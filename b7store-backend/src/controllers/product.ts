@@ -1,6 +1,10 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { getAllProducts } from '../services/product'
+import {
+  getProduct,
+  getProducts,
+  incrementProductView,
+} from '../services/product'
 import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 
 const productBodySchema = z.object({
@@ -24,7 +28,7 @@ const response = z.object({
   products: productResponseSchema,
 })
 
-export const getProducts: FastifyPluginAsyncZod = async (app) => {
+export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
   app.post(
     '/products',
     {
@@ -44,7 +48,7 @@ export const getProducts: FastifyPluginAsyncZod = async (app) => {
       const parsedLimit = limit ? parseInt(limit) : undefined
       const parsedMetadata = metadata ? JSON.parse(metadata) : undefined
 
-      const products = await getAllProducts({
+      const products = await getProducts({
         limit: parsedLimit,
         metadata: parsedMetadata,
         order: orderBy,
@@ -59,6 +63,79 @@ export const getProducts: FastifyPluginAsyncZod = async (app) => {
       return reply
         .status(200)
         .send({ error: null, products: productsWithAbsoluteUrl })
+    },
+  )
+}
+
+const categorySchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    slug: z.string(),
+  })
+  .nullable()
+
+const productSchema = z
+  .object({
+    id: z.number().int().positive(),
+    label: z.string(),
+    price: z.number(),
+    description: z.string().nullable(),
+    images: z.array(z.url()),
+  })
+  .nullable()
+
+export const getProductResponseSchema = z.object({
+  error: z.string().nullable(),
+  product: productSchema,
+  category: categorySchema,
+})
+
+export const getOneProduct: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    '/product/:id',
+    {
+      schema: {
+        summary: 'Get product by ID.',
+        tags: ['products'],
+        security: [],
+        params: z.object({
+          id: z.string().regex(/^\d+$/),
+        }),
+        response: {
+          200: getProductResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const id = parseInt(request.params.id)
+
+      if (Number.isNaN(id)) {
+        return reply
+          .status(400)
+          .send({ error: 'Invalid id', product: null, category: null })
+      }
+
+      const product = await getProduct(id)
+
+      if (!product) {
+        return reply
+          .status(404)
+          .send({ error: 'Product not found', product: null, category: null })
+      }
+
+      const productWithAbsoluteImages = {
+        ...product,
+        images: product.images.map((img) => getAbsoluteImageUrl(img)),
+      }
+
+      await incrementProductView(product.id)
+
+      return reply.status(200).send({
+        error: null,
+        product: productWithAbsoluteImages,
+        category: product.category,
+      })
     },
   )
 }

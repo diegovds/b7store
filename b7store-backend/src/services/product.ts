@@ -5,7 +5,7 @@ interface ProductFilters {
   order?: string
   limit?: number
 }
-export const getAllProducts = async (filters: ProductFilters) => {
+export const getProducts = async (filters: ProductFilters) => {
   // Organize ORDER
   let orderBy = {}
   switch (filters.order) {
@@ -70,4 +70,43 @@ export const getAllProducts = async (filters: ProductFilters) => {
     image: product.images[0] ? `media/products/${product.images[0].url}` : null,
     images: undefined,
   }))
+}
+
+export const getProduct = async (id: number) => {
+  const product = await prisma.product.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      label: true,
+      price: true,
+      description: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
+      images: true,
+    },
+  })
+
+  if (!product) return null
+
+  return {
+    ...product,
+    images:
+      product.images.length > 0
+        ? product.images.map((img) => `media/products/${img.url}`)
+        : [],
+  }
+}
+
+export const incrementProductView = async (id: number) => {
+  await prisma.product.update({
+    where: { id },
+    data: {
+      viewsCount: { increment: 1 },
+    },
+  })
 }
