@@ -1,13 +1,9 @@
-import { db } from '../drizzle/drizzle'
+import { prisma } from '../libs/prisma'
 
 export const getAllBanners = async () => {
-  const banners = await db.query.banners.findMany({
-    columns: {
-      img: true,
-      link: true,
-    },
+  const banners = await prisma.banner.findMany({
+    select: { img: true, link: true },
   })
-
   return banners.map((banner) => ({
     ...banner,
     img: `media/banners/${banner.img}`,

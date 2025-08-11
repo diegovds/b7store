@@ -1,34 +1,34 @@
-import { db } from '../drizzle/drizzle'
+import { prisma } from '../libs/prisma'
 
 interface ProductFilters {
   metadata?: { [key: string]: string }
   order?: string
   limit?: number
 }
-
-export const getAllProducts = async ({
-  limit,
-  metadata,
-  order,
-}: ProductFilters) => {
-  const orderBy = (fields, { asc, desc }) => {
-    switch (order) {
-      case 'views':
-        return [desc(fields.viewsCount)]
-      case 'selling':
-        return [desc(fields.salesCount)]
-      case 'price':
-        return [asc(fields.price)]
-      default:
-        return [desc(fields.viewsCount)]
-    }
+export const getAllProducts = async (filters: ProductFilters) => {
+  // Organize ORDER
+  let orderBy = {}
+  switch (filters.order) {
+    case 'views':
+      orderBy = { viewsCount: 'desc' }
+      break
+    case 'selling':
+      orderBy = { salesCount: 'desc' }
+      break
+    case 'price':
+      orderBy = { price: 'asc' }
+      break
+    default:
+      orderBy = { viewsCount: 'desc' }
+      break
   }
 
+  // Organize Metadata
   const where: any = {}
-  if (metadata && typeof metadata === 'object') {
+  if (filters.metadata && typeof filters.metadata === 'object') {
     const metaFilters = []
-    for (const categoryMetadataId in metadata) {
-      const value = metadata[categoryMetadataId]
+    for (const categoryMetadataId in filters.metadata) {
+      const value = filters.metadata[categoryMetadataId]
       if (typeof value !== 'string') continue
       const valueIds = value
         .split('|')
@@ -50,19 +50,19 @@ export const getAllProducts = async ({
     }
   }
 
-  const products = await db.query.products.findMany({
-    columns: {
+  const products = await prisma.product.findMany({
+    select: {
       id: true,
       label: true,
       price: true,
-    },
-    with: {
       images: {
-        columns: {
-          url: true,
-        },
+        take: 1,
+        orderBy: { id: 'asc' },
       },
     },
+    where,
+    orderBy,
+    take: filters.limit ?? undefined,
   })
 
   return products.map((product) => ({
