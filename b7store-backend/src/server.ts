@@ -1,5 +1,6 @@
 import { fastifyCors } from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
+import fastifyStatic from '@fastify/static'
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import fastify from 'fastify'
@@ -10,6 +11,7 @@ import {
   validatorCompiler,
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import path from 'path'
 import { env } from './env'
 import { routes } from './routes/main'
 
@@ -17,6 +19,13 @@ const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
+
+const publicFolder = path.join(__dirname, '..', 'public')
+
+app.register(fastifyStatic, {
+  root: publicFolder,
+  prefix: '/',
+})
 
 app.register(fastifyCors, {
   origin: true,
