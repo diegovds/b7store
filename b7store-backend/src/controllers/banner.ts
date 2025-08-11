@@ -25,12 +25,6 @@ export const getBanners: FastifyPluginAsyncZod = async (app) => {
         security: [],
         response: {
           200: response,
-          404: z.object({
-            message: z.string(),
-          }),
-          401: z.object({
-            message: z.string(),
-          }),
         },
       },
     },
