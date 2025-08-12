@@ -7,7 +7,7 @@ import {
   getOneProduct,
   getRelatedProduct,
 } from '../controllers/product'
-import { register } from '../controllers/user'
+import { login, register } from '../controllers/user'
 
 export async function routes(app: FastifyInstance) {
   app.get('/ping', async (request, reply) => {
@@ -22,4 +22,5 @@ export async function routes(app: FastifyInstance) {
   app.register(cartMount)
   app.register(calculateShipping)
   app.register(register)
+  app.register(login)
 }
