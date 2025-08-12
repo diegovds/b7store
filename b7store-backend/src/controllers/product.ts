@@ -54,21 +54,21 @@ export const getProductResponseSchema = z.object({
 })
 
 export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
-  app.post(
+  app.get(
     '/products',
     {
       schema: {
         summary: 'Get all products.',
         tags: ['products'],
         security: [],
-        body: productBodySchema,
+        querystring: productBodySchema,
         response: {
           200: productsResponseSchema,
         },
       },
     },
     async (request, reply) => {
-      const { limit, metadata, orderBy } = request.body
+      const { limit, metadata, orderBy } = request.query
 
       const parsedLimit = limit ? parseInt(limit) : undefined
       const parsedMetadata = metadata ? JSON.parse(metadata) : undefined
