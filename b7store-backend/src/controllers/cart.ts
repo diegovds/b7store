@@ -1,6 +1,8 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { createOrder } from '../services/order'
 import { getProduct } from '../services/product'
+import { getAddressById } from '../services/user'
 import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 
 const cartMountSchema = z.object({
@@ -15,6 +17,16 @@ const productsSchema = z.array(
     image: z.string().nullable(),
   }),
 )
+
+export const cartItemSchema = z.object({
+  productId: z.number().int().positive(),
+  quantity: z.number().int().positive().min(1),
+})
+
+export const orderSchema = z.object({
+  cart: z.array(cartItemSchema).nonempty('O carrinho não pode estar vazio'),
+  addressId: z.number().int().positive(),
+})
 
 export const cartMount: FastifyPluginAsyncZod = async (app) => {
   app.post(
@@ -67,7 +79,7 @@ export const calculateShipping: FastifyPluginAsyncZod = async (app) => {
         querystring: z.object({
           zipcode: z
             .string()
-            .min(5, 'Zipcode must be at least 5 characters long'),
+            .regex(/^\d{5}-\d{3}$/, 'O CEP deve estar no formato 12345-678'),
         }),
         response: {
           200: z.object({
@@ -83,6 +95,56 @@ export const calculateShipping: FastifyPluginAsyncZod = async (app) => {
       const { zipcode } = request.query
 
       return reply.status(200).send({ error: null, zipcode, cost: 7, days: 3 })
+    },
+  )
+}
+
+export const finish: FastifyPluginAsyncZod = async (app) => {
+  app.post(
+    '/cart/finish',
+    {
+      schema: {
+        summary:
+          'Finish the cart and create an order (returns Stripe checkout URL).',
+        tags: ['cart'],
+        security: [{ bearerAuth: [] }],
+        body: orderSchema,
+        response: {
+          200: z.object({
+            error: z.string().nullable(),
+            url: z.number(),
+          }),
+          400: z.object({ error: z.string() }),
+        },
+      },
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const { addressId, cart } = request.body
+      const userId = parseInt(request.user.sub)
+
+      const address = await getAddressById(userId, addressId)
+
+      if (!address) {
+        return reply.status(400).send({ error: 'Endereço não encontrado' })
+      }
+
+      const shippingCost = 7 // TODO: temporário
+      const shippingDays = 3 // TODO: temporário
+
+      const orderId = await createOrder({
+        userId,
+        address,
+        shippingCost,
+        shippingDays,
+        cart,
+      })
+
+      if (!orderId) {
+        return reply.status(400).send({ error: 'Pedido não criado.' })
+      }
+
+      return reply.status(200).send({ error: null, url: orderId })
     },
   )
 }
