@@ -1,6 +1,11 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { createAddress, createUser, logUser } from '../services/user'
+import {
+  createAddress,
+  createUser,
+  getAddressesFromUserId,
+  logUser,
+} from '../services/user'
 
 const addressSchema = z.object({
   zipcode: z
@@ -138,6 +143,33 @@ export const addAddress: FastifyPluginAsyncZod = async (app) => {
       const newAddress = await createAddress(
         parseInt(request.user.sub),
         address,
+      )
+
+      return reply.status(200).send({ error: null, address: newAddress })
+    },
+  )
+}
+
+export const getAddresses: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    '/user/addresses',
+    {
+      schema: {
+        summary: 'Get all addresses for the logged-in user.',
+        tags: ['user'],
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: z.object({
+            error: z.string().nullable(),
+            address: z.array(addressSchema.extend({ id: z.number() })),
+          }),
+        },
+      },
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const newAddress = await getAddressesFromUserId(
+        parseInt(request.user.sub),
       )
 
       return reply.status(200).send({ error: null, address: newAddress })
