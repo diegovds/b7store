@@ -1,6 +1,7 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { createOrder } from '../services/order'
+import { createPaymentLink } from '../services/payment'
 import { getProduct } from '../services/product'
 import { getAddressById } from '../services/user'
 import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
@@ -112,7 +113,7 @@ export const finish: FastifyPluginAsyncZod = async (app) => {
         response: {
           200: z.object({
             error: z.string().nullable(),
-            url: z.number(),
+            url: z.url(),
           }),
           400: z.object({ error: z.string() }),
         },
@@ -144,7 +145,15 @@ export const finish: FastifyPluginAsyncZod = async (app) => {
         return reply.status(400).send({ error: 'Pedido não criado.' })
       }
 
-      return reply.status(200).send({ error: null, url: orderId })
+      const url = await createPaymentLink({ cart, shippingCost, orderId })
+
+      if (!url) {
+        return reply
+          .status(400)
+          .send({ error: 'Link de pagamento não criado.' })
+      }
+
+      return reply.status(200).send({ error: null, url })
     },
   )
 }
