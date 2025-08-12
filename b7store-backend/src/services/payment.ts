@@ -1,6 +1,6 @@
 import {
-    createStripeCheckoutSession,
-    getStripeCheckoutSession,
+  createStripeCheckoutSession,
+  getStripeCheckoutSession,
 } from '../libs/stripe'
 import { CartItem } from '../types/cart-item'
 
