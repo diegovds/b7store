@@ -120,7 +120,7 @@ export const addAddress: FastifyPluginAsyncZod = async (app) => {
     {
       schema: {
         summary: 'Add a new address for the logged-in user.',
-        tags: ['address'],
+        tags: ['user'],
         security: [{ bearerAuth: [] }],
         body: addressSchema,
         response: {
