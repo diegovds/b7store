@@ -7,6 +7,7 @@ import {
   getOneProduct,
   getRelatedProduct,
 } from '../controllers/product'
+import { register } from '../controllers/user'
 
 export async function routes(app: FastifyInstance) {
   app.get('/ping', async (request, reply) => {
@@ -20,4 +21,5 @@ export async function routes(app: FastifyInstance) {
   app.register(getCategoryWithMetadata)
   app.register(cartMount)
   app.register(calculateShipping)
+  app.register(register)
 }
