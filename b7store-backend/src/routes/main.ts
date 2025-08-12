@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { getBanners } from '../controllers/banner'
-import { cartMount } from '../controllers/cart'
+import { calculateShipping, cartMount } from '../controllers/cart'
 import { getCategoryWithMetadata } from '../controllers/category'
 import {
   getAllProducts,
@@ -19,4 +19,5 @@ export async function routes(app: FastifyInstance) {
   app.register(getRelatedProduct)
   app.register(getCategoryWithMetadata)
   app.register(cartMount)
+  app.register(calculateShipping)
 }

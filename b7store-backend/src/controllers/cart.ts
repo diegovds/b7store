@@ -55,3 +55,34 @@ export const cartMount: FastifyPluginAsyncZod = async (app) => {
     },
   )
 }
+
+export const calculateShipping: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    '/cart/shipping',
+    {
+      schema: {
+        summary: 'Calculate shipping cost and days for a zipcode.',
+        tags: ['cart'],
+        security: [],
+        querystring: z.object({
+          zipcode: z
+            .string()
+            .min(5, 'Zipcode must be at least 5 characters long'),
+        }),
+        response: {
+          200: z.object({
+            error: z.string().nullable(),
+            zipcode: z.string(),
+            cost: z.number(),
+            days: z.number(),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      const { zipcode } = request.query
+
+      return reply.status(200).send({ error: null, zipcode, cost: 7, days: 3 })
+    },
+  )
+}
