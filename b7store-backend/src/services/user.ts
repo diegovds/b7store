@@ -1,4 +1,5 @@
 import { prisma } from '../libs/prisma'
+import { Address } from '../types/address'
 
 export const createUser = async (
   name: string,
@@ -29,4 +30,13 @@ export const logUser = async (email: string) => {
   const user = await prisma.user.findUnique({ where: { email } })
 
   return { user }
+}
+
+export const createAddress = async (userId: number, address: Address) => {
+  return await prisma.userAddress.create({
+    data: {
+      ...address,
+      userId,
+    },
+  })
 }

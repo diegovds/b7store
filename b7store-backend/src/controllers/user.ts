@@ -1,6 +1,18 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { createUser, logUser } from '../services/user'
+import { createAddress, createUser, logUser } from '../services/user'
+
+const addressSchema = z.object({
+  zipcode: z
+    .string()
+    .regex(/^\d{5}-\d{3}$/, 'O CEP deve estar no formato 12345-678'),
+  street: z.string().min(1, 'Rua é obrigatória'),
+  number: z.string().min(1, 'Número é obrigatório'),
+  city: z.string().min(1, 'Cidade é obrigatória'),
+  state: z.string().min(1, 'Estado é obrigatório'),
+  country: z.string().min(1, 'País é obrigatório'),
+  complement: z.string().nullable(),
+})
 
 export const register: FastifyPluginAsyncZod = async (app) => {
   app.post(
@@ -98,6 +110,37 @@ export const login: FastifyPluginAsyncZod = async (app) => {
       return reply.status(404).send({
         error: 'Usuário não encontrado.',
       })
+    },
+  )
+}
+
+export const addAddress: FastifyPluginAsyncZod = async (app) => {
+  app.post(
+    '/user/addresses',
+    {
+      schema: {
+        summary: 'Add a new address for the logged-in user.',
+        tags: ['address'],
+        security: [{ bearerAuth: [] }],
+        body: addressSchema,
+        response: {
+          200: z.object({
+            error: z.string().nullable(),
+            address: addressSchema.extend({ id: z.number() }),
+          }),
+        },
+      },
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const address = request.body
+
+      const newAddress = await createAddress(
+        parseInt(request.user.sub),
+        address,
+      )
+
+      return reply.status(200).send({ error: null, address: newAddress })
     },
   )
 }
