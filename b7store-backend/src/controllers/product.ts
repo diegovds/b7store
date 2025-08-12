@@ -3,6 +3,7 @@ import { z } from 'zod'
 import {
   getProduct,
   getProducts,
+  getProductsFromSameCategory,
   incrementProductView,
 } from '../services/product'
 import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
@@ -23,9 +24,33 @@ const productResponseSchema = z.array(
   }),
 )
 
-const response = z.object({
+const productsResponseSchema = z.object({
   error: z.string().nullable(),
   products: productResponseSchema,
+})
+
+const categorySchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    slug: z.string(),
+  })
+  .nullable()
+
+const productSchema = z
+  .object({
+    id: z.number().int().positive(),
+    label: z.string(),
+    price: z.number(),
+    description: z.string().nullable(),
+    images: z.array(z.url()),
+  })
+  .nullable()
+
+export const getProductResponseSchema = z.object({
+  error: z.string().nullable(),
+  product: productSchema,
+  category: categorySchema,
 })
 
 export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
@@ -38,7 +63,7 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
         security: [],
         body: productBodySchema,
         response: {
-          200: response,
+          200: productsResponseSchema,
         },
       },
     },
@@ -66,30 +91,6 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
     },
   )
 }
-
-const categorySchema = z
-  .object({
-    id: z.number(),
-    name: z.string(),
-    slug: z.string(),
-  })
-  .nullable()
-
-const productSchema = z
-  .object({
-    id: z.number().int().positive(),
-    label: z.string(),
-    price: z.number(),
-    description: z.string().nullable(),
-    images: z.array(z.url()),
-  })
-  .nullable()
-
-export const getProductResponseSchema = z.object({
-  error: z.string().nullable(),
-  product: productSchema,
-  category: categorySchema,
-})
 
 export const getOneProduct: FastifyPluginAsyncZod = async (app) => {
   app.get(
@@ -135,6 +136,57 @@ export const getOneProduct: FastifyPluginAsyncZod = async (app) => {
         error: null,
         product: productWithAbsoluteImages,
         category: product.category,
+      })
+    },
+  )
+}
+
+export const getRelatedProduct: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    '/product/:id/related',
+    {
+      schema: {
+        summary: 'Get related products from the same category.',
+        tags: ['products'],
+        security: [],
+        params: z.object({
+          id: z.string().regex(/^\d+$/),
+        }),
+        querystring: z.object({
+          limit: z.string().regex(/^\d+$/).optional(),
+        }),
+        response: {
+          200: productsResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const id = parseInt(request.params.id)
+      const limit = request.query.limit
+        ? parseInt(request.query.limit)
+        : undefined
+
+      if (Number.isNaN(id) || (limit && Number.isNaN(limit))) {
+        return reply.status(400).send({ error: 'Invalid id', products: [] })
+      }
+
+      const products = await getProductsFromSameCategory(id, limit || undefined)
+
+      if (!products) {
+        return reply
+          .status(404)
+          .send({ error: 'Product not found', products: [] })
+      }
+
+      const productsWithAbsoluteUrl = products.map((product) => ({
+        ...product,
+        image: product.image ? getAbsoluteImageUrl(product.image) : null,
+        liked: false,
+      }))
+
+      return reply.status(200).send({
+        error: null,
+        products: productsWithAbsoluteUrl,
       })
     },
   )

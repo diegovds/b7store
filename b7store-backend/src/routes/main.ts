@@ -1,6 +1,10 @@
 import { FastifyInstance } from 'fastify'
 import { getBanners } from '../controllers/banner'
-import { getAllProducts, getOneProduct } from '../controllers/product'
+import {
+  getAllProducts,
+  getOneProduct,
+  getRelatedProduct,
+} from '../controllers/product'
 
 export async function routes(app: FastifyInstance) {
   app.get('/ping', async (request, reply) => {
@@ -10,4 +14,5 @@ export async function routes(app: FastifyInstance) {
   app.register(getBanners)
   app.register(getAllProducts)
   app.register(getOneProduct)
+  app.register(getRelatedProduct)
 }
