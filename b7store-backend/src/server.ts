@@ -57,11 +57,12 @@ app.register(fastifySwaggerUi, {
 app.register(routes)
 
 app.setErrorHandler((error, request, reply) => {
-  console.error(error)
-
-  reply.status(500).send({
-    error: 'Ocorreu algum erro',
-  })
+  if (error.validation) {
+    return reply.status(400).send({
+      error: error.message,
+    })
+  }
+  reply.status(500).send({ error: 'Internal Server Error' })
 })
 
 app.listen({ port: env.PORT }).then(() => {
