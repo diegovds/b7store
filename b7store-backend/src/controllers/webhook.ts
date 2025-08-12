@@ -5,6 +5,15 @@ import { getConstructEvent } from '../libs/stripe'
 import { updateOrderStatus } from '../services/order'
 
 export const stripe: FastifyPluginAsyncZod = async (app) => {
+  // Parser customizado apenas para application/json
+  app.addContentTypeParser(
+    'application/json',
+    { parseAs: 'buffer' },
+    function (_req, body, done) {
+      done(null, body.toString())
+    },
+  )
+
   app.post(
     '/webhook/stripe',
     {
@@ -28,25 +37,30 @@ export const stripe: FastifyPluginAsyncZod = async (app) => {
       const webhookKey = env.STRIPE_WEBHOOK_SECRET
       const rawBody = request.body
 
-      const event = await getConstructEvent(rawBody, sig, webhookKey)
+      try {
+        const event = await getConstructEvent(rawBody, sig, webhookKey)
 
-      if (event) {
-        const session = event.data.object as any
-        const orderId = parseInt(session.metadata?.orderId)
+        if (event) {
+          const session = event.data.object as any
+          const orderId = parseInt(session.metadata?.orderId)
 
-        switch (event.type) {
-          case 'checkout.session.completed':
-          case 'checkout.session.async_payment_succeeded':
-            await updateOrderStatus(orderId, 'paid')
-            break
-          case 'checkout.session.expired':
-          case 'checkout.session.async_payment_failed':
-            await updateOrderStatus(orderId, 'cancelled')
-            break
+          switch (event.type) {
+            case 'checkout.session.completed':
+            case 'checkout.session.async_payment_succeeded':
+              await updateOrderStatus(orderId, 'paid')
+              break
+            case 'checkout.session.expired':
+            case 'checkout.session.async_payment_failed':
+              await updateOrderStatus(orderId, 'cancelled')
+              break
+          }
         }
-      }
 
-      return reply.status(200).send({ error: null })
+        return reply.status(200).send({ error: null })
+      } catch (err) {
+        console.error('Stripe webhook error:', err)
+        return reply.status(400).send({ error: 'Invalid signature' })
+      }
     },
   )
 }
