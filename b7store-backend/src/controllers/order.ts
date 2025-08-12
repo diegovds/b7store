@@ -1,6 +1,19 @@
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { getUserOrders } from '../services/order'
 import { getOrderIdFromSession } from '../services/payment'
+
+const orderSchema = z.object({
+  id: z.number().int().positive(),
+  status: z.string(),
+  total: z.number().positive(),
+  createdAt: z.instanceof(Date),
+})
+
+export const ordersResponseSchema = z.object({
+  error: z.string().nullable(),
+  orders: z.array(orderSchema),
+})
 
 export const getOrderBySessionId: FastifyPluginAsyncZod = async (app) => {
   app.get(
@@ -34,6 +47,30 @@ export const getOrderBySessionId: FastifyPluginAsyncZod = async (app) => {
       }
 
       return reply.status(200).send({ error: null, orderId })
+    },
+  )
+}
+
+export const listOrders: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    '/orders',
+    {
+      schema: {
+        summary: 'List all orders for the logged-in user.',
+        tags: ['order'],
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: ordersResponseSchema,
+        },
+      },
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const userId = parseInt(request.user.sub)
+
+      const orders = await getUserOrders(userId)
+
+      return reply.status(200).send({ error: null, orders })
     },
   )
 }
