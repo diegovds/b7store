@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify'
 import { getBanners } from '../controllers/banner'
 import { calculateShipping, cartMount, finish } from '../controllers/cart'
 import { getCategoryWithMetadata } from '../controllers/category'
+import { getOrderBySessionId } from '../controllers/order'
 import {
   getAllProducts,
   getOneProduct,
@@ -28,4 +29,5 @@ export async function routes(app: FastifyInstance) {
   app.register(getAddresses)
   app.register(finish)
   app.register(stripe)
+  app.register(getOrderBySessionId)
 }
