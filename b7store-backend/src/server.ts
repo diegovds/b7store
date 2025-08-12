@@ -1,8 +1,8 @@
-import { fastifyCors } from '@fastify/cors'
+import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifyStatic from '@fastify/static'
-import { fastifySwagger } from '@fastify/swagger'
-import { fastifySwaggerUi } from '@fastify/swagger-ui'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 import fastifyBcrypt from 'fastify-bcrypt'
 import {
@@ -15,6 +15,16 @@ import path from 'path'
 import { env } from './env'
 import { routes } from './routes/main'
 
+// Declaração de tipo para o decorator
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate: (
+      request: FastifyRequest,
+      reply: FastifyReply,
+    ) => Promise<void>
+  }
+}
+
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.setSerializerCompiler(serializerCompiler)
@@ -22,23 +32,37 @@ app.setValidatorCompiler(validatorCompiler)
 
 const publicFolder = path.join(__dirname, '..', 'public')
 
+// Arquivos estáticos
 app.register(fastifyStatic, {
   root: publicFolder,
   prefix: '/',
 })
 
+// CORS
 app.register(fastifyCors, {
   origin: true,
 })
 
+// Bcrypt
 app.register(fastifyBcrypt, {
   saltWorkFactor: 10,
 })
 
+// JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET_KEY,
 })
 
+// Decorator de autenticação
+app.decorate('authenticate', async function (request, reply): Promise<void> {
+  try {
+    await request.jwtVerify()
+  } catch {
+    reply.status(401).send({ message: 'Não autorizado' })
+  }
+})
+
+// Swagger
 app.register(fastifySwagger, {
   openapi: {
     info: {
@@ -46,16 +70,33 @@ app.register(fastifySwagger, {
       version: '0.0.1',
       description: 'API para a B7Store',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   transform: jsonSchemaTransform,
 })
 
+// Swagger UI
 app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+// Rotas
 app.register(routes)
 
+// Handler de erro
 app.setErrorHandler((error, request, reply) => {
   if (error.validation) {
     return reply.status(400).send({
@@ -65,6 +106,7 @@ app.setErrorHandler((error, request, reply) => {
   reply.status(500).send({ error: 'Internal Server Error' })
 })
 
+// Start do servidor
 app.listen({ port: env.PORT }).then(() => {
   console.log(`🚀 HTTP Server Running! http://localhost:${env.PORT}`)
 })
