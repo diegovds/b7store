@@ -2,6 +2,7 @@ import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { getOrderById, getUserOrders } from '../services/order'
 import { getOrderIdFromSession } from '../services/payment'
+import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 
 const orderSchema = z.object({
   id: z.number().int().positive(),
@@ -138,7 +139,20 @@ export const getOrder: FastifyPluginAsyncZod = async (app) => {
         return reply.status(404).send({ error: 'Order not found' })
       }
 
-      return reply.status(200).send({ error: null, order })
+      const itemsWithAbsoluteUrl = order.orderItems.map((item) => ({
+        ...item,
+        product: {
+          ...item.product,
+          image: item.product.image
+            ? getAbsoluteImageUrl(item.product.image)
+            : null,
+        },
+      }))
+
+      return reply.status(200).send({
+        error: null,
+        order: { ...order, orderItems: itemsWithAbsoluteUrl },
+      })
     },
   )
 }
