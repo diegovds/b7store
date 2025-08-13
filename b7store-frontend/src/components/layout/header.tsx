@@ -67,7 +67,7 @@ export function Header() {
         </div>
       </div>
       <div
-        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'max-h-[154px]' : 'max-h-0'}`}
+        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[154px]' : 'max-h-0'}`}
       >
         {menu.map((item) => (
           <Link key={item.label} href={item.href}>
@@ -85,7 +85,7 @@ export function Header() {
           </Link>
         ))}
       </div>
-      <div className="p-6 md:hidden">
+      <div className="px-6 pb-6 md:hidden">
         <HeaderSearch />
       </div>
     </header>
