@@ -59,6 +59,18 @@ async function main() {
         link: '/categories/algo',
       },
     }),
+    prisma.banner.create({
+      data: {
+        img: 'banner_promo_3.jpg',
+        link: '/categories/node',
+      },
+    }),
+    prisma.banner.create({
+      data: {
+        img: 'banner_promo_4.jpg',
+        link: '/categories/php',
+      },
+    }),
   ])
   console.log('✅ Banners created:', banners.length)
 
