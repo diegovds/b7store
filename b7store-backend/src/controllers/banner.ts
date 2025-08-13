@@ -5,8 +5,8 @@ import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 
 const bannerResponseSchema = z.array(
   z.object({
-    img: z.string(),
-    link: z.url(),
+    img: z.url(),
+    link: z.string(),
   }),
 )
 
@@ -32,7 +32,7 @@ export const getBanners: FastifyPluginAsyncZod = async (app) => {
       const banners = await getAllBanners()
       const bannersWithAbsoluteUrl = banners.map((banner) => ({
         ...banner,
-        link: getAbsoluteImageUrl(banner.img),
+        img: getAbsoluteImageUrl(banner.img),
       }))
 
       return reply
