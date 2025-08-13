@@ -27,17 +27,31 @@ export function Header() {
         <strong>APROVEITA!</strong>
       </div>
       <div className="mx-auto w-full max-w-6xl p-6">
-        <div className="flex items-center justify-between">
-          <div className="w-32">
+        <div className="flex items-center">
+          <div className="flex items-center">
             <Link href="/">
               <Image
                 src="/assets/ui/logo-black.png"
                 alt="B7Store"
-                width={120}
+                width={142}
                 height={40}
                 quality={100}
               />
             </Link>
+          </div>
+          <div className="flex-1">
+            <div className="hidden gap-6 px-6 md:flex md:items-center md:justify-between">
+              <ul className="flex flex-1 gap-10 font-semibold text-gray-500">
+                {menu.map((item) => (
+                  <li key={item.label}>
+                    <Link href={item.href}>{item.label}</Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="w-80">
+                <HeaderSearch />
+              </div>
+            </div>
           </div>
           <div className="flex gap-4">
             <Link href="/my-orders">
@@ -72,7 +86,7 @@ export function Header() {
         {menu.map((item) => (
           <Link key={item.label} href={item.href}>
             <div className="flex items-center justify-between border-b border-gray-200 p-6">
-              <div className="text-lg font-medium text-gray-500">
+              <div className="text-lg font-semibold text-gray-500">
                 {item.label}
               </div>
               <Image
