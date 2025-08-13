@@ -1,12 +1,15 @@
 import { Banners } from '@/components/home/banners'
 import { InformationIcon } from '@/components/home/information-icon'
+import { MostViewedProducts } from '@/components/home/most-viewed-products'
+import { ProductListSkeleton } from '@/components/home/product-list-skeleton'
 import { getBanners } from '@/http/api'
+import { Suspense } from 'react'
 
 export default async function Home() {
   const data = await getBanners()
 
   return (
-    <div>
+    <div className="">
       <Banners list={data.banners} />
       <div className="mt-6 flex flex-col gap-4 md:mt-12 md:flex-row md:gap-8">
         <InformationIcon
@@ -25,6 +28,10 @@ export default async function Home() {
           description="No período de 30 dias."
         />
       </div>
+      <Suspense fallback={<ProductListSkeleton />}>
+        <MostViewedProducts />
+      </Suspense>
+      <Suspense fallback={<ProductListSkeleton />}></Suspense>
     </div>
   )
 }
