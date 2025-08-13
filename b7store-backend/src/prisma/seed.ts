@@ -61,13 +61,13 @@ async function main() {
     }),
     prisma.banner.create({
       data: {
-        img: 'banner_promo_3.jpg',
+        img: 'banner_promo_3.png',
         link: '/categories/node',
       },
     }),
     prisma.banner.create({
       data: {
-        img: 'banner_promo_4.jpg',
+        img: 'banner_promo_4.png',
         link: '/categories/php',
       },
     }),
