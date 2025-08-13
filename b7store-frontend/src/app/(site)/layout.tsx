@@ -8,7 +8,7 @@ export default function SiteLayout({
   return (
     <div>
       <Header />
-      {children}
+      <main className="mx-auto max-w-6xl p-6">{children}</main>
     </div>
   )
 }
