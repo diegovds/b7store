@@ -108,6 +108,76 @@ async function main() {
   ])
   console.log('✅ Metadata values created:', metadataValues.length)
 
+  // Create Products
+  let product = await prisma.product.create({
+    data: {
+      label: 'Camisa React',
+      price: 94.5,
+      description: 'Camisa com logo do React, ideal para front-end developers',
+      categoryId: category.id,
+    },
+  })
+  for (let i = 1; i <= 3; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_1_${i}.png`,
+      },
+    })
+  }
+
+  product = await prisma.product.create({
+    data: {
+      label: 'Camisa RN',
+      price: 89.9,
+      description:
+        'Camisa com estampa de React Native, perfeita para desenvolvedores',
+      categoryId: category.id,
+    },
+  })
+  await prisma.productImage.create({
+    data: {
+      productId: product.id,
+      url: 'product_2_1.png',
+    },
+  })
+
+  product = await prisma.product.create({
+    data: {
+      label: 'Camisa PHP',
+      price: 69.9,
+      description: 'Camisa com estampa PHP, para desenvolvedores web',
+      categoryId: category.id,
+    },
+  })
+  for (let i = 1; i <= 2; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_3_${i}.png`,
+      },
+    })
+  }
+
+  product = await prisma.product.create({
+    data: {
+      label: 'Camisa Node',
+      price: 79.9,
+      description: 'Camisa com design Node, para programadores Node',
+      categoryId: category.id,
+    },
+  })
+  for (let i = 1; i <= 2; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_4_${i}.png`,
+      },
+    })
+  }
+
+  console.log('✅ Products created')
+
   console.log('🎉 Database seeding completed successfully!')
 }
 
