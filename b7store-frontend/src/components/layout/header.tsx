@@ -11,8 +11,10 @@ export function Header() {
   const [menuOpened, setMenuOpened] = useState(false)
 
   const menu: MenuItem[] = [
-    { label: 'Camisa', href: '/categories/camisa' },
-    { label: 'Kits', href: '/categories/kits' },
+    { label: 'Camisetas', href: '/categories/camisetas' },
+    { label: 'Kits B7Web', href: '/categories/kits' },
+    { label: 'Acessórios', href: '/categories/acessorios' },
+    { label: 'Eletrônicos', href: '/categories/eletronicos' },
   ]
 
   return (
@@ -20,14 +22,14 @@ export function Header() {
       <div className="hidden bg-black p-4 text-center text-base text-white md:block">
         <strong>FRETE GRÁTIS</strong> para todo o Nordeste nas compras acima de
         R$ 199,00.
-        <strong>APROVEITA!</strong>
+        <strong> APROVEITA!</strong>
       </div>
       <div className="bg-black p-4 text-center text-xs text-white md:hidden">
         <strong>FRETE GRÁTIS</strong> para todo o Nordeste!
       </div>
       <div className="mx-auto w-full max-w-6xl p-6">
         <div className="flex items-center">
-          <div className="flex items-center">
+          <div className="flex items-center md:pb-3">
             <Link href="/">
               <Image
                 src="/assets/ui/logo-black.png"
@@ -40,10 +42,12 @@ export function Header() {
           </div>
           <div className="flex-1">
             <div className="hidden gap-6 px-6 md:flex md:items-center md:justify-between">
-              <ul className="flex flex-1 gap-10 font-semibold text-gray-500">
+              <ul className="flex flex-1 gap-10 text-gray-500">
                 {menu.map((item) => (
                   <li key={item.label}>
-                    <Link href={item.href}>{item.label}</Link>
+                    <Link href={item.href} className="text-base font-medium">
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -80,12 +84,12 @@ export function Header() {
         </div>
       </div>
       <div
-        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[154px]' : 'max-h-0'}`}
+        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[308px]' : 'max-h-0'}`}
       >
         {menu.map((item) => (
           <Link key={item.label} href={item.href}>
             <div className="flex items-center justify-between border-b border-gray-200 p-6">
-              <div className="text-lg font-semibold text-gray-500">
+              <div className="text-lg font-medium text-gray-500">
                 {item.label}
               </div>
               <Image
