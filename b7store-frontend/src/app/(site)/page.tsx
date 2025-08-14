@@ -10,7 +10,7 @@ export default async function Home() {
   const data = await getBanners()
 
   return (
-    <div className="">
+    <div className="md:mt-6">
       <Banners list={data.banners} />
       <div className="mt-6 flex flex-col gap-4 md:mt-12 md:flex-row md:gap-8">
         <InformationIcon
