@@ -2,7 +2,7 @@ import { getProducts } from '@/http/api'
 import { ProductList } from '../product-list'
 
 export async function MostViewedProducts() {
-  const { products } = await getProducts({ orderBy: 'views' })
+  const { products } = await getProducts({ orderBy: 'views', limit: '4' })
 
   return (
     <div className="mt-12 md:mt-[69px]">
