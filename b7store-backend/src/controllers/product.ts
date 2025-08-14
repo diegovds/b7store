@@ -44,6 +44,7 @@ const productSchema = z
     price: z.number(),
     description: z.string().nullable(),
     images: z.array(z.url()),
+    liked: z.boolean(),
   })
   .nullable()
 
@@ -128,6 +129,7 @@ export const getOneProduct: FastifyPluginAsyncZod = async (app) => {
       const productWithAbsoluteImages = {
         ...product,
         images: product.images.map((img) => getAbsoluteImageUrl(img)),
+        liked: false,
       }
 
       await incrementProductView(product.id)
