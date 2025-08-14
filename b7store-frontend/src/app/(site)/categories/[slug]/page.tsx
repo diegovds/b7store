@@ -43,8 +43,6 @@ export default async function CategoriesPage({
   const { category } = await getCategorySlugMetadata(slug)
   const { products } = await getProducts({ orderBy: order })
 
-  console.log(filters.order)
-
   return (
     <div>
       <div className="my-4 text-base text-gray-500">
