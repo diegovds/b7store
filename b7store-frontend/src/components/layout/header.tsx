@@ -1,15 +1,11 @@
 'use client'
 
+import { MenuItem } from '@/types/menu-item'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { HeaderIcon } from './header-icon'
 import { HeaderSearch } from './header-search'
-
-type MenuItem = {
-  label: string
-  href: string
-}
 
 export function Header() {
   const [menuOpened, setMenuOpened] = useState(false)
