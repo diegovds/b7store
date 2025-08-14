@@ -176,6 +176,40 @@ async function main() {
     })
   }
 
+  product = await prisma.product.create({
+    data: {
+      label: 'Camisa Laravel',
+      price: 59.9,
+      description: 'Camisa com design Laravel, para programadores Laravel',
+      categoryId: category.id,
+    },
+  })
+  for (let i = 1; i <= 4; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_5_${i}.png`,
+      },
+    })
+  }
+
+  product = await prisma.product.create({
+    data: {
+      label: 'Camisa Base da Web',
+      price: 49.9,
+      description: 'Camisa com design das tecnologias base da web.',
+      categoryId: category.id,
+    },
+  })
+  for (let i = 1; i <= 3; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_8_${i}.png`,
+      },
+    })
+  }
+
   console.log('✅ Products created')
 
   console.log('🎉 Database seeding completed successfully!')
