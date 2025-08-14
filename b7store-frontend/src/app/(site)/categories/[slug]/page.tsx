@@ -1,21 +1,49 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getCategorySlugMetadata, getProducts } from '@/http/api'
+import { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 type CategoriesProps = {
   params: Promise<{ slug: string }>
-  searcgParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-export default async function Categories({
+export async function generateMetadata({
   params,
-  searcgParams,
-}: CategoriesProps) {
+}: CategoriesProps): Promise<Metadata> {
   const { slug } = await params
-  const filters = await searcgParams
 
   const { category } = await getCategorySlugMetadata(slug)
-  const { products } = await getProducts()
+
+  if (!category?.name) {
+    notFound()
+  }
+
+  return {
+    title: category.name,
+  }
+}
+
+export default async function CategoriesPage({
+  params,
+  searchParams,
+}: CategoriesProps) {
+  const { slug } = await params
+  const filters = await searchParams
+  const order =
+    filters.order === 'views'
+      ? 'views'
+      : filters.order === 'price'
+        ? 'price'
+        : filters.order === 'selling'
+          ? 'selling'
+          : undefined
+
+  const { category } = await getCategorySlugMetadata(slug)
+  const { products } = await getProducts({ orderBy: order })
+
+  console.log(filters.order)
 
   return (
     <div>
