@@ -5,8 +5,8 @@ import { FooterButton } from './footer-button'
 
 export const Footer = () => {
   const menu: MenuItem[] = [
-    { label: 'Camisas', href: '/categories/camisas' },
-    { label: 'Kits', href: '/categories/kits' },
+    { label: 'Camisetas', href: '/categories/camisetas' },
+    { label: 'Bonés', href: '/categories/bones' },
   ]
   return (
     <footer>
