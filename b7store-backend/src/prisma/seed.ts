@@ -23,15 +23,24 @@ async function main() {
 
   console.log('📝 No existing data found. Proceeding with seeding...')
 
-  // Create Category
   console.log('Creating category...')
-  const category = await prisma.category.create({
+  // Create Category id 1
+  const category1 = await prisma.category.create({
     data: {
       slug: 'camisetas',
       name: 'Camisetas',
     },
   })
-  console.log('✅ Category created:', category.name)
+  console.log('✅ Category created:', category1.name)
+
+  // Create Category id 2
+  const category2 = await prisma.category.create({
+    data: {
+      slug: 'bones',
+      name: 'Bonés',
+    },
+  })
+  console.log('✅ Category created:', category2.name)
 
   // Create CategoryMetadata
   console.log('Creating category metadata...')
@@ -39,7 +48,7 @@ async function main() {
     data: {
       id: 'tech',
       name: 'Tecnologia',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   console.log('✅ Category metadata created:', categoryMetadata.name)
@@ -114,7 +123,7 @@ async function main() {
       label: 'Camisa React',
       price: 94.5,
       description: 'Camisa com logo do React, ideal para front-end developers',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   for (let i = 1; i <= 3; i++) {
@@ -132,7 +141,7 @@ async function main() {
       price: 89.9,
       description:
         'Camisa com estampa de React Native, perfeita para desenvolvedores',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   await prisma.productImage.create({
@@ -147,7 +156,7 @@ async function main() {
       label: 'Camisa PHP',
       price: 69.9,
       description: 'Camisa com estampa PHP, para desenvolvedores web',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   for (let i = 1; i <= 2; i++) {
@@ -164,7 +173,7 @@ async function main() {
       label: 'Camisa Node',
       price: 79.9,
       description: 'Camisa com design Node, para programadores Node',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   for (let i = 1; i <= 2; i++) {
@@ -181,7 +190,7 @@ async function main() {
       label: 'Camisa Laravel',
       price: 59.9,
       description: 'Camisa com design Laravel, para programadores Laravel',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   for (let i = 1; i <= 4; i++) {
@@ -198,7 +207,7 @@ async function main() {
       label: 'Camisa Base da Web',
       price: 49.9,
       description: 'Camisa com design das tecnologias base da web.',
-      categoryId: category.id,
+      categoryId: category1.id,
     },
   })
   for (let i = 1; i <= 3; i++) {
