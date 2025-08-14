@@ -12,9 +12,7 @@ export function Header() {
 
   const menu: MenuItem[] = [
     { label: 'Camisetas', href: '/categories/camisetas' },
-    { label: 'Kits B7Web', href: '/categories/kits' },
-    { label: 'Acessórios', href: '/categories/acessorios' },
-    { label: 'Eletrônicos', href: '/categories/eletronicos' },
+    { label: 'Bonés', href: '/categories/bones' },
   ]
 
   return (
@@ -84,7 +82,7 @@ export function Header() {
         </div>
       </div>
       <div
-        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[308px]' : 'max-h-0'}`}
+        className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[154px]' : 'max-h-0'}`}
       >
         {menu.map((item) => (
           <Link key={item.label} href={item.href}>
