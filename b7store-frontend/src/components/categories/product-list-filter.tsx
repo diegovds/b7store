@@ -1,6 +1,7 @@
 'use client'
 
 import { useQueryString } from '@/hooks/use-querystring'
+import { GetCategorySlugMetadata200MetadataItem } from '@/http/api'
 import { Product } from '@/types/product'
 import { ChangeEvent, useState } from 'react'
 import { ProductItem } from '../product-item'
@@ -8,9 +9,13 @@ import { FilterGroup } from './filter-group'
 
 type ProductListFilterProps = {
   products: Product[]
+  metadata: GetCategorySlugMetadata200MetadataItem[]
 }
 
-export function ProductListFilter({ products }: ProductListFilterProps) {
+export function ProductListFilter({
+  products,
+  metadata,
+}: ProductListFilterProps) {
   const queryString = useQueryString()
   const [filterOpened, setFilterOpened] = useState(false)
 
@@ -48,8 +53,14 @@ export function ProductListFilter({ products }: ProductListFilterProps) {
         <div
           className={`flex-1 overflow-x-hidden overflow-y-hidden duration-300 md:max-w-70 ${filterOpened ? `max-h-screen` : `max-h-0`} md:max-h-fit`}
         >
-          <FilterGroup />
-          <FilterGroup />
+          {metadata.map((data) => (
+            <FilterGroup
+              key={data.id}
+              groupId={data.id}
+              groupName={data.name}
+              filters={data.values}
+            />
+          ))}
         </div>
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
           {products.map((product) => (

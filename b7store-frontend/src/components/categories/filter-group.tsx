@@ -1,10 +1,17 @@
 'use client'
 
+import { GetCategorySlugMetadata200MetadataItemValuesItem } from '@/http/api'
 import Image from 'next/image'
 import { useState } from 'react'
 import { FilterItem } from './filter-item'
 
-export function FilterGroup() {
+type FilterGroupProps = {
+  groupId: string
+  groupName: string
+  filters: GetCategorySlugMetadata200MetadataItemValuesItem[]
+}
+
+export function FilterGroup({ filters, groupName, groupId }: FilterGroupProps) {
   const [opened, setOpened] = useState(true)
 
   return (
@@ -12,7 +19,7 @@ export function FilterGroup() {
       <div
         className={`mb-4 flex items-center justify-between border-b border-gray-200 pb-4`}
       >
-        <div className="flex-1 text-xl font-medium">Nome do grupo</div>
+        <div className="flex-1 text-xl font-medium">{groupName}</div>
         <div
           onClick={() => setOpened(!opened)}
           className="flex size-8 cursor-pointer items-center justify-center"
@@ -29,9 +36,13 @@ export function FilterGroup() {
       <div
         className={`space-y-4 overflow-y-hidden ${opened ? 'max-h-screen' : 'max-h-0'} duration-300`}
       >
-        <FilterItem id={1} label={'Item 1'} />
-        <FilterItem id={2} label={'Item 2'} />
-        <FilterItem id={3} label={'Item 3'} />
+        {filters.map((filter) => (
+          <FilterItem
+            key={filter.id}
+            item={{ id: filter.id, label: filter.label }}
+            groupId={groupId}
+          />
+        ))}
       </div>
     </div>
   )

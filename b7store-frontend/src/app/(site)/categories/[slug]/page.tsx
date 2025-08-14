@@ -40,15 +40,17 @@ export default async function CategoriesPage({
           ? 'selling'
           : undefined
 
-  const { category } = await getCategorySlugMetadata(slug)
+  const { category, metadata } = await getCategorySlugMetadata(slug)
   const { products } = await getProducts({ orderBy: order })
+
+  console.log(metadata[0])
 
   return (
     <div>
       <div className="my-4 text-base text-gray-500">
         <Link href="/">Home</Link> &gt; {category?.name}
       </div>
-      <ProductListFilter products={products} />
+      <ProductListFilter products={products} metadata={metadata} />
     </div>
   )
 }
