@@ -21,10 +21,13 @@ export function Header() {
 
   return (
     <header className="border-b border-gray-200 bg-white">
-      <div className="bg-black p-4 text-center text-base text-white">
+      <div className="hidden bg-black p-4 text-center text-base text-white md:block">
         <strong>FRETE GRÁTIS</strong> para todo o Nordeste nas compras acima de
         R$ 199,00.
         <strong>APROVEITA!</strong>
+      </div>
+      <div className="bg-black p-4 text-center text-xs text-white md:hidden">
+        <strong>FRETE GRÁTIS</strong> para todo o Nordeste!
       </div>
       <div className="mx-auto w-full max-w-6xl p-6">
         <div className="flex items-center">
