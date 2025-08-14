@@ -29,7 +29,8 @@ export function ProductListFilter({
     <div>
       <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div className="text-3xl">
-          <strong>{products.length}</strong> Produtos
+          <strong>{products.length}</strong> Produto
+          {products.length !== 1 ? 's' : ''}
         </div>
         <div className="flex w-full flex-row gap-5 md:max-w-70">
           <select
