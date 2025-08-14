@@ -39,11 +39,11 @@ export function ProductItem({ id, image, label, liked: like, price }: Product) {
             />
           )}
         </div>
-        <div className="mt-9 text-lg font-bold">{label}</div>
-        <div className="mt-3 text-2xl font-bold text-blue-600">
+        <div className="mt-9 text-lg font-semibold">{label}</div>
+        <div className="mt-3 text-2xl font-semibold text-blue-600">
           R$ {price.toFixed(2)}
         </div>
-        <div className="mt-5 text-gray-400">Em até 12X no cartão</div>
+        <div className="mt-5 text-base text-gray-400">Em até 12X no cartão</div>
       </Link>
     </div>
   )
