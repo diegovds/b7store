@@ -11,7 +11,10 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'B7Store',
+  title: {
+    default: 'B7Store',
+    template: '%s | B7Store',
+  },
   description:
     'B7Store - Loja virtual de roupas e acessórios com as melhores ofertas e novidades.',
 }
