@@ -4,6 +4,7 @@ import { useQueryString } from '@/hooks/use-querystring'
 import { Product } from '@/types/product'
 import { ChangeEvent, useState } from 'react'
 import { ProductItem } from '../product-item'
+import { FilterGroup } from './filter-group'
 
 type ProductListFilterProps = {
   products: Product[]
@@ -45,9 +46,10 @@ export function ProductListFilter({ products }: ProductListFilterProps) {
       </div>
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
         <div
-          className={`flex-1 md:max-w-70 ${filterOpened ? `block` : `hidden`} md:block`}
+          className={`flex-1 overflow-x-hidden overflow-y-hidden duration-300 md:max-w-70 ${filterOpened ? `max-h-screen` : `max-h-0`} md:max-h-fit`}
         >
-          Filtros
+          <FilterGroup />
+          <FilterGroup />
         </div>
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
           {products.map((product) => (
