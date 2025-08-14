@@ -9,7 +9,7 @@ async function main() {
   console.log('Checking if database has already been seeded...')
   const existingCategory = await prisma.category.findFirst({
     where: {
-      slug: 'camisas',
+      slug: 'camisetas',
     },
   })
 
@@ -27,8 +27,8 @@ async function main() {
   console.log('Creating category...')
   const category = await prisma.category.create({
     data: {
-      slug: 'camisas',
-      name: 'Camisas',
+      slug: 'camisetas',
+      name: 'Camisetas',
     },
   })
   console.log('✅ Category created:', category.name)
