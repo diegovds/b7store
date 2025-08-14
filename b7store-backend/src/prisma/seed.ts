@@ -204,6 +204,40 @@ async function main() {
 
   product = await prisma.product.create({
     data: {
+      label: 'Boné 1',
+      price: 39.9,
+      description: 'Boné com design B7Web com cores escuras',
+      categoryId: category2.id,
+    },
+  })
+  for (let i = 1; i <= 3; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_6_${i}.png`,
+      },
+    })
+  }
+
+  product = await prisma.product.create({
+    data: {
+      label: 'Boné 2',
+      price: 29.9,
+      description: 'Boné com design B7Web, para programadores estilosos',
+      categoryId: category2.id,
+    },
+  })
+  for (let i = 1; i <= 3; i++) {
+    await prisma.productImage.create({
+      data: {
+        productId: product.id,
+        url: `product_7_${i}.png`,
+      },
+    })
+  }
+
+  product = await prisma.product.create({
+    data: {
       label: 'Camisa Base da Web',
       price: 49.9,
       description: 'Camisa com design das tecnologias base da web.',
