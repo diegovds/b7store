@@ -1,10 +1,13 @@
+import { ProductListSkeleton } from '@/components/home/product-list-skeleton'
 import { ImageSlider } from '@/components/product/image-slider'
 import { ProductDescription } from '@/components/product/product-description'
 import { ProductDetails } from '@/components/product/product-details'
+import { RelatedProducts } from '@/components/product/related-products'
 import { getProductId } from '@/http/api'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
 type ProductPageProps = {
   params: Promise<{ id: string }>
@@ -47,9 +50,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <ProductDetails product={product} />
       </div>
       <ProductDescription text={product.description} />
-      <div>
-        <h3>Você também pode gostar:</h3>
-      </div>
+      <Suspense fallback={<ProductListSkeleton text={false} />}>
+        <RelatedProducts id={product.id.toString()} />
+      </Suspense>
     </div>
   )
 }
