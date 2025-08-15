@@ -72,6 +72,7 @@ export type GetProductId200ProductAnyOf = {
   price: number
   description: GetProductId200ProductAnyOfDescription
   images: string[]
+  liked: boolean
 }
 
 export type GetProductId200Product = GetProductId200ProductAnyOf | null
