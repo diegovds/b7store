@@ -33,7 +33,7 @@ export async function generateMetadata({
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params
 
-  const { product } = await getProductId(id)
+  const { product, category } = await getProductId(id)
 
   if (!product) {
     return notFound()
@@ -43,7 +43,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <div>
       <div className="mt-2 mb-8 text-base text-gray-500 md:mt-6 md:mb-12">
         <Link href="/">Home</Link> &gt;{' '}
-        <Link href="/categories/camisetas">Camisetas</Link> &gt; {product.label}
+        <Link href={`/categories/${category?.slug}`}>{category?.name}</Link>{' '}
+        &gt; {product.label}
       </div>
       <div className="flex flex-col gap-6 md:flex-row md:gap-32">
         <ImageSlider images={product.images} />
