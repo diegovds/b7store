@@ -16,13 +16,13 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   }
 
   return (
-    <div className="flex-1">
-      <div className="mb-2 text-xs text-gray-500">Cód. {product.id}</div>
-      <div className="mb-6 text-3xl font-medium">{product.label}</div>
-      <div className="mb-2 text-4xl font-medium text-blue-600">
+    <div className="flex-1 space-y-4">
+      <div className="text-xs text-gray-500">Cód. {product.id}</div>
+      <div className="text-2xl font-medium md:text-3xl">{product.label}</div>
+      <div className="text-4xl font-medium text-blue-600">
         R$ {product.price.toFixed(2)}
       </div>
-      <div className="mb-6 text-sm text-gray-500">Em até 12X no cartão</div>
+      <div className="text-sm text-gray-500">Em até 12X no cartão</div>
       <div className="flex gap-4">
         <button
           onClick={addToCart}
@@ -52,6 +52,21 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             width={24}
             height={24}
           />
+        </div>
+      </div>
+      <div className="mt-10 border-t border-gray-200 pt-10">
+        <div className="mb-4 text-base text-gray-500">
+          Calcular frete e prazo
+        </div>
+        <div className="flex flex-row gap-6">
+          <input
+            type="text"
+            className="w-[359px] rounded-sm border border-gray-200 px-4 py-3 text-base outline-none"
+            placeholder="Digite aqui o CEP"
+          />
+          <button className="cursor-pointer rounded-sm border-0 bg-blue-600 px-8 py-4 text-white duration-300 hover:bg-blue-700">
+            Calcular
+          </button>
         </div>
       </div>
     </div>

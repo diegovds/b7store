@@ -10,7 +10,9 @@ export async function RelatedProducts({ id }: RelatedProductsProps) {
 
   return (
     <div className="my-10">
-      <h3 className="text-2xl font-medium">Você também vai gostar</h3>
+      <h3 className="text-xl font-medium md:text-2xl">
+        Você também vai gostar
+      </h3>
       <ProductList list={products} />
     </div>
   )

@@ -15,7 +15,9 @@ export function ProductDescription({ text }: ProductDescriptionProps) {
       <div
         className={`flex items-center justify-between ${opened ? 'border-b pb-7' : 'border-b-0'} border-b-gray-200`}
       >
-        <div className="text-2xl font-medium">Informações do produto</div>
+        <div className="text-base font-medium md:text-2xl">
+          Informações do produto
+        </div>
         <div
           onClick={() => setOpened(!opened)}
           className="flex size-14 cursor-pointer items-center justify-center rounded-sm border border-gray-200"
@@ -30,7 +32,7 @@ export function ProductDescription({ text }: ProductDescriptionProps) {
         </div>
       </div>
       <div
-        className={`overflow-y-hidden text-base text-gray-500 duration-300 ${opened ? 'mt-7 max-h-screen' : 'max-h-0'}`}
+        className={`overflow-y-hidden text-sm text-gray-500 duration-300 md:text-base ${opened ? 'mt-7 max-h-screen' : 'max-h-0'}`}
       >
         {text}
       </div>
