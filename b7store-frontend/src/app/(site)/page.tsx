@@ -29,10 +29,10 @@ export default async function Home() {
           description="No período de 30 dias."
         />
       </div>
-      <Suspense fallback={<ProductListSkeleton />}>
+      <Suspense fallback={<ProductListSkeleton text={true} />}>
         <MostViewedProducts />
       </Suspense>
-      <Suspense fallback={<ProductListSkeleton />}>
+      <Suspense fallback={<ProductListSkeleton text={true} />}>
         <MostSoldProducts />
       </Suspense>
     </div>
