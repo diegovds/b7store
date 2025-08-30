@@ -8,7 +8,7 @@ type CartProductItemProps = {
 }
 
 export const CartProductItem = ({ item }: CartProductItemProps) => {
-  const cartStore = useCartStore((state) => state)
+  const { updateQuantity, removeItem } = useCartStore()
 
   const updateCookie = async () => {
     const updatedCart = useCartStore.getState().cart
@@ -17,7 +17,7 @@ export const CartProductItem = ({ item }: CartProductItemProps) => {
 
   const handleMinus = async () => {
     if (item.quantity > 1) {
-      cartStore.updateQuantity(item.product.id, item.quantity - 1)
+      updateQuantity(item.product.id, item.quantity - 1)
       await updateCookie()
     } else {
       await handleRemove()
@@ -25,12 +25,12 @@ export const CartProductItem = ({ item }: CartProductItemProps) => {
   }
 
   const handlePlus = async () => {
-    cartStore.updateQuantity(item.product.id, item.quantity + 1)
+    updateQuantity(item.product.id, item.quantity + 1)
     await updateCookie()
   }
 
   const handleRemove = async () => {
-    cartStore.removeItem(item.product.id)
+    removeItem(item.product.id)
     await updateCookie()
   }
 
