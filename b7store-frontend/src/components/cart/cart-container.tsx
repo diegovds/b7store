@@ -17,7 +17,7 @@ export const CartContainer = ({
   const cartStore = useCartStore((state) => state)
 
   useEffect(() => {
-    cartStore.clearShipping()
+    // cartStore.clearShipping()
   }, [cartStore])
 
   return (
