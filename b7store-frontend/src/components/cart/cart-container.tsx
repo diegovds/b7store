@@ -15,11 +15,11 @@ export const CartContainer = ({
   initialCartProducts,
   initialSubtotal,
 }: CartContainerProps) => {
-  const cartStore = useCartStore((state) => state)
+  const { cart, clearShipping } = useCartStore()
 
   useEffect(() => {
-    // cartStore.clearShipping()
-  }, [cartStore])
+    clearShipping()
+  }, [clearShipping])
 
   return (
     <div>
@@ -33,8 +33,8 @@ export const CartContainer = ({
         <div className="text-base">
           Seu carrinho de compras{' '}
           <span className="text-gray-500">
-            ( {cartStore.cart.length} ite
-            {cartStore.cart.length !== 1 ? 'ns' : 'm'} )
+            ( {cart.length} ite
+            {cart.length !== 1 ? 'ns' : 'm'} )
           </span>
         </div>
       </div>
