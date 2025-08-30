@@ -4,6 +4,7 @@ import { useCartStore } from '@/store/cart'
 import { CartListItem } from '@/types/cart-list-item'
 import Image from 'next/image'
 import { useEffect } from 'react'
+import { CartProductList } from './cart-product-list'
 
 type CartContainerProps = {
   initialCartProducts: CartListItem[]
@@ -38,8 +39,10 @@ export const CartContainer = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 md:flex-row">
-        <div className="flex-1">Produtos</div>
+      <div className="mt-9 flex flex-col gap-8 md:flex-row">
+        <div className="flex-1">
+          <CartProductList initialList={initialCartProducts} />
+        </div>
         <div className="flex-1 md:max-w-sm">Info</div>
       </div>
     </div>
