@@ -13,10 +13,10 @@ type ProductDetailsProps = {
 
 export function ProductDetails({ product }: ProductDetailsProps) {
   const [liked, setLiked] = useState(product.liked)
-  const cartStore = useCartStore((state) => state)
+  const { addItem } = useCartStore()
 
   const addToCart = async () => {
-    cartStore.addItem({ productId: product.id, quantity: 1 })
+    addItem({ productId: product.id, quantity: 1 })
     const updatedCart = useCartStore.getState().cart
     await setCartState(updatedCart)
     redirect('/cart')
