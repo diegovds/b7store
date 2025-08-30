@@ -26,7 +26,7 @@ export const useCartStore = create<CartState>((set) => ({
   selectedAdressId: null,
   addItem: ({ productId, quantity }) =>
     set((state) => {
-      const existing = state.cart.filter((item) => item.productId === productId)
+      const existing = state.cart.find((item) => item.productId === productId)
       let newCart
 
       if (existing) {
