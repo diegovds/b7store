@@ -19,7 +19,7 @@ export const FinishPurchaseButton = () => {
         href={'/login'}
         className="block w-full cursor-pointer rounded-sm border-0 bg-blue-600 px-6 py-5 text-center text-white"
       >
-        Fazer login para finalizar
+        Faça login para finalizar
       </Link>
     )
   }
