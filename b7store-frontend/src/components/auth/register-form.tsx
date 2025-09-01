@@ -137,7 +137,7 @@ export const RegisterForm = () => {
             disabled={form.formState.isSubmitting}
             className="mt-2 w-full cursor-pointer rounded bg-blue-600 py-2 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
           >
-            {form.formState.isSubmitting ? 'Entrando...' : 'Entrar'}
+            {form.formState.isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
           </button>
         </form>
       </Form>

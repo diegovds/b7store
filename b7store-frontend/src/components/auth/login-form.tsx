@@ -41,7 +41,7 @@ export const LoginForm = () => {
     const res = await login(data)
 
     if (res.error) {
-      alert('Ocorreu um erro.')
+      alert(res.error) // passar para sonner
     } else if (res.token) {
       await setAuthCookie(res.token)
       setToken(res.token)
