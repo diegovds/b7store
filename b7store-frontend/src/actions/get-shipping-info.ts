@@ -1,5 +1,7 @@
 'use server'
 
+import { getCartShipping } from '@/http/api'
+
 type ShippingInfoResponse = {
   zipcode: string
   cost: number
@@ -9,11 +11,11 @@ type ShippingInfoResponse = {
 export const getShippingInfo = async (
   zipcode: string,
 ): Promise<ShippingInfoResponse | false> => {
-  // todo
+  try {
+    const response = await getCartShipping({ zipcode })
 
-  return {
-    zipcode,
-    cost: 100,
-    days: 4,
-  }
+    return !response.error ? response : false
+  } catch {}
+
+  return false
 }
