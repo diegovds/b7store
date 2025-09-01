@@ -5,256 +5,179 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Starting database seeding...')
 
-  // Check if seeding has already been done
-  console.log('Checking if database has already been seeded...')
   const existingCategory = await prisma.category.findFirst({
-    where: {
-      slug: 'camisetas',
-    },
+    where: { slug: 'camisetas' },
   })
 
   if (existingCategory) {
-    console.log(
-      '✅ Database has already been seeded. Skipping to avoid duplicate records.',
-    )
-    console.log('Found existing category:', existingCategory.name)
+    console.log('✅ Database has already been seeded. Skipping.')
     return
   }
 
   console.log('📝 No existing data found. Proceeding with seeding...')
 
-  console.log('Creating category...')
-  // Create Category id 1
+  // Categories
   const category1 = await prisma.category.create({
-    data: {
-      slug: 'camisetas',
-      name: 'Camisetas',
-    },
+    data: { slug: 'camisetas', name: 'Camisetas' },
   })
-  console.log('✅ Category created:', category1.name)
-
-  // Create Category id 2
   const category2 = await prisma.category.create({
-    data: {
-      slug: 'bones',
-      name: 'Bonés',
-    },
+    data: { slug: 'bones', name: 'Bonés' },
   })
-  console.log('✅ Category created:', category2.name)
 
-  // Create CategoryMetadata
-  console.log('Creating category metadata...')
+  // CategoryMetadata
   const categoryMetadata = await prisma.categoryMetadata.create({
-    data: {
-      id: 'tech',
-      name: 'Tecnologia',
-      categoryId: category1.id,
-    },
+    data: { id: 'tech', name: 'Tecnologia', categoryId: category1.id },
   })
-  console.log('✅ Category metadata created:', categoryMetadata.name)
 
-  // Create Banners
-  console.log('Creating banners...')
-  const banners = await Promise.all([
+  // Banners
+  await Promise.all([
     prisma.banner.create({
-      data: {
-        img: 'banner_promo_1.jpg',
-        link: '/categories/camisas',
-      },
+      data: { img: 'banner_promo_1.jpg', link: '/categories/camisas' },
     }),
     prisma.banner.create({
-      data: {
-        img: 'banner_promo_2.jpg',
-        link: '/categories/algo',
-      },
+      data: { img: 'banner_promo_2.jpg', link: '/categories/algo' },
     }),
     prisma.banner.create({
-      data: {
-        img: 'banner_promo_3.png',
-        link: '/categories/node',
-      },
+      data: { img: 'banner_promo_3.png', link: '/categories/node' },
     }),
     prisma.banner.create({
-      data: {
-        img: 'banner_promo_4.png',
-        link: '/categories/php',
-      },
+      data: { img: 'banner_promo_4.png', link: '/categories/php' },
     }),
   ])
-  console.log('✅ Banners created:', banners.length)
 
-  // Create MetadataValues
-  console.log('Creating metadata values...')
-  const metadataValues = await Promise.all([
+  // MetadataValues
+  await Promise.all([
     prisma.metadataValue.create({
-      data: {
-        id: 'node',
-        label: 'Node',
-        categoryMetadataId: 'tech',
-      },
+      data: { id: 'node', label: 'Node', categoryMetadataId: 'tech' },
     }),
     prisma.metadataValue.create({
-      data: {
-        id: 'react',
-        label: 'React',
-        categoryMetadataId: 'tech',
-      },
+      data: { id: 'react', label: 'React', categoryMetadataId: 'tech' },
     }),
     prisma.metadataValue.create({
-      data: {
-        id: 'python',
-        label: 'Python',
-        categoryMetadataId: 'tech',
-      },
+      data: { id: 'python', label: 'Python', categoryMetadataId: 'tech' },
     }),
     prisma.metadataValue.create({
-      data: {
-        id: 'php',
-        label: 'PHP',
-        categoryMetadataId: 'tech',
-      },
+      data: { id: 'php', label: 'PHP', categoryMetadataId: 'tech' },
     }),
   ])
-  console.log('✅ Metadata values created:', metadataValues.length)
 
-  // Create Products
-  let product = await prisma.product.create({
-    data: {
-      label: 'Camisa React',
-      price: 94.5,
-      description: 'Camisa com logo do React, ideal para front-end developers',
-      categoryId: category1.id,
-    },
-  })
-  for (let i = 1; i <= 3; i++) {
-    await prisma.productImage.create({
+  console.log('✅ Metadata values created')
+
+  // Helper function para criar produto com imagens e metadata
+  async function createProductWithMetadata(data: {
+    label: string
+    price: number
+    description: string
+    categoryId: number
+    images: string[]
+    metadataIds?: string[]
+  }) {
+    const product = await prisma.product.create({
       data: {
-        productId: product.id,
-        url: `product_1_${i}.png`,
+        label: data.label,
+        price: data.price,
+        description: data.description,
+        categoryId: data.categoryId,
       },
     })
+
+    for (const url of data.images) {
+      await prisma.productImage.create({
+        data: { productId: product.id, url },
+      })
+    }
+
+    if (data.metadataIds && data.metadataIds.length > 0) {
+      for (const metadataId of data.metadataIds) {
+        await prisma.productMetadata.create({
+          data: {
+            productId: product.id,
+            categoryMetadataId: categoryMetadata.id,
+            metadataValueId: metadataId,
+          },
+        })
+      }
+    }
   }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Camisa RN',
-      price: 89.9,
-      description:
-        'Camisa com estampa de React Native, perfeita para desenvolvedores',
-      categoryId: category1.id,
-    },
-  })
-  await prisma.productImage.create({
-    data: {
-      productId: product.id,
-      url: 'product_2_1.png',
-    },
+  // Criando produtos com imagens e metadata
+  await createProductWithMetadata({
+    label: 'Camisa React',
+    price: 94.5,
+    description: 'Camisa com logo do React, ideal para front-end developers',
+    categoryId: category1.id,
+    images: ['product_1_1.png', 'product_1_2.png', 'product_1_3.png'],
+    metadataIds: ['react'],
   })
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Camisa PHP',
-      price: 69.9,
-      description: 'Camisa com estampa PHP, para desenvolvedores web',
-      categoryId: category1.id,
-    },
+  await createProductWithMetadata({
+    label: 'Camisa RN',
+    price: 89.9,
+    description:
+      'Camisa com estampa de React Native, perfeita para desenvolvedores',
+    categoryId: category1.id,
+    images: ['product_2_1.png'],
+    metadataIds: ['react'],
   })
-  for (let i = 1; i <= 2; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_3_${i}.png`,
-      },
-    })
-  }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Camisa Node',
-      price: 79.9,
-      description: 'Camisa com design Node, para programadores Node',
-      categoryId: category1.id,
-    },
+  await createProductWithMetadata({
+    label: 'Camisa PHP',
+    price: 69.9,
+    description: 'Camisa com estampa PHP, para desenvolvedores web',
+    categoryId: category1.id,
+    images: ['product_3_1.png', 'product_3_2.png'],
+    metadataIds: ['php'],
   })
-  for (let i = 1; i <= 2; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_4_${i}.png`,
-      },
-    })
-  }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Camisa Laravel',
-      price: 59.9,
-      description: 'Camisa com design Laravel, para programadores Laravel',
-      categoryId: category1.id,
-    },
+  await createProductWithMetadata({
+    label: 'Camisa Node',
+    price: 79.9,
+    description: 'Camisa com design Node, para programadores Node',
+    categoryId: category1.id,
+    images: ['product_4_1.png', 'product_4_2.png'],
+    metadataIds: ['node'],
   })
-  for (let i = 1; i <= 4; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_5_${i}.png`,
-      },
-    })
-  }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Boné 1',
-      price: 39.9,
-      description: 'Boné com design B7Web com cores escuras',
-      categoryId: category2.id,
-    },
+  await createProductWithMetadata({
+    label: 'Camisa Laravel',
+    price: 59.9,
+    description: 'Camisa com design Laravel, para programadores Laravel',
+    categoryId: category1.id,
+    images: [
+      'product_5_1.png',
+      'product_5_2.png',
+      'product_5_3.png',
+      'product_5_4.png',
+    ],
+    metadataIds: ['php'],
   })
-  for (let i = 1; i <= 3; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_6_${i}.png`,
-      },
-    })
-  }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Boné 2',
-      price: 29.9,
-      description: 'Boné com design B7Web, para programadores estilosos',
-      categoryId: category2.id,
-    },
+  await createProductWithMetadata({
+    label: 'Boné 1',
+    price: 39.9,
+    description: 'Boné com design B7Web com cores escuras',
+    categoryId: category2.id,
+    images: ['product_6_1.png', 'product_6_2.png', 'product_6_3.png'],
   })
-  for (let i = 1; i <= 3; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_7_${i}.png`,
-      },
-    })
-  }
 
-  product = await prisma.product.create({
-    data: {
-      label: 'Camisa Base da Web',
-      price: 49.9,
-      description: 'Camisa com design das tecnologias base da web.',
-      categoryId: category1.id,
-    },
+  await createProductWithMetadata({
+    label: 'Boné 2',
+    price: 29.9,
+    description: 'Boné com design B7Web, para programadores estilosos',
+    categoryId: category2.id,
+    images: ['product_7_1.png', 'product_7_2.png', 'product_7_3.png'],
   })
-  for (let i = 1; i <= 3; i++) {
-    await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: `product_8_${i}.png`,
-      },
-    })
-  }
 
-  console.log('✅ Products created')
+  await createProductWithMetadata({
+    label: 'Camisa Base da Web',
+    price: 49.9,
+    description: 'Camisa com design das tecnologias base da web.',
+    categoryId: category1.id,
+    images: ['product_8_1.png', 'product_8_2.png', 'product_8_3.png'],
+    metadataIds: ['node', 'react', 'php', 'python'],
+  })
 
+  console.log('✅ Products with metadata created')
   console.log('🎉 Database seeding completed successfully!')
 }
 
