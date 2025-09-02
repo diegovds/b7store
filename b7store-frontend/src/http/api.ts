@@ -339,12 +339,6 @@ export type PostCartFinish400 = {
   error: string
 }
 
-export type PostWebhookStripe200Error = string | null
-
-export type PostWebhookStripe200 = {
-  error: PostWebhookStripe200Error
-}
-
 export type GetOrdersSessionParams = {
   session_id: string
 }
@@ -362,6 +356,15 @@ export type GetOrdersSession404 = {
 
 export type GetOrders200Error = string | null
 
+export type GetOrders200OrdersItemStatus =
+  (typeof GetOrders200OrdersItemStatus)[keyof typeof GetOrders200OrdersItemStatus]
+
+export const GetOrders200OrdersItemStatus = {
+  pending: 'pending',
+  paid: 'paid',
+  cancelled: 'cancelled',
+} as const
+
 export type GetOrders200OrdersItem = {
   /**
    * @minimum 0
@@ -369,7 +372,7 @@ export type GetOrders200OrdersItem = {
    * @exclusiveMinimum
    */
   id: number
-  status: string
+  status: GetOrders200OrdersItemStatus
   /**
    * @minimum 0
    * @exclusiveMinimum
@@ -384,6 +387,15 @@ export type GetOrders200 = {
 }
 
 export type GetOrdersId200Error = string | null
+
+export type GetOrdersId200OrderStatus =
+  (typeof GetOrdersId200OrderStatus)[keyof typeof GetOrdersId200OrderStatus]
+
+export const GetOrdersId200OrderStatus = {
+  pending: 'pending',
+  paid: 'paid',
+  cancelled: 'cancelled',
+} as const
 
 export type GetOrdersId200OrderShippingZipcode = string | null
 
@@ -445,7 +457,7 @@ export type GetOrdersId200Order = {
    * @exclusiveMinimum
    */
   id: number
-  status: string
+  status: GetOrdersId200OrderStatus
   /**
    * @minimum 0
    * @exclusiveMinimum
@@ -477,6 +489,24 @@ export type GetOrdersId200 = {
 
 export type GetOrdersId404 = {
   error: string
+}
+
+export const getPostWebhookStripeUrl = () => {
+  return `http://localhost:4444/webhook/stripe`
+}
+
+export const postWebhookStripe = async (
+  options?: RequestInit,
+): Promise<null> => {
+  const res = await fetch(getPostWebhookStripeUrl(), {
+    ...options,
+    method: 'POST',
+  })
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: null = body ? JSON.parse(body) : {}
+
+  return data
 }
 
 export const getGetPingUrl = () => {
@@ -803,30 +833,6 @@ export const postCartFinish = async (
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
   const data: PostCartFinish200 = body ? JSON.parse(body) : {}
-
-  return data
-}
-
-/**
- * @summary Handle Stripe payment events and update order statuses.
- */
-export const getPostWebhookStripeUrl = () => {
-  return `http://localhost:4444/webhook/stripe`
-}
-
-export const postWebhookStripe = async (
-  postWebhookStripeBody: string,
-  options?: RequestInit,
-): Promise<PostWebhookStripe200> => {
-  const res = await fetch(getPostWebhookStripeUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(postWebhookStripeBody),
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostWebhookStripe200 = body ? JSON.parse(body) : {}
 
   return data
 }
