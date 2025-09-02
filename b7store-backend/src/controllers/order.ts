@@ -6,7 +6,7 @@ import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 
 const orderSchema = z.object({
   id: z.number().int().positive(),
-  status: z.string(),
+  status: z.enum(['pending', 'paid', 'cancelled']),
   total: z.number().positive(),
   createdAt: z.instanceof(Date),
 })
