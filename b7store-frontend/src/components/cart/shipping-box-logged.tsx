@@ -1,9 +1,10 @@
 'use client'
 
 import { getShippingInfo } from '@/actions/get-shipping-info'
-import { getUserAddresses, GetUserAddresses200AddressItem } from '@/http/api'
+import { getUserAddresses } from '@/http/api'
 import { useAuthStore } from '@/store/auth'
 import { useCartStore } from '@/store/cart'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import {
   Select,
@@ -12,9 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import { AddressModal } from './address-modal'
+
+type UseAddressesProps = {
+  token: string | null
+  hydrated: boolean
+}
 
 export const ShippingBoxLogged = () => {
   const { token, hydrated } = useAuthStore()
+  const [modalOpened, setModalOpened] = useState(false)
   const {
     shippingZipcode,
     clearShipping,
@@ -24,24 +32,22 @@ export const ShippingBoxLogged = () => {
     setShippingZipcode,
     setSelectedAddressId,
   } = useCartStore()
-  const [addresses, setAddresses] = useState<
-    GetUserAddresses200AddressItem[] | []
-  >([])
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      const response = await getUserAddresses({
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (response.address) {
-        setAddresses(response.address)
-      }
-    }
+  function useAddresses({ token, hydrated }: UseAddressesProps) {
+    return useQuery({
+      queryKey: ['user-addresses', token],
+      queryFn: async () => {
+        if (!token) return []
+        const response = await getUserAddresses({
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        return response.address ?? []
+      },
+      enabled: !!token && hydrated,
+    })
+  }
 
-    if (token && hydrated) {
-      fetchAddresses()
-    }
-  }, [token, hydrated])
+  const { data: addresses = [] } = useAddresses({ token, hydrated })
 
   useEffect(() => {
     const updateShippingInfo = async () => {
@@ -69,9 +75,9 @@ export const ShippingBoxLogged = () => {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col gap-4">
       <Select onValueChange={handleSelectAddress}>
-        <SelectTrigger className="h-full flex-1 px-6 py-8">
+        <SelectTrigger className="w-full px-6 py-8">
           <SelectValue placeholder="Selecione um endereço" />
         </SelectTrigger>
         <SelectContent className="rounded-sm border border-gray-200 bg-white">
@@ -82,9 +88,13 @@ export const ShippingBoxLogged = () => {
           ))}
         </SelectContent>
       </Select>
-      <button className="cursor-pointer rounded-sm border-0 bg-blue-600 px-6 py-5 text-white">
-        +
+      <button
+        onClick={() => setModalOpened(true)}
+        className="text-blck cursor-pointer"
+      >
+        Adicionar novo endereço
       </button>
+      <AddressModal open={modalOpened} onClose={() => setModalOpened(false)} />
     </div>
   )
 }
