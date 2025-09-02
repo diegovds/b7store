@@ -1,66 +1,53 @@
-import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
-import z from 'zod'
+import { FastifyInstance } from 'fastify'
+import rawBody from 'fastify-raw-body'
+import Stripe from 'stripe'
 import { env } from '../env'
-import { getConstructEvent } from '../libs/stripe'
 import { updateOrderStatus } from '../services/order'
 
-export const stripe: FastifyPluginAsyncZod = async (app) => {
-  // Parser customizado apenas para application/json
-  app.addContentTypeParser(
-    'application/json',
-    { parseAs: 'buffer' },
-    function (_req, body, done) {
-      done(null, body.toString())
-    },
-  )
+const stripe = new Stripe(env.STRIPE_SECRET_KEY)
 
-  app.post(
-    '/webhook/stripe',
-    {
-      schema: {
-        summary: 'Handle Stripe payment events and update order statuses.',
-        tags: ['stripe'],
-        security: [],
-        body: z.string(),
-        headers: z.object({
-          'stripe-signature': z.string(),
-        }),
-        response: {
-          200: z.object({
-            error: z.string().nullable(),
-          }),
-        },
-      },
-    },
-    async (request, reply) => {
-      const sig = request.headers['stripe-signature']
-      const webhookKey = env.STRIPE_WEBHOOK_SECRET
-      const rawBody = request.body
+export async function registerStripeWebhook(app: FastifyInstance) {
+  await app.register(rawBody, {
+    field: 'rawBody',
+    global: false,
+    encoding: false,
+    runFirst: true,
+  })
 
+  app.route({
+    method: 'POST',
+    url: '/webhook/stripe',
+    config: {
+      rawBody: true,
+    },
+    handler: async (request, reply) => {
+      const sig = request.headers['stripe-signature'] as string
+      const rawBody = request.rawBody as Buffer
+      const webhookSecret = env.STRIPE_WEBHOOK_SECRET
+
+      let event: Stripe.Event
       try {
-        const event = await getConstructEvent(rawBody, sig, webhookKey)
-
-        if (event) {
-          const session = event.data.object as any
-          const orderId = parseInt(session.metadata?.orderId)
-
-          switch (event.type) {
-            case 'checkout.session.completed':
-            case 'checkout.session.async_payment_succeeded':
-              await updateOrderStatus(orderId, 'paid')
-              break
-            case 'checkout.session.expired':
-            case 'checkout.session.async_payment_failed':
-              await updateOrderStatus(orderId, 'cancelled')
-              break
-          }
-        }
-
-        return reply.status(200).send({ error: null })
+        event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
       } catch (err) {
-        console.error('Stripe webhook error:', err)
+        console.error('Invalid signature:', err)
         return reply.status(400).send({ error: 'Invalid signature' })
       }
+
+      const session = event.data.object as any
+      const orderId = parseInt(session.metadata?.orderId)
+
+      switch (event.type) {
+        case 'checkout.session.completed':
+        case 'checkout.session.async_payment_succeeded':
+          await updateOrderStatus(orderId, 'paid')
+          break
+        case 'checkout.session.expired':
+        case 'checkout.session.async_payment_failed':
+          await updateOrderStatus(orderId, 'cancelled')
+          break
+      }
+
+      return reply.status(200).send({ received: true })
     },
-  )
+  })
 }

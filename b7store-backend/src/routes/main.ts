@@ -9,7 +9,6 @@ import {
   getRelatedProduct,
 } from '../controllers/product'
 import { addAddress, getAddresses, login, register } from '../controllers/user'
-import { stripe } from '../controllers/webhook'
 
 export async function routes(app: FastifyInstance) {
   app.get('/ping', async (request, reply) => {
@@ -28,7 +27,6 @@ export async function routes(app: FastifyInstance) {
   app.register(addAddress)
   app.register(getAddresses)
   app.register(finish)
-  app.register(stripe)
   app.register(getOrderBySessionId)
   app.register(listOrders)
   app.register(getOrder)

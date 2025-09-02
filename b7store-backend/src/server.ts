@@ -12,6 +12,7 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import path from 'path'
+import { registerStripeWebhook } from './controllers/webhook'
 import { env } from './env'
 import { routes } from './routes/main'
 
@@ -93,6 +94,7 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+app.register(registerStripeWebhook)
 // Rotas
 app.register(routes)
 

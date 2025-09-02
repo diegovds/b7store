@@ -59,7 +59,7 @@ export const createStripeCheckoutSession = async ({
 }
 
 export const getConstructEvent = async (
-  rawBody: string,
+  rawBody: Buffer,
   sig: string,
   webhookKey: string,
 ) => {
