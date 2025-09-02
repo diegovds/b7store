@@ -282,6 +282,7 @@ export type GetUserAddresses200Error = string | null
 export type GetUserAddresses200AddressItemComplement = string | null
 
 export type GetUserAddresses200AddressItem = {
+  id: number
   /** @pattern ^\d{5}-\d{3}$ */
   zipcode: string
   /** @minLength 1 */
@@ -295,7 +296,6 @@ export type GetUserAddresses200AddressItem = {
   /** @minLength 1 */
   country: string
   complement: GetUserAddresses200AddressItemComplement
-  id: number
 }
 
 export type GetUserAddresses200 = {
