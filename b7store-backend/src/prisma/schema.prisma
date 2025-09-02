@@ -112,10 +112,16 @@ model MetadataValue {
   categoryMetadata   CategoryMetadata @relation(fields: [categoryMetadataId], references: [id])
 }
 
+enum OrderStatus {
+  pending
+  paid
+  cancelled
+}
+
 model Order {
   id                 Int            @id @default(autoincrement())
   userId             Int
-  status             String         @default("pending")
+  status             OrderStatus    @default(pending)
   total              Float
   shippingCost       Float          @default(0)
   shippingDays       Int            @default(0)
