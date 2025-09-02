@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface CartSuccessPageProps {
-  searchParams: { session_id?: string }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function PurchaseCompletedPage({
@@ -12,9 +12,9 @@ export default async function PurchaseCompletedPage({
 }: CartSuccessPageProps) {
   const cookieStore = await cookies()
   const token = cookieStore.get('auth_token')
-  const sessionId = searchParams.session_id
+  const sessionId = (await searchParams).session_id
 
-  if (!sessionId || !token) return notFound()
+  if (typeof sessionId !== 'string' || !token) return notFound()
 
   const { error, orderId: id } = await getOrdersSession({
     session_id: sessionId,
