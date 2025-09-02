@@ -161,7 +161,23 @@ export const getAddresses: FastifyPluginAsyncZod = async (app) => {
         response: {
           200: z.object({
             error: z.string().nullable(),
-            address: z.array(addressSchema.extend({ id: z.number() })),
+            address: z.array(
+              z.object({
+                id: z.number(),
+                zipcode: z
+                  .string()
+                  .regex(
+                    /^\d{5}-\d{3}$/,
+                    'O CEP deve estar no formato 12345-678',
+                  ),
+                street: z.string().min(1, 'Rua é obrigatória'),
+                number: z.string().min(1, 'Número é obrigatório'),
+                city: z.string().min(1, 'Cidade é obrigatória'),
+                state: z.string().min(1, 'Estado é obrigatório'),
+                country: z.string().min(1, 'País é obrigatório'),
+                complement: z.string().nullable(),
+              }),
+            ),
           }),
         },
       },
