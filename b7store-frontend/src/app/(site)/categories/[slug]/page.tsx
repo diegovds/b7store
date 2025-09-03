@@ -46,7 +46,7 @@ export default async function CategoriesPage({
     orderBy: order,
     limit: '8',
     metadata: JSON.stringify(filters),
-    categoryId: category?.id,
+    categoryId: category?.id.toString(),
   })
 
   if (error) {
