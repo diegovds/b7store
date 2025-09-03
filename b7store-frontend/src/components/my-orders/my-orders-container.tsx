@@ -21,14 +21,16 @@ export const MyOrdersContainer = ({
       <div className="flex flex-col">
         <div className="flex gap-2 py-4">
           <button
+            disabled={viewOrders}
             onClick={() => setViewOrders(true)}
-            className="cursor-pointer bg-blue-200"
+            className={`cursor-pointer rounded-sm border-0 px-4 py-2 text-white duration-300 hover:bg-blue-700 disabled:cursor-default ${viewOrders ? 'bg-black disabled:hover:bg-black' : 'bg-blue-600 disabled:hover:bg-blue-600'}`}
           >
             Meus Pedidos
           </button>
           <button
+            disabled={!viewOrders}
             onClick={() => setViewOrders(false)}
-            className="cursor-pointer bg-blue-200"
+            className={`cursor-pointer rounded-sm border-0 px-4 py-2 text-white duration-300 hover:bg-blue-700 disabled:cursor-default ${!viewOrders ? 'bg-black disabled:hover:bg-black' : 'bg-blue-600 disabled:hover:bg-blue-600'}`}
           >
             Meus Endereços
           </button>
