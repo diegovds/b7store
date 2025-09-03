@@ -1,9 +1,9 @@
 import { MyOrdersContainer } from '@/components/my-orders/my-orders-container'
 import {
-    getOrders,
-    getOrdersId,
-    GetOrdersId200Order,
-    getUserAddresses,
+  getOrders,
+  getOrdersId,
+  GetOrdersId200Order,
+  getUserAddresses,
 } from '@/http/api'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
