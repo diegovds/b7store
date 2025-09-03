@@ -12,7 +12,7 @@ export default async function MyOrdersPage() {
   const cookieStore = await cookies()
   const token = cookieStore.get('auth_token')
 
-  if (!token) return redirect('/')
+  if (!token) return redirect('/login')
 
   const { error, orders } = await getOrders({
     headers: { Authorization: `Bearer ${token.value}` },
