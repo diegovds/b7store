@@ -1,5 +1,6 @@
 import { getOrdersId, getOrdersSession } from '@/http/api'
 import { cookies } from 'next/headers'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -85,9 +86,22 @@ export default async function PurchaseCompletedPage({
             {order.order.orderItems.map((item) => (
               <li
                 key={item.id}
-                className="flex justify-between px-4 py-3 text-gray-700"
+                className="flex items-center justify-between gap-4 px-4 py-3 text-gray-700"
               >
-                <span>{item.product.label}</span>
+                <div className="flex items-center gap-3">
+                  {item.product.image && (
+                    <div className="rounded border border-gray-200 bg-white p-2">
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.label}
+                        width={50}
+                        height={50}
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <span>{item.product.label}</span>
+                </div>
                 <span className="font-medium">
                   R${item.price.toFixed(2)} x {item.quantity}
                 </span>
@@ -98,10 +112,7 @@ export default async function PurchaseCompletedPage({
 
         <div className="flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold text-gray-900">
           <span>Total:</span>
-          <span>
-            R$
-            {order.order.total.toFixed(2)}
-          </span>
+          <span>R${order.order.total.toFixed(2)}</span>
         </div>
 
         <div className="flex justify-between border-t border-gray-200 pt-4 text-lg font-semibold text-gray-900">
