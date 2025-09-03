@@ -1,13 +1,17 @@
 import { prisma } from '../libs/prisma'
 
+type ProductOrder = 'views' | 'selling' | 'price'
+
 interface ProductFilters {
   metadata?: { [key: string]: string }
-  order?: string
+  order?: ProductOrder
   limit?: number
+  categoryId?: number
 }
+
 export const getProducts = async (filters: ProductFilters) => {
   // Organize ORDER
-  let orderBy = {}
+  let orderBy: any = {}
   switch (filters.order) {
     case 'views':
       orderBy = { viewsCount: 'desc' }
@@ -23,8 +27,15 @@ export const getProducts = async (filters: ProductFilters) => {
       break
   }
 
-  // Organize Metadata
+  // Organize WHERE
   const where: any = {}
+
+  // Filtro por categoria
+  if (filters.categoryId) {
+    where.categoryId = filters.categoryId
+  }
+
+  // Filtro por metadata
   if (filters.metadata && typeof filters.metadata === 'object') {
     const metaFilters = []
     for (const categoryMetadataId in filters.metadata) {
