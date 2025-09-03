@@ -23,14 +23,14 @@ export const MyOrdersContainer = ({
           <button
             disabled={viewOrders}
             onClick={() => setViewOrders(true)}
-            className={`cursor-pointer rounded-sm border-0 px-4 py-2 text-white duration-300 hover:bg-blue-700 disabled:cursor-default ${viewOrders ? 'bg-black disabled:hover:bg-black' : 'bg-blue-600 disabled:hover:bg-blue-600'}`}
+            className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${viewOrders ? 'border-gray-300 opacity-65' : 'border-transparent'}`}
           >
             Meus Pedidos
           </button>
           <button
             disabled={!viewOrders}
             onClick={() => setViewOrders(false)}
-            className={`cursor-pointer rounded-sm border-0 px-4 py-2 text-white duration-300 hover:bg-blue-700 disabled:cursor-default ${!viewOrders ? 'bg-black disabled:hover:bg-black' : 'bg-blue-600 disabled:hover:bg-blue-600'}`}
+            className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${!viewOrders ? 'border-gray-300 opacity-65' : 'border-transparent'}`}
           >
             Meus Endereços
           </button>
