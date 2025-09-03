@@ -38,8 +38,8 @@ export function Banners({ list }: BannersProps) {
           <Link
             key={index}
             href={banner.link}
-            className={`absolute inset-0 duration-1000`}
-            style={{ opacity: currentImage === index ? 1 : 0 }}
+            className={`absolute inset-0`}
+            style={{ display: currentImage === index ? '' : 'none' }}
           >
             <Image
               src={banner.img}
