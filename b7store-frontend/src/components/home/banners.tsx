@@ -32,32 +32,38 @@ export function Banners({ list }: BannersProps) {
   }, [nextImage])
 
   return (
-    <div>
-      <div className="relative aspect-[3/1]">
-        {list.map((banner, index) => (
-          <Link
-            key={index}
-            href={banner.link}
-            className={`absolute inset-0`}
-            style={{ display: currentImage === index ? '' : 'none' }}
-          >
-            <Image
-              src={banner.img}
-              alt=""
-              width={1200}
-              height={400}
-              className="rounded-sm"
-            />
-          </Link>
-        ))}
+    <div className="w-full">
+      <div className="relative aspect-[3/1] overflow-hidden rounded-sm">
+        <div
+          className="flex h-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${currentImage * 100}%)` }}
+        >
+          {list.map((banner, index) => (
+            <Link
+              key={index}
+              href={banner.link}
+              className="h-full w-full flex-shrink-0"
+            >
+              <Image
+                src={banner.img}
+                alt=""
+                width={1200}
+                height={400}
+                className="h-full w-full object-cover"
+              />
+            </Link>
+          ))}
+        </div>
       </div>
+
       <div className="mt-4 flex justify-center gap-4">
-        {list.map((banner, index) => (
-          <div
+        {list.map((_, index) => (
+          <button
             key={index}
-            className="size-4 cursor-pointer rounded-full bg-blue-600 duration-1000"
-            style={{ opacity: currentImage === index ? 1 : 0.3 }}
             onClick={() => handleBannerClick(index)}
+            className={`size-4 cursor-pointer rounded-full duration-300 ${
+              currentImage === index ? 'bg-blue-600' : 'bg-gray-400'
+            }`}
           />
         ))}
       </div>
