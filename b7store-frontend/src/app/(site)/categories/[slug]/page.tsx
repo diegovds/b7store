@@ -2,7 +2,7 @@ import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getCategorySlugMetadata, getProducts } from '@/http/api'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 type CategoriesProps = {
   params: Promise<{ slug: string }>
@@ -42,11 +42,16 @@ export default async function CategoriesPage({
 
   const { category, metadata } = await getCategorySlugMetadata(slug)
   filters.order = undefined
-  const { products } = await getProducts({
+  const { products, error } = await getProducts({
     orderBy: order,
     limit: '8',
     metadata: JSON.stringify(filters),
+    categoryId: category?.id,
   })
+
+  if (error) {
+    return redirect('/')
+  }
 
   return (
     <div>
