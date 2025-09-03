@@ -32,16 +32,25 @@ async function main() {
   // Banners
   await Promise.all([
     prisma.banner.create({
-      data: { img: 'banner_promo_1.jpg', link: '/categories/camisas' },
+      data: { img: 'banner_promo_1.jpg', link: '/categories/camisetas' },
     }),
     prisma.banner.create({
-      data: { img: 'banner_promo_2.jpg', link: '/categories/algo' },
+      data: {
+        img: 'banner_promo_2.jpg',
+        link: '/categories/camisetas?tech=php',
+      },
     }),
     prisma.banner.create({
-      data: { img: 'banner_promo_3.png', link: '/categories/node' },
+      data: {
+        img: 'banner_promo_3.png',
+        link: '/categories/camisetas?tech=node',
+      },
     }),
     prisma.banner.create({
-      data: { img: 'banner_promo_4.png', link: '/categories/php' },
+      data: {
+        img: 'banner_promo_4.png',
+        link: '/categories/camisetas?tech=php',
+      },
     }),
   ])
 
@@ -52,9 +61,6 @@ async function main() {
     }),
     prisma.metadataValue.create({
       data: { id: 'react', label: 'React', categoryMetadataId: 'tech' },
-    }),
-    prisma.metadataValue.create({
-      data: { id: 'python', label: 'Python', categoryMetadataId: 'tech' },
     }),
     prisma.metadataValue.create({
       data: { id: 'php', label: 'PHP', categoryMetadataId: 'tech' },
@@ -174,7 +180,7 @@ async function main() {
     description: 'Camisa com design das tecnologias base da web.',
     categoryId: category1.id,
     images: ['product_8_1.png', 'product_8_2.png', 'product_8_3.png'],
-    metadataIds: ['node', 'react', 'php', 'python'],
+    metadataIds: ['node', 'react', 'php'],
   })
 
   console.log('✅ Products with metadata created')
