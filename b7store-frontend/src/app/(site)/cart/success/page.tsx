@@ -128,10 +128,10 @@ export default async function PurchaseCompletedPage({
 
         <div className="mt-6 text-center">
           <Link
-            href="/"
+            href="/my-orders"
             className="inline-block rounded bg-blue-600 px-6 py-2 text-white transition hover:bg-blue-700"
           >
-            Voltar à loja
+            Ir para meus pedidos
           </Link>
         </div>
       </div>
