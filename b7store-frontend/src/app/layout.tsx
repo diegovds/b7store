@@ -46,7 +46,7 @@ export default function RootLayout({
           <StoreHydration />
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <main className="mx-auto w-full max-w-6xl flex-1 p-6">
+            <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
               {children}
             </main>
             <Footer />
