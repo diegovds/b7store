@@ -68,10 +68,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <div className="flex flex-row gap-6">
           <input
             type="text"
-            className="w-[359px] rounded-sm border border-gray-200 px-4 py-3 text-base outline-none"
+            className="flex-1 rounded-sm border border-gray-200 px-4 py-3 text-base outline-none md:w-[359px] md:flex-none"
             placeholder="Digite aqui o CEP"
           />
-          <button className="cursor-pointer rounded-sm border-0 bg-blue-600 px-8 py-4 text-white duration-300 hover:bg-blue-700">
+          <button className="flex-1 cursor-pointer rounded-sm border-0 bg-blue-600 py-4 text-white duration-300 hover:bg-blue-700 md:flex-none md:px-8">
             Calcular
           </button>
         </div>
