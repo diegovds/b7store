@@ -1,3 +1,7 @@
+import { Footer } from '@/components/layout/footer'
+import { Header } from '@/components/layout/header'
+import { QueryClientContext } from '@/providers/queryclient'
+import { StoreHydration } from '@/providers/store-hydration'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { Toaster } from 'sonner'
@@ -38,7 +42,14 @@ export default function RootLayout({
           }}
           richColors
         />
-        {children}
+        <QueryClientContext>
+          <StoreHydration />
+          <div className="flex min-h-dvh flex-col">
+            <Header />
+            <main className="mx-auto max-w-6xl flex-1 p-6">{children}</main>
+            <Footer />
+          </div>
+        </QueryClientContext>
       </body>
     </html>
   )
