@@ -24,7 +24,7 @@ export const MyOrdersContainer = ({
   return (
     <div>
       <div className="flex flex-col">
-        <div className="flex items-center justify-between gap-2 py-4">
+        <div className="mb-4 flex items-center justify-between gap-2">
           <div className="flex gap-2">
             <button
               disabled={viewOrders}
