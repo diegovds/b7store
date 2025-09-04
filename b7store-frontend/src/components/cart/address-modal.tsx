@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { postUserAddresses } from '@/http/api'
 import { useAuthStore } from '@/store/auth'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const newAddressSchema = z.object({
   street: z.string().min(3, 'Informe a rua'),
@@ -81,7 +82,7 @@ export const AddressModal = ({ onClose, open }: AddressModalProps) => {
         form.reset()
       }
     } catch {
-      alert('Erro ao cadastrar endereço')
+      toast.error('Erro ao cadastrar endereço')
     }
   }
 

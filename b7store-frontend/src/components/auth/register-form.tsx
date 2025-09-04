@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import {
   Form,
@@ -46,7 +47,7 @@ export const RegisterForm = () => {
     const res = await register(data)
 
     if (res.error) {
-      alert('Ocorreu um erro.')
+      toast.error(res.error)
     } else {
       redirect('/login')
     }

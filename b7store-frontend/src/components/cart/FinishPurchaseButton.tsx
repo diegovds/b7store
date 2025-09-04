@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/auth'
 import { useCartStore } from '@/store/cart'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { toast } from 'sonner'
 
 export const FinishPurchaseButton = () => {
   const { token, hydrated } = useAuthStore()
@@ -34,7 +35,7 @@ export const FinishPurchaseButton = () => {
       clearCart()
       redirect(sessionUrl)
     } else {
-      alert('Ocorreu um erro')
+      toast.error('Ocorreu um erro')
     }
   }
 
