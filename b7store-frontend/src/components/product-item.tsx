@@ -28,16 +28,8 @@ export function ProductItem({ id, image, label, liked: like, price }: Product) {
         </div>
       </div>
       <Link href={`/product/${id}`}>
-        <div className="flex justify-center">
-          {image && (
-            <Image
-              src={image}
-              alt={label}
-              width={200}
-              height={200}
-              className="h-48 max-w-full"
-            />
-          )}
+        <div className="flex aspect-square w-full items-center justify-center">
+          {image && <Image src={image} alt={label} width={300} height={300} />}
         </div>
         <div className="mt-9 text-lg font-semibold">{label}</div>
         <div className="mt-3 text-2xl font-semibold text-blue-600">
