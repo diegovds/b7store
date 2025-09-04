@@ -16,13 +16,12 @@ export function ImageSlider({ images }: ImageSliderProps) {
 
   return (
     <div className="max-w-sm space-y-8">
-      <div className="size-[380px] border border-gray-300 bg-white p-14">
+      <div className="w-full border border-gray-300 bg-white p-14">
         <Image
           src={images[selectedImageIndex]}
           alt=""
           width={380}
           height={380}
-          className="max-w-full"
         />
       </div>
       <div className="mx-auto grid grid-cols-4 gap-6 md:mx-0">
