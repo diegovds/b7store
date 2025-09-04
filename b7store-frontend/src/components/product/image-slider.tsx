@@ -16,7 +16,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
 
   return (
     <div className="max-w-sm space-y-8">
-      <div className="w-full border border-gray-300 bg-white p-14">
+      <div className="flex aspect-square w-full items-center justify-center border border-gray-300 bg-white p-14">
         <Image
           src={images[selectedImageIndex]}
           alt=""
@@ -29,7 +29,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
           <div
             key={index}
             onClick={() => handleThumbnailClick(index)}
-            className={`cursor-pointer border bg-white p-2 ${index === selectedImageIndex ? 'border-blue-500' : 'border-gray-300'}`}
+            className={`flex aspect-square cursor-pointer items-center justify-center border bg-white p-2 ${index === selectedImageIndex ? 'border-blue-500' : 'border-gray-300'}`}
           >
             <Image src={image} alt="" width={120} height={120} />
           </div>
