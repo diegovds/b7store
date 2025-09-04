@@ -22,7 +22,7 @@ export const MyOrdersContainer = ({
   const { clearToken } = useAuthStore()
 
   return (
-    <div className="min-h-screen">
+    <div>
       <div className="flex flex-col">
         <div className="flex items-center justify-between gap-2 py-4">
           <div className="flex gap-2">

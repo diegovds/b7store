@@ -15,7 +15,7 @@ export const PageForm = ({
   title,
 }: PageFormProps) => {
   return (
-    <div className="my-4 flex min-h-screen w-full max-w-md flex-col items-center justify-center md:my-0">
+    <div className="my-4 flex w-full max-w-md flex-col items-center justify-center md:my-0">
       <div className="mb-8 flex justify-center">
         <Image src={logo} alt="" width={143} height={48} />
       </div>

@@ -30,7 +30,7 @@ export default async function PurchaseCompletedPage({
   if (order.error) return notFound()
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <div className="w-full max-w-2xl space-y-6 rounded border border-gray-200 bg-white p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800">
