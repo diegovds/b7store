@@ -5,6 +5,7 @@
  * API para a B7Store
  * OpenAPI spec version: 0.0.1
  */
+import { customFetch } from '../../fetchMutator'
 export type GetBanners200Error = string | null
 
 export type GetBanners200BannersItem = {
@@ -493,58 +494,43 @@ export type GetOrdersId404 = {
 }
 
 export const getPostWebhookStripeUrl = () => {
-  return `http://localhost:4444/webhook/stripe`
+  return `/webhook/stripe`
 }
 
 export const postWebhookStripe = async (
   options?: RequestInit,
 ): Promise<null> => {
-  const res = await fetch(getPostWebhookStripeUrl(), {
+  return customFetch<null>(getPostWebhookStripeUrl(), {
     ...options,
     method: 'POST',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: null = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 export const getGetPingUrl = () => {
-  return `http://localhost:4444/ping`
+  return `/ping`
 }
 
 export const getPing = async (options?: RequestInit): Promise<null> => {
-  const res = await fetch(getGetPingUrl(), {
+  return customFetch<null>(getGetPingUrl(), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: null = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Get all banners.
  */
 export const getGetBannersUrl = () => {
-  return `http://localhost:4444/banners`
+  return `/banners`
 }
 
 export const getBanners = async (
   options?: RequestInit,
 ): Promise<GetBanners200> => {
-  const res = await fetch(getGetBannersUrl(), {
+  return customFetch<GetBanners200>(getGetBannersUrl(), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetBanners200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
@@ -562,45 +548,35 @@ export const getGetProductsUrl = (params?: GetProductsParams) => {
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `http://localhost:4444/products?${stringifiedParams}`
-    : `http://localhost:4444/products`
+    ? `/products?${stringifiedParams}`
+    : `/products`
 }
 
 export const getProducts = async (
   params?: GetProductsParams,
   options?: RequestInit,
 ): Promise<GetProducts200> => {
-  const res = await fetch(getGetProductsUrl(params), {
+  return customFetch<GetProducts200>(getGetProductsUrl(params), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetProducts200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Get product by ID.
  */
 export const getGetProductIdUrl = (id: string) => {
-  return `http://localhost:4444/product/${id}`
+  return `/product/${id}`
 }
 
 export const getProductId = async (
   id: string,
   options?: RequestInit,
 ): Promise<GetProductId200> => {
-  const res = await fetch(getGetProductIdUrl(id), {
+  return customFetch<GetProductId200>(getGetProductIdUrl(id), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetProductId200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
@@ -621,8 +597,8 @@ export const getGetProductIdRelatedUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `http://localhost:4444/product/${id}/related?${stringifiedParams}`
-    : `http://localhost:4444/product/${id}/related`
+    ? `/product/${id}/related?${stringifiedParams}`
+    : `/product/${id}/related`
 }
 
 export const getProductIdRelated = async (
@@ -630,61 +606,52 @@ export const getProductIdRelated = async (
   params?: GetProductIdRelatedParams,
   options?: RequestInit,
 ): Promise<GetProductIdRelated200> => {
-  const res = await fetch(getGetProductIdRelatedUrl(id, params), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetProductIdRelated200 = body ? JSON.parse(body) : {}
-
-  return data
+  return customFetch<GetProductIdRelated200>(
+    getGetProductIdRelatedUrl(id, params),
+    {
+      ...options,
+      method: 'GET',
+    },
+  )
 }
 
 /**
  * @summary Get category and its metadata by slug.
  */
 export const getGetCategorySlugMetadataUrl = (slug: string) => {
-  return `http://localhost:4444/category/${slug}/metadata`
+  return `/category/${slug}/metadata`
 }
 
 export const getCategorySlugMetadata = async (
   slug: string,
   options?: RequestInit,
 ): Promise<GetCategorySlugMetadata200> => {
-  const res = await fetch(getGetCategorySlugMetadataUrl(slug), {
-    ...options,
-    method: 'GET',
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetCategorySlugMetadata200 = body ? JSON.parse(body) : {}
-
-  return data
+  return customFetch<GetCategorySlugMetadata200>(
+    getGetCategorySlugMetadataUrl(slug),
+    {
+      ...options,
+      method: 'GET',
+    },
+  )
 }
 
 /**
  * @summary Get product details for a list of product IDs.
  */
 export const getPostCartMountUrl = () => {
-  return `http://localhost:4444/cart/mount`
+  return `/cart/mount`
 }
 
 export const postCartMount = async (
   postCartMountBody: PostCartMountBody,
   options?: RequestInit,
 ): Promise<PostCartMount200> => {
-  const res = await fetch(getPostCartMountUrl(), {
+  return customFetch<PostCartMount200>(getPostCartMountUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(postCartMountBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostCartMount200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
@@ -702,140 +669,110 @@ export const getGetCartShippingUrl = (params: GetCartShippingParams) => {
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `http://localhost:4444/cart/shipping?${stringifiedParams}`
-    : `http://localhost:4444/cart/shipping`
+    ? `/cart/shipping?${stringifiedParams}`
+    : `/cart/shipping`
 }
 
 export const getCartShipping = async (
   params: GetCartShippingParams,
   options?: RequestInit,
 ): Promise<GetCartShipping200> => {
-  const res = await fetch(getGetCartShippingUrl(params), {
+  return customFetch<GetCartShipping200>(getGetCartShippingUrl(params), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetCartShipping200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Register a new user.
  */
 export const getPostUserRegisterUrl = () => {
-  return `http://localhost:4444/user/register`
+  return `/user/register`
 }
 
 export const postUserRegister = async (
   postUserRegisterBody: PostUserRegisterBody,
   options?: RequestInit,
 ): Promise<PostUserRegister201> => {
-  const res = await fetch(getPostUserRegisterUrl(), {
+  return customFetch<PostUserRegister201>(getPostUserRegisterUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(postUserRegisterBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostUserRegister201 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Login and receive a token.
  */
 export const getPostUserLoginUrl = () => {
-  return `http://localhost:4444/user/login`
+  return `/user/login`
 }
 
 export const postUserLogin = async (
   postUserLoginBody: PostUserLoginBody,
   options?: RequestInit,
 ): Promise<PostUserLogin200> => {
-  const res = await fetch(getPostUserLoginUrl(), {
+  return customFetch<PostUserLogin200>(getPostUserLoginUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(postUserLoginBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostUserLogin200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Add a new address for the logged-in user.
  */
 export const getPostUserAddressesUrl = () => {
-  return `http://localhost:4444/user/addresses`
+  return `/user/addresses`
 }
 
 export const postUserAddresses = async (
   postUserAddressesBody: PostUserAddressesBody,
   options?: RequestInit,
 ): Promise<PostUserAddresses200> => {
-  const res = await fetch(getPostUserAddressesUrl(), {
+  return customFetch<PostUserAddresses200>(getPostUserAddressesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(postUserAddressesBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostUserAddresses200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Get all addresses for the logged-in user.
  */
 export const getGetUserAddressesUrl = () => {
-  return `http://localhost:4444/user/addresses`
+  return `/user/addresses`
 }
 
 export const getUserAddresses = async (
   options?: RequestInit,
 ): Promise<GetUserAddresses200> => {
-  const res = await fetch(getGetUserAddressesUrl(), {
+  return customFetch<GetUserAddresses200>(getGetUserAddressesUrl(), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetUserAddresses200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Finish the cart and create an order (returns Stripe checkout URL).
  */
 export const getPostCartFinishUrl = () => {
-  return `http://localhost:4444/cart/finish`
+  return `/cart/finish`
 }
 
 export const postCartFinish = async (
   postCartFinishBody: PostCartFinishBody,
   options?: RequestInit,
 ): Promise<PostCartFinish200> => {
-  const res = await fetch(getPostCartFinishUrl(), {
+  return customFetch<PostCartFinish200>(getPostCartFinishUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(postCartFinishBody),
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostCartFinish200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
@@ -853,64 +790,49 @@ export const getGetOrdersSessionUrl = (params: GetOrdersSessionParams) => {
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `http://localhost:4444/orders/session?${stringifiedParams}`
-    : `http://localhost:4444/orders/session`
+    ? `/orders/session?${stringifiedParams}`
+    : `/orders/session`
 }
 
 export const getOrdersSession = async (
   params: GetOrdersSessionParams,
   options?: RequestInit,
 ): Promise<GetOrdersSession200> => {
-  const res = await fetch(getGetOrdersSessionUrl(params), {
+  return customFetch<GetOrdersSession200>(getGetOrdersSessionUrl(params), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetOrdersSession200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary List all orders for the logged-in user.
  */
 export const getGetOrdersUrl = () => {
-  return `http://localhost:4444/orders`
+  return `/orders`
 }
 
 export const getOrders = async (
   options?: RequestInit,
 ): Promise<GetOrders200> => {
-  const res = await fetch(getGetOrdersUrl(), {
+  return customFetch<GetOrders200>(getGetOrdersUrl(), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetOrders200 = body ? JSON.parse(body) : {}
-
-  return data
 }
 
 /**
  * @summary Get details of a specific order by ID for the logged-in user.
  */
 export const getGetOrdersIdUrl = (id: string) => {
-  return `http://localhost:4444/orders/${id}`
+  return `/orders/${id}`
 }
 
 export const getOrdersId = async (
   id: string,
   options?: RequestInit,
 ): Promise<GetOrdersId200> => {
-  const res = await fetch(getGetOrdersIdUrl(id), {
+  return customFetch<GetOrdersId200>(getGetOrdersIdUrl(id), {
     ...options,
     method: 'GET',
   })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetOrdersId200 = body ? JSON.parse(body) : {}
-
-  return data
 }

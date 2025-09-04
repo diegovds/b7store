@@ -8,9 +8,11 @@ export default defineConfig({
       client: 'fetch',
       httpClient: 'fetch',
       clean: true,
-      baseUrl: 'http://localhost:4444',
-
       override: {
+        mutator: {
+          path: './fetchMutator.ts',
+          name: 'customFetch',
+        },
         fetch: {
           includeHttpResponseReturnType: false,
         },
