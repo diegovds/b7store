@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const clientEnvSchema = z.object({
-  NEXT_PUBLIC_BACKEND_URL: z.string(),
+  NEXT_PUBLIC_BACKEND_URL: z.url(),
 })
 
 const clientEnv = {
