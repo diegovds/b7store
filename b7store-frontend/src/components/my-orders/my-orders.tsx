@@ -24,12 +24,12 @@ export const MyOrders = ({ myOrders }: MyOrdersProps) => {
       <Accordion
         type="single"
         collapsible
-        className="space-y-2"
+        className="border border-gray-200 bg-white p-7"
         defaultValue={myOrders.length.toString()}
       >
         {myOrders.map((order) => (
           <AccordionItem key={order.id} value={order.id.toString()}>
-            <AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
               Pedido #{order.id} -{' '}
               {order.status === 'paid'
                 ? 'Aprovado'
