@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
         hostname: 'github.com',
       },
     ],
+    unoptimized: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
