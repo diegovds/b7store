@@ -21,7 +21,12 @@ export const MyOrders = ({ myOrders }: MyOrdersProps) => {
         {myOrders.length !== 1 ? 'pedidos' : 'pedido'}:
       </h2>
 
-      <Accordion type="single" collapsible className="space-y-2">
+      <Accordion
+        type="single"
+        collapsible
+        className="space-y-2"
+        defaultValue={myOrders.length.toString()}
+      >
         {myOrders.map((order) => (
           <AccordionItem key={order.id} value={order.id.toString()}>
             <AccordionTrigger>
