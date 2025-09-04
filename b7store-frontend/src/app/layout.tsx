@@ -46,7 +46,9 @@ export default function RootLayout({
           <StoreHydration />
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <main className="mx-auto max-w-6xl flex-1 p-6">{children}</main>
+            <main className="mx-auto w-full max-w-6xl flex-1 p-6">
+              {children}
+            </main>
             <Footer />
           </div>
         </QueryClientContext>
