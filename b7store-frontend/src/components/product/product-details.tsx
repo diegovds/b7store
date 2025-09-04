@@ -33,7 +33,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
       <div className="flex gap-4">
         <button
           onClick={addToCart}
-          className="max-w-xs flex-1 cursor-pointer rounded-sm border-0 bg-blue-600 px-8 py-4 text-white duration-300 hover:bg-blue-700"
+          className="flex-1 cursor-pointer rounded-sm border-0 bg-blue-600 py-4 text-white duration-300 hover:bg-blue-700 md:max-w-xs md:px-8"
         >
           Adicionar ao carrinho
         </button>
