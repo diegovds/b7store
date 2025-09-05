@@ -53,7 +53,10 @@ export const MyAddresses = ({ addresses }: MyAddressesProps) => {
 
       <div className="grid gap-4 md:grid-cols-2">
         {_addresses.map((address) => (
-          <Card key={address.id} className="border border-gray-200 shadow-none">
+          <Card
+            key={address.id}
+            className="rounded border border-gray-200 shadow-none"
+          >
             <CardHeader>
               <CardTitle className="text-lg font-semibold">
                 {address.street}, {address.number}
