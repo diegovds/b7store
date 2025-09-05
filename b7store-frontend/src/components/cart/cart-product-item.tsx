@@ -36,14 +36,13 @@ export const CartProductItem = ({ item }: CartProductItemProps) => {
 
   return (
     <div className="flex gap-4 border-0 border-gray-200 p-6 md:gap-8 md:border-b">
-      <div className="border border-gray-200 p-1">
+      <div className="flex aspect-square size-24 items-center justify-center border border-gray-200 p-1 md:size-20">
         {item.product.image && (
           <Image
             src={item.product.image}
             alt={item.product.label}
             width={96}
             height={96}
-            className="size-24 md:size-20"
           />
         )}
       </div>
