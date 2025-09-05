@@ -90,13 +90,12 @@ export default async function PurchaseCompletedPage({
               >
                 <div className="flex items-center gap-3">
                   {item.product.image && (
-                    <div className="rounded border border-gray-200 bg-white p-2">
+                    <div className="flex aspect-square items-center justify-center rounded border border-gray-200 bg-white p-2">
                       <Image
                         src={item.product.image}
                         alt={item.product.label}
                         width={50}
                         height={50}
-                        className="object-cover"
                       />
                     </div>
                   )}
