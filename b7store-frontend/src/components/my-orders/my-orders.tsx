@@ -25,7 +25,7 @@ export const MyOrders = ({ myOrders }: MyOrdersProps) => {
       <Accordion
         type="single"
         collapsible
-        className="space-y-3"
+        className="space-y-6"
         defaultValue={myOrders.length.toString()}
       >
         {myOrders.map((order) => (
@@ -83,7 +83,7 @@ export const MyOrders = ({ myOrders }: MyOrdersProps) => {
                       ? 'Itens do pedido'
                       : 'Item do pedido'}
                   </h3>
-                  <ul className="divide-muted bg-muted/50 divide-y rounded shadow">
+                  <ul className="divide-y divide-gray-200 rounded bg-gray-50">
                     {order.orderItems.map((item) => (
                       <li
                         key={item.id}
