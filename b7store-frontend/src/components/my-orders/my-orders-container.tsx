@@ -25,22 +25,7 @@ export const MyOrdersContainer = ({
     <div>
       <div className="flex flex-col">
         <div className="mb-4 flex items-center justify-between gap-2">
-          <div className="flex gap-2">
-            <button
-              disabled={viewOrders}
-              onClick={() => setViewOrders(true)}
-              className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${viewOrders ? 'border-gray-300 font-medium opacity-65' : 'border-transparent font-normal'}`}
-            >
-              Meus Pedidos
-            </button>
-            <button
-              disabled={!viewOrders}
-              onClick={() => setViewOrders(false)}
-              className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${!viewOrders ? 'border-gray-300 font-medium opacity-65' : 'border-transparent font-normal'}`}
-            >
-              Meus Endereços
-            </button>
-          </div>
+          <h2 className="text-2xl font-bold">Minha conta</h2>
           <button
             className="cursor-pointer"
             onClick={async () => {
@@ -50,6 +35,22 @@ export const MyOrdersContainer = ({
             }}
           >
             <LogOut />
+          </button>
+        </div>
+        <div className="mb-4 flex gap-2">
+          <button
+            disabled={viewOrders}
+            onClick={() => setViewOrders(true)}
+            className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${viewOrders ? 'border-gray-300 font-medium opacity-65' : 'border-transparent font-normal'}`}
+          >
+            Meus Pedidos
+          </button>
+          <button
+            disabled={!viewOrders}
+            onClick={() => setViewOrders(false)}
+            className={`cursor-pointer border-0 border-b pb-1 text-black duration-300 disabled:cursor-default ${!viewOrders ? 'border-gray-300 font-medium opacity-65' : 'border-transparent font-normal'}`}
+          >
+            Meus Endereços
           </button>
         </div>
         <div>
