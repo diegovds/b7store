@@ -39,7 +39,7 @@ export const MyAddresses = ({ addresses }: MyAddressesProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-xl font-medium">
           Você possui {_addresses.length}{' '}
           {_addresses.length !== 1 ? 'endereços' : 'endereço'}:
         </h2>
