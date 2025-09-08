@@ -1,3 +1,4 @@
+import removeAccents from 'remove-accents'
 import { prisma } from '../libs/prisma'
 
 type ProductOrder = 'views' | 'selling' | 'price'
@@ -7,6 +8,7 @@ interface ProductFilters {
   order?: ProductOrder
   limit?: number
   categoryId?: number
+  q?: string
 }
 
 export const getProducts = async (filters: ProductFilters) => {
@@ -28,16 +30,15 @@ export const getProducts = async (filters: ProductFilters) => {
   }
 
   // Organize WHERE
-  const where: any = {}
+  const andFilters: any[] = []
 
-  // Filtro por categoria
+  // Categoria
   if (filters.categoryId) {
-    where.categoryId = filters.categoryId
+    andFilters.push({ categoryId: filters.categoryId })
   }
 
-  // Filtro por metadata
+  // Metadata
   if (filters.metadata && typeof filters.metadata === 'object') {
-    const metaFilters = []
     for (const categoryMetadataId in filters.metadata) {
       const value = filters.metadata[categoryMetadataId]
       if (typeof value !== 'string') continue
@@ -47,7 +48,7 @@ export const getProducts = async (filters: ProductFilters) => {
         .filter(Boolean)
       if (valueIds.length === 0) continue
 
-      metaFilters.push({
+      andFilters.push({
         metadata: {
           some: {
             categoryMetadataId,
@@ -56,10 +57,22 @@ export const getProducts = async (filters: ProductFilters) => {
         },
       })
     }
-    if (metaFilters.length > 0) {
-      where.AND = metaFilters
-    }
   }
+
+  // Busca por termo (label ou description)
+  if (filters.q && filters.q.trim() !== '') {
+    const searchTerm = removeAccents(filters.q.trim())
+
+    andFilters.push({
+      OR: [
+        { labelSearch: { contains: searchTerm, mode: 'insensitive' } },
+        { descriptionSearch: { contains: searchTerm, mode: 'insensitive' } },
+      ],
+    })
+  }
+
+  // Se não houver filtros, passar undefined
+  const where = andFilters.length > 0 ? { AND: andFilters } : undefined
 
   const products = await prisma.product.findMany({
     select: {

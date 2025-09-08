@@ -1,3 +1,4 @@
+import removeAccents from 'remove-accents'
 import { PrismaClient } from '../generated/prisma'
 
 const prisma = new PrismaClient()
@@ -81,8 +82,10 @@ async function main() {
     const product = await prisma.product.create({
       data: {
         label: data.label,
+        labelSearch: removeAccents(data.label),
         price: data.price,
         description: data.description,
+        descriptionSearch: removeAccents(data.description),
         categoryId: data.categoryId,
       },
     })
