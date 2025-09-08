@@ -12,6 +12,18 @@ export const getCategoryBySlug = async (slug: string) => {
   return category
 }
 
+export const getCategoryById = async (id: number) => {
+  const category = await prisma.category.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+    },
+  })
+  return category
+}
+
 export const getCategoryMetadata = async (id: number) => {
   const metadata = await prisma.categoryMetadata.findMany({
     where: { categoryId: id },
