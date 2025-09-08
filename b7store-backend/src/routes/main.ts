@@ -9,10 +9,13 @@ import {
   getRelatedProduct,
 } from '../controllers/product'
 import { addAddress, getAddresses, login, register } from '../controllers/user'
+import { env } from '../env'
 
 export async function routes(app: FastifyInstance) {
-  app.get('/ping', async (request, reply) => {
-    reply.send({ pong: true })
+  app.get('/', async (request, reply) => {
+    reply.send({
+      B7Store_API: `Go to ${env.BASE_URL}/docs to see the documentation.`,
+    })
   })
 
   app.register(getBanners)
