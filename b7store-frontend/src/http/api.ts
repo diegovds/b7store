@@ -26,6 +26,7 @@ export type GetProductsParams = {
    */
   limit?: string
   categoryId?: string
+  q?: string
 }
 
 export type GetProductsOrderBy =
