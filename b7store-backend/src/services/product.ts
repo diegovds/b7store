@@ -83,6 +83,7 @@ export const getProducts = async (filters: ProductFilters) => {
         take: 1,
         orderBy: { id: 'asc' },
       },
+      categoryId: true,
     },
     where,
     orderBy,
