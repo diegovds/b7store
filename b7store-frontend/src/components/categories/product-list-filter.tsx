@@ -3,14 +3,32 @@
 import { useQueryString } from '@/hooks/use-querystring'
 import { GetCategorySlugMetadata200MetadataItem } from '@/http/api'
 import { Product } from '@/types/product'
-import { ChangeEvent, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import * as z from 'zod'
 import { ProductItem } from '../product-item'
 import { FilterGroup } from './filter-group'
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type ProductListFilterProps = {
   products: Product[]
   metadata: GetCategorySlugMetadata200MetadataItem[]
 }
+
+// Zod schema
+const filterSchema = z.object({
+  order: z.enum(['views', 'price', 'selling']),
+})
+
+type FilterFormValues = z.infer<typeof filterSchema>
 
 export function ProductListFilter({
   products,
@@ -19,10 +37,17 @@ export function ProductListFilter({
   const queryString = useQueryString()
   const [filterOpened, setFilterOpened] = useState(false)
 
-  const order = queryString.get('order') ?? 'views'
+  const defaultValues: FilterFormValues = {
+    order: (queryString.get('order') as FilterFormValues['order']) || 'views',
+  }
 
-  const handleSelectChanged = (e: ChangeEvent<HTMLSelectElement>) => {
-    queryString.set('order', e.target.value)
+  const { control } = useForm<FilterFormValues>({
+    resolver: zodResolver(filterSchema),
+    defaultValues,
+  })
+
+  const handleOrderChange = (value: FilterFormValues['order']) => {
+    queryString.set('order', value)
   }
 
   return (
@@ -32,16 +57,31 @@ export function ProductListFilter({
           <strong>{products.length}</strong> Produto
           {products.length !== 1 ? 's' : ''}
         </div>
+
         <div className="flex w-full flex-row gap-5 md:max-w-70">
-          <select
-            defaultValue={order}
-            onChange={handleSelectChanged}
-            className="flex h-14 flex-1 items-center rounded-sm border border-gray-200 bg-white px-6 text-gray-500 outline-none"
-          >
-            <option value="views">Popularidade</option>
-            <option value="price">Por preço</option>
-            <option value="selling">Mais vendidos</option>
-          </select>
+          <Controller
+            name="order"
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={field.value}
+                onValueChange={(val) => {
+                  field.onChange(val)
+                  handleOrderChange(val as FilterFormValues['order'])
+                }}
+              >
+                <SelectTrigger className="flex h-14 flex-1 items-center rounded-sm border border-gray-200 bg-white px-6 text-gray-500 outline-none">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="views">Popularidade</SelectItem>
+                  <SelectItem value="price">Por preço</SelectItem>
+                  <SelectItem value="selling">Mais vendidos</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+
           <div
             onClick={() => setFilterOpened(!filterOpened)}
             className="flex h-14 flex-1 cursor-pointer items-center rounded-sm border border-gray-200 bg-white px-6 text-gray-500 md:hidden"
@@ -50,6 +90,7 @@ export function ProductListFilter({
           </div>
         </div>
       </div>
+
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
         <div
           className={`flex-1 overflow-x-hidden overflow-y-hidden duration-300 md:max-w-70 ${filterOpened ? `max-h-screen` : `max-h-0`} md:max-h-fit`}
@@ -63,6 +104,7 @@ export function ProductListFilter({
             />
           ))}
         </div>
+
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
           {products.map((product) => (
             <ProductItem key={product.id} {...product} />
