@@ -58,6 +58,7 @@ export type GetProducts200ProductsItem = {
 export type GetProducts200 = {
   error: GetProducts200Error
   products: GetProducts200ProductsItem[]
+  categoryIds: number[]
 }
 
 export type GetProductId200Error = string | null
