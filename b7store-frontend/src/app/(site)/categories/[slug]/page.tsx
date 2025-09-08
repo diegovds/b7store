@@ -41,11 +41,13 @@ export default async function CategoriesPage({
           : undefined
 
   const { category, metadata } = await getCategorySlugMetadata(slug)
-  filters.order = undefined
+
+  const { order: _order, ..._filters } = filters
+
   const { products, error } = await getProducts({
     orderBy: order,
     limit: '8',
-    metadata: JSON.stringify(filters),
+    metadata: JSON.stringify(_filters),
     categoryId: category?.id.toString(),
   })
 
