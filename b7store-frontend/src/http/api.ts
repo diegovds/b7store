@@ -155,6 +155,37 @@ export type GetCategorySlugMetadata404 = {
   error: string
 }
 
+export type GetCategoryId200Error = string | null
+
+export type GetCategoryId200CategoryAnyOf = {
+  id: number
+  name: string
+  slug: string
+}
+
+export type GetCategoryId200Category = GetCategoryId200CategoryAnyOf | null
+
+export type GetCategoryId200MetadataItemValuesItem = {
+  id: string
+  label: string
+}
+
+export type GetCategoryId200MetadataItem = {
+  id: string
+  name: string
+  values: GetCategoryId200MetadataItemValuesItem[]
+}
+
+export type GetCategoryId200 = {
+  error: GetCategoryId200Error
+  category: GetCategoryId200Category
+  metadata: GetCategoryId200MetadataItem[]
+}
+
+export type GetCategoryId404 = {
+  error: string
+}
+
 export type PostCartMountBody = {
   /** @minItems 1 */
   ids: number[]
@@ -507,12 +538,12 @@ export const postWebhookStripe = async (
   })
 }
 
-export const getGetPingUrl = () => {
-  return `/ping`
+export const getGetUrl = () => {
+  return `/`
 }
 
-export const getPing = async (options?: RequestInit): Promise<null> => {
-  return customFetch<null>(getGetPingUrl(), {
+export const get = async (options?: RequestInit): Promise<null> => {
+  return customFetch<null>(getGetUrl(), {
     ...options,
     method: 'GET',
   })
@@ -634,6 +665,23 @@ export const getCategorySlugMetadata = async (
       method: 'GET',
     },
   )
+}
+
+/**
+ * @summary Get category and its metadata by id.
+ */
+export const getGetCategoryIdUrl = (id: string) => {
+  return `/category/${id}`
+}
+
+export const getCategoryId = async (
+  id: string,
+  options?: RequestInit,
+): Promise<GetCategoryId200> => {
+  return customFetch<GetCategoryId200>(getGetCategoryIdUrl(id), {
+    ...options,
+    method: 'GET',
+  })
 }
 
 /**
