@@ -15,11 +15,12 @@ const searchSchema = z.object({
 type SearchSchema = z.infer<typeof searchSchema>
 
 export function HeaderSearch() {
-  const { register, handleSubmit } = useForm<SearchSchema>({
+  const { register, handleSubmit, resetField } = useForm<SearchSchema>({
     resolver: zodResolver(searchSchema),
   })
 
   const onSubmit = ({ search }: SearchSchema) => {
+    resetField('search')
     redirect(`/search?q=${search}`)
   }
 
