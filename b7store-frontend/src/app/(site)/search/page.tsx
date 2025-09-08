@@ -1,4 +1,9 @@
-import { getProducts } from '@/http/api'
+import { ProductListFilter } from '@/components/categories/product-list-filter'
+import {
+    getCategoryId,
+    GetCategoryId200MetadataItem,
+    getProducts,
+} from '@/http/api'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -48,11 +53,24 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     redirect('/')
   }
 
+  const metadata: GetCategoryId200MetadataItem[] = []
+
+  for (const i in categoryIds) {
+    const meta = await getCategoryId(categoryIds[i].toString())
+
+    if (meta.error) {
+      return redirect('/')
+    }
+
+    metadata.push(...meta.metadata)
+  }
+
   return (
     <div>
       <div className="my-4 text-base text-gray-500">
         <Link href="/">Home</Link> &gt; Busca por {q}
       </div>
+      <ProductListFilter products={products} metadata={metadata} />
     </div>
   )
 }
