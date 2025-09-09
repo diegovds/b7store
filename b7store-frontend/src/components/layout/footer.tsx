@@ -1,15 +1,35 @@
 'use client'
 
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { MenuItem } from '@/types/menu-item'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { FooterButton } from './footer-button'
+
+const subscribeSchema = z.object({
+  email: z.email(),
+})
+
+type SubscribeFormData = z.infer<typeof subscribeSchema>
 
 export const Footer = () => {
   const menu: MenuItem[] = [
     { label: 'Camisetas', href: '/categories/camisetas' },
     { label: 'Bonés', href: '/categories/bones' },
   ]
+
+  const form = useForm<SubscribeFormData>({
+    resolver: zodResolver(subscribeSchema),
+    defaultValues: { email: '' },
+  })
+
+  const onSubmit = ({ email }: SubscribeFormData) => {
+    console.log('E-mail enviado:', email)
+  }
+
   return (
     <footer>
       <div className="border-t border-gray-200 bg-white px-6 py-10">
@@ -28,21 +48,35 @@ export const Footer = () => {
               Coloque seu e-mail e seja o primeiro a saber
             </p>
           </div>
-          <form
-            method="POST"
-            className="flex w-full flex-1 flex-col gap-4 md:flex-row"
-          >
-            <input
-              type="text"
-              className="flex-1 rounded-sm border border-gray-200 px-6 py-5 outline-0"
-              placeholder="Qual seu e-mail?"
-            />
-            <input
-              type="submit"
-              value="Enviar"
-              className="w-full rounded-sm border-0 bg-blue-600 px-6 py-5 text-white md:w-50"
-            />
-          </form>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex w-full flex-1 flex-col gap-4 md:flex-row"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <input
+                        type="text"
+                        placeholder="Qual seu e-mail?"
+                        {...field}
+                        className="flex-1 rounded-sm border border-gray-200 px-6 py-5 outline-0"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <button
+                type="submit"
+                className="w-full cursor-pointer rounded-sm border-0 bg-blue-600 px-6 py-5 text-white duration-300 hover:bg-blue-700 md:w-50"
+              >
+                Enviar
+              </button>
+            </form>
+          </Form>
         </div>
       </div>
       <div className="bg-black text-white">
@@ -82,7 +116,7 @@ export const Footer = () => {
                 />
               </div>
             </div>
-            <div className="">
+            <div>
               <h4 className="mt-8 mb-10 text-center text-lg md:mt-0 md:text-left">
                 Acompanhe nas redes sociais
               </h4>
