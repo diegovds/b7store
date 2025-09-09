@@ -1,9 +1,5 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
-import {
-    getCategoryId,
-    GetCategoryId200MetadataItem,
-    getProducts,
-} from '@/http/api'
+import { getProducts } from '@/http/api'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -42,7 +38,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const { q: _q, order: _order, ...filters } = params
 
-  const { categoryIds, error, products } = await getProducts({
+  const { error, products } = await getProducts({
     orderBy: order,
     limit: '8',
     metadata: JSON.stringify(filters),
@@ -53,17 +49,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     redirect('/')
   }
 
-  const metadata: GetCategoryId200MetadataItem[] = []
-
-  for (const i in categoryIds) {
-    const meta = await getCategoryId(categoryIds[i].toString())
-
-    if (meta.error) {
-      return redirect('/')
-    }
-
-    metadata.push(...meta.metadata)
-  }
+  const metadata = Array.from(
+    new Map(
+      products
+        .flatMap((p) => p.metadata)
+        .map((m) => [
+          m.metadataValue.categoryMetadata.id,
+          {
+            id: m.metadataValue.categoryMetadata.id,
+            name: m.metadataValue.categoryMetadata.name,
+            values: [
+              {
+                id: m.metadataValue.id,
+                label: m.metadataValue.label,
+              },
+            ],
+          },
+        ]),
+    ).values(),
+  )
 
   return (
     <div>

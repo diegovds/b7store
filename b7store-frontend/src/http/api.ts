@@ -42,6 +42,28 @@ export type GetProducts200Error = string | null
 
 export type GetProducts200ProductsItemImage = string | null
 
+export type GetProducts200ProductsItemMetadataItemMetadataValueCategoryMetadata =
+  {
+    id: string
+    name: string
+  }
+
+export type GetProducts200ProductsItemMetadataItemMetadataValue = {
+  id: string
+  label: string
+  categoryMetadata: GetProducts200ProductsItemMetadataItemMetadataValueCategoryMetadata
+}
+
+export type GetProducts200ProductsItemMetadataItem = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number
+  categoryMetadataId: string
+  metadataValue: GetProducts200ProductsItemMetadataItemMetadataValue
+}
+
 export type GetProducts200ProductsItem = {
   /**
    * @minimum 0
@@ -53,12 +75,13 @@ export type GetProducts200ProductsItem = {
   price: number
   image: GetProducts200ProductsItemImage
   liked: boolean
+  categoryId?: number
+  metadata: GetProducts200ProductsItemMetadataItem[]
 }
 
 export type GetProducts200 = {
   error: GetProducts200Error
   products: GetProducts200ProductsItem[]
-  categoryIds: number[]
 }
 
 export type GetProductId200Error = string | null

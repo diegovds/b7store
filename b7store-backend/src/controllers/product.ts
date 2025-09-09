@@ -68,8 +68,30 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
         response: {
           200: z.object({
             error: z.string().nullable(),
-            products: productResponseSchema,
-            categoryIds: z.array(z.number()),
+            products: z.array(
+              z.object({
+                id: z.number().int().positive(),
+                label: z.string(),
+                price: z.number(),
+                image: z.url().nullable(),
+                liked: z.boolean(),
+                categoryId: z.number().optional(),
+                metadata: z.array(
+                  z.object({
+                    id: z.number().int(),
+                    categoryMetadataId: z.string(),
+                    metadataValue: z.object({
+                      id: z.string(),
+                      label: z.string(),
+                      categoryMetadata: z.object({
+                        id: z.string(),
+                        name: z.string(),
+                      }),
+                    }),
+                  }),
+                ),
+              }),
+            ),
           }),
         },
       },
@@ -89,10 +111,6 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
         q,
       })
 
-      const categoryIds = Array.from(
-        new Set(products.map((product) => product.categoryId).filter(Boolean)),
-      )
-
       const productsWithAbsoluteUrl = products.map((product) => ({
         ...product,
         image: product.image ? getAbsoluteImageUrl(product.image) : null,
@@ -102,7 +120,6 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
       return reply.status(200).send({
         error: null,
         products: productsWithAbsoluteUrl,
-        categoryIds,
       })
     },
   )
