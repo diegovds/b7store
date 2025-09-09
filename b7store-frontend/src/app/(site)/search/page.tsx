@@ -49,30 +49,43 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     redirect('/')
   }
 
-  /*
-    Detalhe: do jeito que está, se dois produtos tiverem a mesma categoryMetadata.id 
-    mas com valores diferentes (ex: "Cor: Azul" e "Cor: Vermelho"), só o último valor vai ficar.
-  */
+  const metadataMap = new Map<
+    string,
+    {
+      id: string
+      name: string
+      values: { id: string; label: string }[]
+    }
+  >()
 
-  const metadata = Array.from(
-    new Map(
-      products
-        .flatMap((p) => p.metadata)
-        .map((m) => [
-          m.metadataValue.categoryMetadata.id,
-          {
-            id: m.metadataValue.categoryMetadata.id,
-            name: m.metadataValue.categoryMetadata.name,
-            values: [
-              {
-                id: m.metadataValue.id,
-                label: m.metadataValue.label,
-              },
-            ],
-          },
-        ]),
-    ).values(),
-  )
+  for (const product of products) {
+    for (const m of product.metadata) {
+      const categoryId = m.metadataValue.categoryMetadata.id
+      const existing = metadataMap.get(categoryId)
+
+      if (existing) {
+        if (!existing.values.some((v) => v.id === m.metadataValue.id)) {
+          existing.values.push({
+            id: m.metadataValue.id,
+            label: m.metadataValue.label,
+          })
+        }
+      } else {
+        metadataMap.set(categoryId, {
+          id: categoryId,
+          name: m.metadataValue.categoryMetadata.name,
+          values: [
+            {
+              id: m.metadataValue.id,
+              label: m.metadataValue.label,
+            },
+          ],
+        })
+      }
+    }
+  }
+
+  const metadata = Array.from(metadataMap.values())
 
   return (
     <div>
