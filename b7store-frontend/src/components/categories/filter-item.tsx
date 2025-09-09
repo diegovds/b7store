@@ -9,9 +9,10 @@ type FilterItemProps = {
     id: string
     label: string
   }
+  selected: () => void
 }
 
-export function FilterItem({ groupId, item }: FilterItemProps) {
+export function FilterItem({ groupId, item, selected }: FilterItemProps) {
   const queryString = useQueryString()
 
   const toggleFilter = (groupId: string, itemId: string) => {
@@ -25,6 +26,7 @@ export function FilterItem({ groupId, item }: FilterItemProps) {
     }
 
     queryString.set(groupId, currentFilters.join('|'))
+    selected()
   }
 
   const hasFilter = (groupId: string, itemId: string) => {

@@ -115,6 +115,7 @@ export function ProductListFilter({
                       key={value.id}
                       item={{ id: value.id, label: value.label }}
                       groupId={data.id}
+                      selected={() => setFilterOpened(!filterOpened)}
                     />
                   ))}
                 </AccordionContent>
