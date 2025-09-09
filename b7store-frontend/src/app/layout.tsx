@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
+import { Loading } from '@/components/loading'
 import { QueryClientContext } from '@/providers/queryclient'
 import { StoreHydration } from '@/providers/store-hydration'
 import type { Metadata } from 'next'
@@ -50,6 +51,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <Loading />
           </div>
         </QueryClientContext>
       </body>
