@@ -1,10 +1,18 @@
 import { getAuthState } from '@/actions/get-auth-state'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+import { getCartState } from './actions/get-cart-state'
 
 export async function middleware(req: NextRequest) {
   const { token } = await getAuthState()
+  const { cart } = await getCartState()
   const url = req.nextUrl.clone()
+
+  // Se carrinho vazio → redireciona para Home
+  if (cart.length === 0 && url.pathname.startsWith('/cart')) {
+    url.pathname = '/'
+    return NextResponse.redirect(url)
+  }
 
   // Rotas públicas que não devem ser acessadas se o usuário estiver logado
   const publicRoutes = ['/login', '/register']
@@ -30,5 +38,5 @@ export async function middleware(req: NextRequest) {
 
 // Configuração: quais rotas o middleware deve interceptar
 export const config = {
-  matcher: ['/login', '/register', '/my-orders'],
+  matcher: ['/cart', '/login', '/register', '/my-orders'],
 }
