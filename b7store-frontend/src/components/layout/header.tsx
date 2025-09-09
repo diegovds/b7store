@@ -85,14 +85,18 @@ export function Header() {
         className={`overflow-hidden duration-300 md:hidden ${menuOpened ? 'mb-6 max-h-[154px]' : 'max-h-0'}`}
       >
         {menu.map((item) => (
-          <Link key={item.label} href={item.href}>
+          <Link
+            key={item.label}
+            href={item.href}
+            onClick={() => setMenuOpened(!menuOpened)}
+          >
             <div className="flex items-center justify-between border-b border-gray-200 p-6">
               <div className="text-lg font-medium text-gray-500">
                 {item.label}
               </div>
               <Image
                 src={`/assets/ui/arrow-up-right.png`}
-                alt="Ir para a categoria"
+                alt=""
                 width={24}
                 height={24}
               />
