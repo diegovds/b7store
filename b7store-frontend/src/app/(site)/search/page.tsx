@@ -49,6 +49,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     redirect('/')
   }
 
+  /*
+    Detalhe: do jeito que está, se dois produtos tiverem a mesma categoryMetadata.id 
+    mas com valores diferentes (ex: "Cor: Azul" e "Cor: Vermelho"), só o último valor vai ficar.
+  */
+
   const metadata = Array.from(
     new Map(
       products
