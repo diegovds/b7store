@@ -20,11 +20,11 @@ export const Footer = () => {
             width={68}
             height={68}
           />
-          <div className="text-center md:text-left">
-            <h3 className="mb-6 text-2xl font-medium text-balance md:mb-2">
+          <div className="flex flex-col items-center text-center md:items-start">
+            <h3 className="mb-6 text-xl font-medium text-balance md:mb-2">
               Fique por dentro das promoções
             </h3>
-            <p className="w-[55%] place-self-center text-base text-gray-400 md:w-full">
+            <p className="w-[55%] text-base text-gray-400 md:w-full">
               Coloque seu e-mail e seja o primeiro a saber
             </p>
           </div>
@@ -58,7 +58,7 @@ export const Footer = () => {
             </Link>
             <ul className="flex flex-col items-center gap-12 md:flex-row">
               {menu.map((item, index) => (
-                <li key={index} className="text-xl font-medium">
+                <li key={index} className="text-lg font-medium">
                   <Link href={item.href}>{item.label}</Link>
                 </li>
               ))}
@@ -66,7 +66,7 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col gap-6 border-b border-gray-700 py-16 md:flex-row md:py-10">
             <div className="flex-1">
-              <h4 className="mb-10 text-center text-xl md:text-left">
+              <h4 className="mb-10 text-center text-lg md:text-left">
                 Precisa de ajuda?
               </h4>
               <div className="flex flex-col gap-6 md:flex-row">
@@ -83,7 +83,7 @@ export const Footer = () => {
               </div>
             </div>
             <div className="">
-              <h4 className="mt-8 mb-10 text-center text-xl md:mt-0 md:text-left">
+              <h4 className="mt-8 mb-10 text-center text-lg md:mt-0 md:text-left">
                 Acompanhe nas redes sociais
               </h4>
               <div className="flex flex-row justify-between gap-6">
@@ -94,25 +94,18 @@ export const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-between gap-14 py-16 md:flex-row md:py-10">
-            <div className="w-[70%] text-center text-xl md:w-full md:text-left">
-              Se você leu isso aqui, saiba que está no caminho certo!
-              <br />
-              Continue estudando e você chegará lá...
-            </div>
-            <div className="flex justify-center">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="flex cursor-pointer rounded-sm border border-gray-700 px-6 py-4 duration-300 hover:bg-gray-900"
-              >
-                <Image
-                  src="/assets/ui/arrow-up-line.png"
-                  alt=""
-                  width={32}
-                  height={32}
-                />
-              </button>
-            </div>
+          <div className="flex w-full justify-center py-16 md:justify-end md:py-10">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex cursor-pointer rounded-sm border border-gray-700 px-5 py-3 duration-300 hover:bg-gray-900"
+            >
+              <Image
+                src="/assets/ui/arrow-up-line.png"
+                alt=""
+                width={16}
+                height={16}
+              />
+            </button>
           </div>
         </div>
       </div>
