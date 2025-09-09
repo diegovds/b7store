@@ -1,5 +1,6 @@
 'use client'
 
+import { Checkbox } from '@/components/ui/checkbox'
 import { useQueryString } from '@/hooks/use-querystring'
 
 type FilterItemProps = {
@@ -33,11 +34,9 @@ export function FilterItem({ groupId, item }: FilterItemProps) {
 
   return (
     <div className="flex items-center gap-4">
-      <input
-        type="checkbox"
-        className="size-6"
+      <Checkbox
         id={`ck-${item.id}`}
-        onChange={() => toggleFilter(groupId, item.id)}
+        onCheckedChange={() => toggleFilter(groupId, item.id)}
         checked={hasFilter(groupId, item.id)}
       />
       <label htmlFor={`ck-${item.id}`} className="text-lg text-gray-500">
