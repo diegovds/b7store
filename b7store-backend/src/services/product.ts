@@ -67,6 +67,15 @@ export const getProducts = async (filters: ProductFilters) => {
       OR: [
         { labelSearch: { contains: searchTerm, mode: 'insensitive' } },
         { descriptionSearch: { contains: searchTerm, mode: 'insensitive' } },
+        {
+          metadata: {
+            some: {
+              metadataValue: {
+                label: { contains: searchTerm, mode: 'insensitive' },
+              },
+            },
+          },
+        },
       ],
     })
   }
