@@ -17,14 +17,14 @@ export const Footer = () => {
           <Image
             src={'/assets/ui/mail-send-line.png'}
             alt=""
-            width={68}
-            height={68}
+            width={58}
+            height={58}
           />
           <div className="flex flex-col items-center text-center md:items-start">
-            <h3 className="mb-6 text-xl font-medium text-balance md:mb-2">
+            <h3 className="mb-6 text-2xl font-medium text-balance md:mb-2">
               Fique por dentro das promoções
             </h3>
-            <p className="w-[55%] text-base text-gray-400 md:w-full">
+            <p className="w-[55%] text-base text-balance text-gray-400 md:w-fit">
               Coloque seu e-mail e seja o primeiro a saber
             </p>
           </div>
