@@ -1,3 +1,5 @@
+import { getAuthState } from '@/actions/get-auth-state'
+import { getCartState } from '@/actions/get-cart-state'
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { QueryClientContext } from '@/providers/queryclient'
@@ -24,11 +26,14 @@ export const metadata: Metadata = {
     'B7Store - Loja virtual de roupas e acessórios com as melhores ofertas e novidades.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { token } = await getAuthState()
+  const { cart } = await getCartState()
+
   return (
     <html lang="pt-BR">
       <body className={`${poppins.variable} antialiased`}>
@@ -43,7 +48,7 @@ export default function RootLayout({
           richColors
         />
         <QueryClientContext>
-          <StoreHydration />
+          <StoreHydration token={token} cart={cart} />
           <div className="flex min-h-dvh flex-col">
             <Header />
             <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">

@@ -5,7 +5,7 @@ import { setAuthCookie } from '@/actions/set-auth-cookie'
 import { useAuthStore } from '@/store/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -28,6 +28,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>
 
 export const LoginForm = () => {
+  const router = useRouter()
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,7 +47,7 @@ export const LoginForm = () => {
     } else if (res.token) {
       await setAuthCookie(res.token)
       setToken(res.token)
-      redirect('/')
+      router.push('/')
     }
   }
 

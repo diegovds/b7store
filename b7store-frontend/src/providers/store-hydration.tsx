@@ -1,26 +1,26 @@
 'use client'
 
-import { getAuthState } from '@/actions/get-auth-state'
-import { getCartState } from '@/actions/get-cart-state'
 import { useAuthStore } from '@/store/auth'
 import { useCartStore } from '@/store/cart'
+import { CartItem } from '@/types/cart-item'
 import { useEffect } from 'react'
 
-export const StoreHydration = () => {
+type Props = {
+  token: string | null
+  cart: CartItem[]
+}
+
+export const StoreHydration = ({ token, cart }: Props) => {
   const { setHydrated, setToken } = useAuthStore()
 
   useEffect(() => {
-    getAuthState().then(({ token }) => {
-      if (token) setToken(token)
-      setHydrated(true)
-    })
+    if (token) setToken(token)
+    setHydrated(true)
 
-    getCartState().then(({ cart }) => {
-      if (cart.length > 0) {
-        useCartStore.setState({ cart })
-      }
-    })
-  }, [setHydrated, setToken])
+    if (cart.length > 0) {
+      useCartStore.setState({ cart })
+    }
+  }, [token, cart, setHydrated, setToken])
 
   return null
 }

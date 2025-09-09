@@ -1,3 +1,4 @@
+import { getAuthState } from '@/actions/get-auth-state'
 import { MyOrdersContainer } from '@/components/my-orders/my-orders-container'
 import {
   getOrders,
@@ -5,17 +6,15 @@ import {
   GetOrdersId200Order,
   getUserAddresses,
 } from '@/http/api'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export default async function MyOrdersPage() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('auth_token')
+  const { token } = await getAuthState()
 
   if (!token) return redirect('/login')
 
   const { error, orders } = await getOrders({
-    headers: { Authorization: `Bearer ${token.value}` },
+    headers: { Authorization: `Bearer ${token}` },
   })
 
   if (error) return redirect('/')
@@ -24,7 +23,7 @@ export default async function MyOrdersPage() {
 
   for (const ooder of orders) {
     const { error, order } = await getOrdersId(ooder.id.toString(), {
-      headers: { Authorization: `Bearer ${token.value}` },
+      headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!error && order) {
@@ -33,7 +32,7 @@ export default async function MyOrdersPage() {
   }
 
   const { error: errorAddresses, address } = await getUserAddresses({
-    headers: { Authorization: `Bearer ${token.value}` },
+    headers: { Authorization: `Bearer ${token}` },
   })
 
   if (errorAddresses) return redirect('/')

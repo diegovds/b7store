@@ -3,7 +3,7 @@
 import { register } from '@/actions/register'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -33,6 +33,7 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>
 
 export const RegisterForm = () => {
+  const router = useRouter()
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -49,7 +50,7 @@ export const RegisterForm = () => {
     if (res.error) {
       toast.error(res.error)
     } else {
-      redirect('/login')
+      router.push('/login')
     }
   }
 

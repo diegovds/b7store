@@ -1,5 +1,5 @@
+import { getAuthState } from '@/actions/get-auth-state'
 import { getOrdersId, getOrdersSession } from '@/http/api'
-import { cookies } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -11,8 +11,7 @@ interface CartSuccessPageProps {
 export default async function PurchaseCompletedPage({
   searchParams,
 }: CartSuccessPageProps) {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('auth_token')
+  const { token } = await getAuthState()
   const sessionId = (await searchParams).session_id
 
   if (typeof sessionId !== 'string' || !token) return notFound()
@@ -24,7 +23,7 @@ export default async function PurchaseCompletedPage({
   if (error) return notFound()
 
   const order = await getOrdersId(id.toString(), {
-    headers: { Authorization: `Bearer ${token.value}` },
+    headers: { Authorization: `Bearer ${token}` },
   })
 
   if (order.error) return notFound()
