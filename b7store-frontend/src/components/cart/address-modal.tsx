@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { postUserAddresses } from '@/http/api'
+import { formatZipcode } from '@/libs/format-zipcode'
 import { useAuthStore } from '@/store/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -53,16 +54,6 @@ export const AddressModal = ({ onClose, open }: AddressModalProps) => {
   })
 
   if (!open) return null
-
-  const formatZipcode = (zipcode: string) => {
-    const onlyNumbers = zipcode.replace(/\D/g, '')
-
-    if (onlyNumbers.length === 8) {
-      return onlyNumbers.replace(/(\d{5})(\d{3})/, '$1-$2')
-    }
-
-    return zipcode
-  }
 
   const onSubmit = async (data: NewAddressFormValues) => {
     try {
