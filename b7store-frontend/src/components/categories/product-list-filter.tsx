@@ -8,7 +8,6 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { ProductItem } from '../product-item'
-import { FilterGroup } from './filter-group'
 
 import {
   Select,
@@ -17,6 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../ui/accordion'
+import { FilterItem } from './filter-item'
 
 type ProductListFilterProps = {
   products: Product[]
@@ -84,7 +90,7 @@ export function ProductListFilter({
 
           <div
             onClick={() => setFilterOpened(!filterOpened)}
-            className="flex h-14 flex-1 cursor-pointer items-center rounded-sm border border-gray-200 bg-white px-6 text-gray-500 md:hidden"
+            className="flex flex-1 cursor-pointer items-center rounded-sm border border-gray-200 bg-white px-6 text-sm text-gray-500 md:hidden"
           >
             Filtrar por
           </div>
@@ -92,17 +98,29 @@ export function ProductListFilter({
       </div>
 
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
-        <div
-          className={`flex-1 overflow-x-hidden overflow-y-hidden duration-300 md:max-w-70 ${filterOpened ? `max-h-screen` : `max-h-0`} md:max-h-fit`}
-        >
-          {metadata.map((data) => (
-            <FilterGroup
-              key={data.id}
-              groupId={data.id}
-              groupName={data.name}
-              filters={data.values}
-            />
-          ))}
+        <div className={`flex-1 md:max-w-70`}>
+          <Accordion
+            type="single"
+            collapsible
+            className={`w-full ${filterOpened ? 'block' : 'hidden'} md:block`}
+          >
+            {metadata.map((data) => (
+              <AccordionItem key={data.id} value={data.id}>
+                <AccordionTrigger className="flex flex-1 items-center text-xl font-medium hover:no-underline">
+                  {data.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {data.values.map((value) => (
+                    <FilterItem
+                      key={value.id}
+                      item={{ id: value.id, label: value.label }}
+                      groupId={data.id}
+                    />
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
 
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
