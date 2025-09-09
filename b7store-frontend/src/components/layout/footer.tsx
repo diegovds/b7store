@@ -1,3 +1,5 @@
+'use client'
+
 import { MenuItem } from '@/types/menu-item'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -99,7 +101,17 @@ export const Footer = () => {
               Continue estudando e você chegará lá...
             </div>
             <div className="flex justify-center">
-              <FooterButton href="/" icon="/assets/ui/arrow-up-line.png" />
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="flex cursor-pointer rounded-sm border border-gray-700 px-6 py-4 duration-300 hover:bg-gray-900"
+              >
+                <Image
+                  src="/assets/ui/arrow-up-line.png"
+                  alt=""
+                  width={32}
+                  height={32}
+                />
+              </button>
             </div>
           </div>
         </div>
