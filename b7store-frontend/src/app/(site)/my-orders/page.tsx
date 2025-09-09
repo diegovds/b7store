@@ -11,8 +11,6 @@ import { redirect } from 'next/navigation'
 export default async function MyOrdersPage() {
   const { token } = await getAuthState()
 
-  if (!token) return redirect('/login')
-
   const { error, orders } = await getOrders({
     headers: { Authorization: `Bearer ${token}` },
   })
