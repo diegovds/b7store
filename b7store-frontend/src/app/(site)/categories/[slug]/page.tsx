@@ -1,5 +1,6 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getCategorySlugMetadata, getProducts } from '@/http/api'
+import { ProductFilters } from '@/types/product-filters'
 import { normalizeSearchParams } from '@/utils/search-params'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -47,12 +48,14 @@ export default async function CategoriesPage({
 
   const { page: _page, order: _order, ..._filters } = filters
 
-  const { products, error } = await getProducts({
+  const productFilter: ProductFilters = {
     orderBy,
     limit: '6',
     metadata: JSON.stringify(_filters),
     categoryId: category?.id.toString(),
-  })
+  }
+
+  const { products, error } = await getProducts(productFilter)
 
   if (error) {
     return redirect('/')
@@ -66,12 +69,7 @@ export default async function CategoriesPage({
       <ProductListFilter
         products={products}
         metadata={metadata}
-        productFilter={{
-          orderBy,
-          limit: '5',
-          metadata: JSON.stringify(_filters),
-          categoryId: category?.id.toString(),
-        }}
+        productFilter={productFilter}
       />
     </div>
   )
