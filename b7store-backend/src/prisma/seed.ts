@@ -231,7 +231,7 @@ async function main() {
 
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Vermelha',
-    price: 59.9,
+    price: 60.0,
     description:
       'Camiseta vermelha com estampa Laravel, perfeita para desenvolvedores PHP que desejam conforto e estilo. Tecido premium, ideal para uso diário, cursos, hackathons e eventos de tecnologia.',
     categoryId: category1.id,
