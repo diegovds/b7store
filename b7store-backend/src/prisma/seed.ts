@@ -70,7 +70,6 @@ async function main() {
 
   console.log('✅ Metadata values created')
 
-  // Helper function para criar produto com imagens e metadata
   async function createProductWithMetadata(data: {
     label: string
     price: number
@@ -109,81 +108,190 @@ async function main() {
     }
   }
 
-  // Criando produtos com imagens e metadata
+  // Camisetas React (azul, cinza, preta)
   await createProductWithMetadata({
-    label: 'Camisa React',
+    label: 'Camiseta React - Azul',
     price: 94.5,
-    description: 'Camisa com logo do React, ideal para front-end developers',
+    description:
+      'Camiseta com logo do React, azul, ideal para front-end developers',
     categoryId: category1.id,
-    images: ['product_1_1.png', 'product_1_2.png', 'product_1_3.png'],
+    images: ['product_1_1.png'],
+    metadataIds: ['react'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta React - Cinza',
+    price: 94.5,
+    description:
+      'Camiseta com logo do React, cinza, ideal para front-end developers',
+    categoryId: category1.id,
+    images: ['product_1_2.png'],
+    metadataIds: ['react'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta React - Preta',
+    price: 94.5,
+    description:
+      'Camiseta com logo do React, preta, ideal para front-end developers',
+    categoryId: category1.id,
+    images: ['product_1_3.png'],
     metadataIds: ['react'],
   })
 
+  // Camiseta React Native (azul escuro)
   await createProductWithMetadata({
-    label: 'Camisa RN',
+    label: 'Camiseta React Native - Azul Escuro',
     price: 89.9,
     description:
-      'Camisa com estampa de React Native, perfeita para desenvolvedores',
+      'Camiseta com estampa React Native, azul escuro, perfeita para mobile developers',
     categoryId: category1.id,
     images: ['product_2_1.png'],
     metadataIds: ['react'],
   })
 
+  // Camiseta PHP (azul, cinza)
   await createProductWithMetadata({
-    label: 'Camisa PHP',
+    label: 'Camiseta PHP - Azul',
     price: 69.9,
-    description: 'Camisa com estampa PHP, para desenvolvedores web',
+    description:
+      'Camiseta com estampa PHP, azul, ideal para desenvolvedores web',
     categoryId: category1.id,
-    images: ['product_3_1.png', 'product_3_2.png'],
+    images: ['product_3_1.png'],
+    metadataIds: ['php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta PHP - Cinza',
+    price: 69.9,
+    description:
+      'Camiseta com estampa PHP, cinza, ideal para desenvolvedores web',
+    categoryId: category1.id,
+    images: ['product_3_2.png'],
     metadataIds: ['php'],
   })
 
+  // Camiseta Node.js (verde, preta)
   await createProductWithMetadata({
-    label: 'Camisa Node',
+    label: 'Camiseta Node.js - Verde',
     price: 79.9,
-    description: 'Camisa com design Node, para programadores Node',
+    description:
+      'Camiseta com estampa Node.js, verde, perfeita para programadores back-end',
     categoryId: category1.id,
-    images: ['product_4_1.png', 'product_4_2.png'],
+    images: ['product_4_1.png'],
+    metadataIds: ['node'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Node.js - Preta',
+    price: 79.9,
+    description:
+      'Camiseta com estampa Node.js, preta, perfeita para programadores back-end',
+    categoryId: category1.id,
+    images: ['product_4_2.png'],
     metadataIds: ['node'],
   })
 
+  // Camiseta Laravel (vermelha, azul, branca, preta)
   await createProductWithMetadata({
-    label: 'Camisa Laravel',
+    label: 'Camiseta Laravel - Vermelha',
     price: 59.9,
-    description: 'Camisa com design Laravel, para programadores Laravel',
+    description: 'Camiseta com estampa Laravel, vermelha, ideal para devs PHP',
     categoryId: category1.id,
-    images: [
-      'product_5_1.png',
-      'product_5_2.png',
-      'product_5_3.png',
-      'product_5_4.png',
-    ],
+    images: ['product_5_1.png'],
+    metadataIds: ['php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Laravel - Azul',
+    price: 59.9,
+    description: 'Camiseta com estampa Laravel, azul, ideal para devs PHP',
+    categoryId: category1.id,
+    images: ['product_5_2.png'],
+    metadataIds: ['php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Laravel - Branca',
+    price: 59.9,
+    description: 'Camiseta com estampa Laravel, branca, ideal para devs PHP',
+    categoryId: category1.id,
+    images: ['product_5_3.png'],
+    metadataIds: ['php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Laravel - Preta',
+    price: 59.9,
+    description: 'Camiseta com estampa Laravel, preta, ideal para devs PHP',
+    categoryId: category1.id,
+    images: ['product_5_4.png'],
     metadataIds: ['php'],
   })
 
+  // Camiseta Web Base (CSS azul, JS laranja, HTML amarela)
   await createProductWithMetadata({
-    label: 'Boné 1',
-    price: 39.9,
-    description: 'Boné com design B7Web com cores escuras',
-    categoryId: category2.id,
-    images: ['product_6_1.png', 'product_6_2.png', 'product_6_3.png'],
-  })
-
-  await createProductWithMetadata({
-    label: 'Boné 2',
-    price: 29.9,
-    description: 'Boné com design B7Web, para programadores estilosos',
-    categoryId: category2.id,
-    images: ['product_7_1.png', 'product_7_2.png', 'product_7_3.png'],
-  })
-
-  await createProductWithMetadata({
-    label: 'Camisa Base da Web',
+    label: 'Camiseta Web Base - CSS Azul',
     price: 49.9,
-    description: 'Camisa com design das tecnologias base da web.',
+    description: 'Camiseta com design CSS, azul, base da web',
     categoryId: category1.id,
-    images: ['product_8_1.png', 'product_8_2.png', 'product_8_3.png'],
+    images: ['product_8_1.png'],
     metadataIds: ['node', 'react', 'php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Web Base - JS Laranja',
+    price: 49.9,
+    description: 'Camiseta com design JavaScript, laranja, base da web',
+    categoryId: category1.id,
+    images: ['product_8_2.png'],
+    metadataIds: ['node', 'react', 'php'],
+  })
+  await createProductWithMetadata({
+    label: 'Camiseta Web Base - HTML Amarela',
+    price: 49.9,
+    description: 'Camiseta com design HTML, amarela, base da web',
+    categoryId: category1.id,
+    images: ['product_8_3.png'],
+    metadataIds: ['node', 'react', 'php'],
+  })
+
+  // Bonés Escuros (azul, preto, cinza escuro)
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Azul',
+    price: 39.9,
+    description: 'Boné B7Web azul escuro',
+    categoryId: category2.id,
+    images: ['product_6_1.png'],
+  })
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Preto',
+    price: 39.9,
+    description: 'Boné B7Web preto',
+    categoryId: category2.id,
+    images: ['product_6_2.png'],
+  })
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Cinza Escuro',
+    price: 39.9,
+    description: 'Boné B7Web cinza escuro',
+    categoryId: category2.id,
+    images: ['product_6_3.png'],
+  })
+
+  // Bonés Claros (azul claro, cinza claro, branco)
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Azul Claro',
+    price: 29.9,
+    description: 'Boné B7Web azul claro',
+    categoryId: category2.id,
+    images: ['product_7_1.png'],
+  })
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Cinza Claro',
+    price: 29.9,
+    description: 'Boné B7Web cinza claro',
+    categoryId: category2.id,
+    images: ['product_7_2.png'],
+  })
+  await createProductWithMetadata({
+    label: 'Boné B7Web - Branco',
+    price: 29.9,
+    description: 'Boné B7Web branco',
+    categoryId: category2.id,
+    images: ['product_7_3.png'],
   })
 
   console.log('✅ Products with metadata created')
