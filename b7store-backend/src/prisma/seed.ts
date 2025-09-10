@@ -28,6 +28,10 @@ async function main() {
     data: { id: 'tech', name: 'Tecnologia', categoryId: category1.id },
   })
 
+  const categoryMetadata2 = await prisma.categoryMetadata.create({
+    data: { id: 'color', name: 'Cor', categoryId: category2.id },
+  })
+
   await Promise.all([
     prisma.banner.create({
       data: { img: 'banner_promo_1.jpg', link: '/categories/camisetas' },
@@ -113,6 +117,52 @@ async function main() {
   ])
   console.log('✅ Metadata values created')
 
+  await Promise.all([
+    prisma.metadataValue.create({
+      data: {
+        id: 'azul',
+        label: 'Azul',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'preto',
+        label: 'Preto',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'cinza-escuro',
+        label: 'Cinza Escuro',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'azul-claro',
+        label: 'Azul Claro',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'cinza-claro',
+        label: 'Cinza Claro',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'branco',
+        label: 'Branco',
+        categoryMetadataId: categoryMetadata2.id,
+      },
+    }),
+  ])
+  console.log('✅ Bonés metadataValues created')
+
   async function createProductWithMetadata(data: {
     label: string
     price: number
@@ -147,8 +197,22 @@ async function main() {
         })
       }
     }
+
+    // Associar cor para bonés
+    if (data.categoryId === category2.id && data.metadataIds) {
+      for (const metadataId of data.metadataIds) {
+        await prisma.productMetadata.create({
+          data: {
+            productId: product.id,
+            categoryMetadataId: categoryMetadata2.id,
+            metadataValueId: metadataId,
+          },
+        })
+      }
+    }
   }
 
+  // Camisetas React
   await createProductWithMetadata({
     label: 'Camiseta React - Azul',
     price: 94.5,
@@ -178,6 +242,7 @@ async function main() {
   })
   console.log('✅ Camisetas React created')
 
+  // Camiseta React Native
   await createProductWithMetadata({
     label: 'Camiseta React Native - Azul Escuro',
     price: 89.9,
@@ -189,6 +254,7 @@ async function main() {
   })
   console.log('✅ Camiseta React Native created')
 
+  // Camisetas PHP
   await createProductWithMetadata({
     label: 'Camiseta PHP - Azul',
     price: 60.0,
@@ -209,6 +275,7 @@ async function main() {
   })
   console.log('✅ Camisetas PHP created')
 
+  // Camisetas Node.js
   await createProductWithMetadata({
     label: 'Camiseta Node.js - Verde',
     price: 60.0,
@@ -229,6 +296,7 @@ async function main() {
   })
   console.log('✅ Camisetas Node.js created')
 
+  // Camisetas Laravel
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Vermelha',
     price: 60.0,
@@ -267,6 +335,7 @@ async function main() {
   })
   console.log('✅ Camisetas Laravel created')
 
+  // Camisetas Web Base
   await createProductWithMetadata({
     label: 'Camiseta CSS Azul',
     price: 60.0,
@@ -285,7 +354,6 @@ async function main() {
     images: ['product_8_3.png'],
     metadataIds: ['javascript', 'react'],
   })
-
   await createProductWithMetadata({
     label: 'Camiseta HTML Laranja',
     price: 49.9,
@@ -295,9 +363,9 @@ async function main() {
     images: ['product_8_2.png'],
     metadataIds: ['html'],
   })
-
   console.log('✅ Camisetas Web Base created')
 
+  // Bonés Escuros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul',
     price: 39.9,
@@ -305,6 +373,7 @@ async function main() {
       'Boné B7Web azul escuro, perfeito para proteção solar com estilo casual e moderno.',
     categoryId: category2.id,
     images: ['product_6_1.png'],
+    metadataIds: ['azul'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Preto',
@@ -313,6 +382,7 @@ async function main() {
       'Boné B7Web preto, confortável e estiloso, ideal para uso diário.',
     categoryId: category2.id,
     images: ['product_6_2.png'],
+    metadataIds: ['preto'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Cinza Escuro',
@@ -321,9 +391,11 @@ async function main() {
       'Boné B7Web cinza escuro, leve e durável, perfeito para qualquer ocasião casual.',
     categoryId: category2.id,
     images: ['product_6_3.png'],
+    metadataIds: ['cinza-escuro'],
   })
   console.log('✅ Bonés Escuros created')
 
+  // Bonés Claros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul Claro',
     price: 29.9,
@@ -331,6 +403,7 @@ async function main() {
       'Boné B7Web azul claro, confortável e leve, ideal para estilo casual.',
     categoryId: category2.id,
     images: ['product_7_1.png'],
+    metadataIds: ['azul-claro'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Cinza Claro',
@@ -339,6 +412,7 @@ async function main() {
       'Boné B7Web cinza claro, estiloso e confortável, perfeito para o dia a dia.',
     categoryId: category2.id,
     images: ['product_7_2.png'],
+    metadataIds: ['cinza-claro'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Branco',
@@ -347,6 +421,7 @@ async function main() {
       'Boné B7Web branco, clássico e leve, ideal para qualquer ocasião.',
     categoryId: category2.id,
     images: ['product_7_3.png'],
+    metadataIds: ['branco'],
   })
   console.log('✅ Bonés Claros created')
 
