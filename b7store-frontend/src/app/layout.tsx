@@ -2,6 +2,7 @@ import { getAuthState } from '@/actions/get-auth-state'
 import { getCartState } from '@/actions/get-cart-state'
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
+import { env } from '@/env'
 import { QueryClientContext } from '@/providers/queryclient'
 import { StoreHydration } from '@/providers/store-hydration'
 import type { Metadata } from 'next'
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: '/assets/ui/logo.png',
+        url: `${env.NEXT_PUBLIC_FRONTEND_URL}/assets/ui/logo.png`,
         width: 1200,
         height: 630,
         alt: 'B7Store',
