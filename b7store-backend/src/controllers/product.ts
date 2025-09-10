@@ -14,6 +14,7 @@ const productBodySchema = z.object({
   limit: z.string().regex(/^\d+$/).optional(),
   categoryId: z.string().optional(),
   q: z.string().optional(),
+  page: z.string().regex(/^\d+$/).optional(),
 })
 
 const productResponseSchema = z.array(
@@ -97,11 +98,12 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
-      const { limit, metadata, orderBy, categoryId, q } = request.query
+      const { limit, metadata, orderBy, categoryId, q, page } = request.query
 
       const parsedLimit = limit ? parseInt(limit) : undefined
       const parsedMetadata = metadata ? JSON.parse(metadata) : undefined
       const parsedCategoryId = categoryId ? parseInt(categoryId) : undefined
+      const parsedPage = page ? parseInt(page) : undefined
 
       const products = await getProducts({
         limit: parsedLimit,
@@ -109,6 +111,7 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
         order: orderBy,
         categoryId: parsedCategoryId,
         q,
+        page: parsedPage,
       })
 
       const productsWithAbsoluteUrl = products.map((product) => ({

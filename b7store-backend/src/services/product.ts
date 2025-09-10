@@ -7,6 +7,7 @@ interface ProductFilters {
   metadata?: { [key: string]: string }
   order?: ProductOrder
   limit?: number
+  page?: number
   categoryId?: number
   q?: string
 }
@@ -114,6 +115,10 @@ export const getProducts = async (filters: ProductFilters) => {
     where,
     orderBy,
     take: filters.limit ?? undefined,
+    skip:
+      filters.page && filters.limit
+        ? (filters.page - 1) * filters.limit
+        : undefined,
   })
 
   return products.map((product) => ({
