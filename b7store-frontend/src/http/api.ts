@@ -27,6 +27,10 @@ export type GetProductsParams = {
   limit?: string
   categoryId?: string
   q?: string
+  /**
+   * @pattern ^\d+$
+   */
+  page?: string
 }
 
 export type GetProductsOrderBy =
