@@ -25,7 +25,6 @@ async function main() {
     data: { slug: 'bones', name: 'Bonés' },
   })
 
-  // CategoryMetadata
   const categoryMetadata = await prisma.categoryMetadata.create({
     data: { id: 'tech', name: 'Tecnologia', categoryId: category1.id },
   })
@@ -55,21 +54,69 @@ async function main() {
     }),
   ])
 
-  // MetadataValues
+  // MetadataValues: tecnologias + estampas
   await Promise.all([
     prisma.metadataValue.create({
-      data: { id: 'node', label: 'Node', categoryMetadataId: 'tech' },
+      data: {
+        id: 'node',
+        label: 'Node',
+        categoryMetadataId: categoryMetadata.id,
+      },
     }),
     prisma.metadataValue.create({
-      data: { id: 'react', label: 'React', categoryMetadataId: 'tech' },
+      data: {
+        id: 'react',
+        label: 'React',
+        categoryMetadataId: categoryMetadata.id,
+      },
     }),
     prisma.metadataValue.create({
-      data: { id: 'php', label: 'PHP', categoryMetadataId: 'tech' },
+      data: {
+        id: 'php',
+        label: 'PHP',
+        categoryMetadataId: categoryMetadata.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'react-native',
+        label: 'React Native',
+        categoryMetadataId: categoryMetadata.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'laravel',
+        label: 'Laravel',
+        categoryMetadataId: categoryMetadata.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'css',
+        label: 'CSS',
+        categoryMetadataId: categoryMetadata.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'javascript',
+        label: 'JavaScript',
+        categoryMetadataId: categoryMetadata.id,
+      },
+    }),
+    prisma.metadataValue.create({
+      data: {
+        id: 'html',
+        label: 'HTML',
+        categoryMetadataId: categoryMetadata.id,
+      },
     }),
   ])
 
   console.log('✅ Metadata values created')
 
+  // Helper function para criar produto com imagens e metadata
   async function createProductWithMetadata(data: {
     label: string
     price: number
@@ -90,9 +137,7 @@ async function main() {
     })
 
     for (const url of data.images) {
-      await prisma.productImage.create({
-        data: { productId: product.id, url },
-      })
+      await prisma.productImage.create({ data: { productId: product.id, url } })
     }
 
     if (data.metadataIds && data.metadataIds.length > 0) {
@@ -145,7 +190,7 @@ async function main() {
       'Camiseta com estampa React Native, azul escuro, perfeita para mobile developers',
     categoryId: category1.id,
     images: ['product_2_1.png'],
-    metadataIds: ['react'],
+    metadataIds: ['react-native'],
   })
 
   // Camiseta PHP (azul, cinza)
@@ -195,7 +240,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, vermelha, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_1.png'],
-    metadataIds: ['php'],
+    metadataIds: ['laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Azul',
@@ -203,7 +248,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, azul, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_2.png'],
-    metadataIds: ['php'],
+    metadataIds: ['laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Branca',
@@ -211,7 +256,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, branca, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_3.png'],
-    metadataIds: ['php'],
+    metadataIds: ['laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Preta',
@@ -219,7 +264,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, preta, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_4.png'],
-    metadataIds: ['php'],
+    metadataIds: ['laravel'],
   })
 
   // Camiseta Web Base (CSS azul, JS laranja, HTML amarela)
@@ -229,7 +274,7 @@ async function main() {
     description: 'Camiseta com design CSS, azul, base da web',
     categoryId: category1.id,
     images: ['product_8_1.png'],
-    metadataIds: ['node', 'react', 'php'],
+    metadataIds: ['css'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Web Base - JS Laranja',
@@ -237,7 +282,7 @@ async function main() {
     description: 'Camiseta com design JavaScript, laranja, base da web',
     categoryId: category1.id,
     images: ['product_8_2.png'],
-    metadataIds: ['node', 'react', 'php'],
+    metadataIds: ['javascript'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Web Base - HTML Amarela',
@@ -245,7 +290,7 @@ async function main() {
     description: 'Camiseta com design HTML, amarela, base da web',
     categoryId: category1.id,
     images: ['product_8_3.png'],
-    metadataIds: ['node', 'react', 'php'],
+    metadataIds: ['html'],
   })
 
   // Bonés Escuros (azul, preto, cinza escuro)
