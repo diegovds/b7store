@@ -1,5 +1,6 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getProducts } from '@/http/api'
+import { ProductFilters } from '@/types/product-filters'
 import { normalizeSearchParams } from '@/utils/search-params'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -27,7 +28,6 @@ export async function generateMetadata({
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = normalizeSearchParams(await searchParams)
   const order = params.order
-  const page = params.page
   const q = params.q
 
   const orderBy =
@@ -41,12 +41,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const { order: _order, page: _page, q: _q, ...filters } = params
 
-  const { error, products } = await getProducts({
+  const productFilter: ProductFilters = {
     orderBy,
-    limit: '8',
+    limit: '6',
     metadata: JSON.stringify(filters),
     q,
-  })
+  }
+
+  const { error, products } = await getProducts(productFilter)
 
   if (error) {
     redirect('/')
@@ -95,7 +97,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="my-4 text-base text-gray-500">
         <Link href="/">Home</Link> &gt; Busca por {q}
       </div>
-      <ProductListFilter products={products} metadata={metadata} />
+      <ProductListFilter
+        products={products}
+        metadata={metadata}
+        productFilter={productFilter}
+      />
     </div>
   )
 }

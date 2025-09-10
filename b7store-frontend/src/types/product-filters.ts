@@ -3,4 +3,5 @@ export type ProductFilters = {
   limit?: string
   metadata?: string
   categoryId?: string
+  q?: string
 }
