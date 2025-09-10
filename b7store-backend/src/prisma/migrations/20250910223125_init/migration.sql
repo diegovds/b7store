@@ -1,10 +1,12 @@
+-- CreateEnum
+CREATE TYPE "public"."OrderStatus" AS ENUM ('pending', 'paid', 'cancelled');
+
 -- CreateTable
 CREATE TABLE "public"."User" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "token" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -43,8 +45,10 @@ CREATE TABLE "public"."Banner" (
 CREATE TABLE "public"."Product" (
     "id" SERIAL NOT NULL,
     "label" TEXT NOT NULL,
+    "labelSearch" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "description" TEXT,
+    "descriptionSearch" TEXT,
     "categoryId" INTEGER NOT NULL,
     "viewsCount" INTEGER NOT NULL DEFAULT 0,
     "salesCount" INTEGER NOT NULL DEFAULT 0,
@@ -114,7 +118,7 @@ CREATE TABLE "public"."MetadataValue" (
 CREATE TABLE "public"."Order" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'pending',
+    "status" "public"."OrderStatus" NOT NULL DEFAULT 'pending',
     "total" DOUBLE PRECISION NOT NULL,
     "shippingCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "shippingDays" INTEGER NOT NULL DEFAULT 0,
@@ -161,6 +165,9 @@ ALTER TABLE "public"."ProductImage" ADD CONSTRAINT "ProductImage_productId_fkey"
 
 -- AddForeignKey
 ALTER TABLE "public"."ProductMetadata" ADD CONSTRAINT "ProductMetadata_productId_fkey" FOREIGN KEY ("productId") REFERENCES "public"."Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."ProductMetadata" ADD CONSTRAINT "ProductMetadata_metadataValueId_fkey" FOREIGN KEY ("metadataValueId") REFERENCES "public"."MetadataValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."CategoryMetadata" ADD CONSTRAINT "CategoryMetadata_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "public"."Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
