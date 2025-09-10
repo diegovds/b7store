@@ -22,15 +22,24 @@ export type GetProductsParams = {
   metadata?: string
   orderBy?: GetProductsOrderBy
   /**
-   * @pattern ^\d+$
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @exclusiveMinimum
    */
-  limit?: string
-  categoryId?: string
+  limit?: number
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @exclusiveMinimum
+   */
+  categoryId?: number
   q?: string
   /**
-   * @pattern ^\d+$
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @exclusiveMinimum
    */
-  page?: string
+  page?: number
 }
 
 export type GetProductsOrderBy =
