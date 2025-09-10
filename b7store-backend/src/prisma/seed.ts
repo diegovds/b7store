@@ -191,7 +191,7 @@ async function main() {
 
   await createProductWithMetadata({
     label: 'Camiseta PHP - Azul',
-    price: 69.9,
+    price: 60.0,
     description:
       'Camiseta confortável com estampa PHP na cor azul, ideal para desenvolvedores web que querem demonstrar suas habilidades com estilo. Produzida em algodão de alta qualidade, perfeita para o trabalho, estudo ou eventos de tecnologia.',
     categoryId: category1.id,
@@ -211,7 +211,7 @@ async function main() {
 
   await createProductWithMetadata({
     label: 'Camiseta Node.js - Verde',
-    price: 79.9,
+    price: 60.0,
     description:
       'Camiseta moderna com estampa Node.js verde, perfeita para desenvolvedores back-end que querem mostrar sua afinidade com tecnologias de servidor. Tecido de alta qualidade, ideal para uso diário e eventos tech.',
     categoryId: category1.id,
@@ -249,7 +249,7 @@ async function main() {
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Branca',
-    price: 59.9,
+    price: 60.0,
     description:
       'Camiseta branca com estampa Laravel, elegante e confortável, perfeita para programadores PHP que buscam unir estilo e tecnologia. Excelente para uso diário, cursos ou eventos de comunidade tech.',
     categoryId: category1.id,
@@ -268,28 +268,28 @@ async function main() {
   console.log('✅ Camisetas Laravel created')
 
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - CSS Azul',
-    price: 49.9,
+    label: 'Camiseta CSS Azul',
+    price: 60.0,
     description:
-      'Camiseta azul com design CSS, base da web, ideal para iniciantes e desenvolvedores que querem mostrar paixão pelo front-end. Confortável, leve e perfeita para estudo, trabalho ou eventos de tecnologia.',
+      'Camiseta azul com design CSS, ideal para iniciantes e desenvolvedores que querem mostrar paixão pelo front-end. Confortável, leve e perfeita para estudo, trabalho ou eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_8_1.png'],
     metadataIds: ['css'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - JS Laranja',
+    label: 'Camiseta JS Laranja',
     price: 49.9,
     description:
-      'Camiseta laranja com design JavaScript, base da web, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
+      'Camiseta laranja com design JavaScript, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
     categoryId: category1.id,
     images: ['product_8_2.png'],
     metadataIds: ['javascript', 'react'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - HTML Amarela',
+    label: 'Camiseta HTML Amarela',
     price: 49.9,
     description:
-      'Camiseta amarela com design HTML, base da web, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
+      'Camiseta amarela com design HTML, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
     categoryId: category1.id,
     images: ['product_8_3.png'],
     metadataIds: ['html'],
