@@ -9,7 +9,10 @@ export const getServerAuthToken = async (): Promise<string | null> => {
 
 export const setServerAuthToken = async (token: string) => {
   const cookiesStore = await cookies()
-  cookiesStore.set('auth_token', token, { httpOnly: true })
+  cookiesStore.set('auth_token', token, {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 30, // 30 dias em segundos
+  })
 }
 
 export const clearServerAuthToken = async () => {
@@ -33,7 +36,10 @@ export async function getServerCart(): Promise<CartItem[]> {
 
 export async function setServerCart(cart: CartItem[]) {
   const cookiesStore = await cookies()
-  cookiesStore.set('cart', JSON.stringify(cart), { httpOnly: true })
+  cookiesStore.set('cart', JSON.stringify(cart), {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 30, // 30 dias em segundos
+  })
 }
 
 export async function clearServerCart() {
