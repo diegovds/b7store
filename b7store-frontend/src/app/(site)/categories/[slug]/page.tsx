@@ -33,7 +33,6 @@ export default async function CategoriesPage({
   const { slug } = await params
   const filters = normalizeSearchParams(await searchParams)
   const order = filters.order
-  const page = filters.page
 
   const orderBy =
     order === 'views'
@@ -50,7 +49,7 @@ export default async function CategoriesPage({
 
   const { products, error } = await getProducts({
     orderBy,
-    limit: '8',
+    limit: '6',
     metadata: JSON.stringify(_filters),
     categoryId: category?.id.toString(),
   })
@@ -64,7 +63,16 @@ export default async function CategoriesPage({
       <div className="my-4 text-base text-gray-500">
         <Link href="/">Home</Link> &gt; {category?.name}
       </div>
-      <ProductListFilter products={products} metadata={metadata} />
+      <ProductListFilter
+        products={products}
+        metadata={metadata}
+        productFilter={{
+          orderBy,
+          limit: '5',
+          metadata: JSON.stringify(_filters),
+          categoryId: category?.id.toString(),
+        }}
+      />
     </div>
   )
 }
