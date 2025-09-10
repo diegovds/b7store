@@ -64,7 +64,7 @@ export function Header() {
             <Link href="/my-orders">
               <HeaderIcon alt="Perfil" src="/assets/ui/user-line.png" />
             </Link>
-            <Link href="/cart">
+            <Link href={`/cart?from=${pathname}`}>
               <HeaderIcon
                 alt="Carrinho"
                 src="/assets/ui/shopping-bag-4-line.png"
