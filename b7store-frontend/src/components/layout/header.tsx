@@ -3,12 +3,18 @@
 import { MenuItem } from '@/types/menu-item'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { HeaderIcon } from './header-icon'
 import { HeaderSearch } from './header-search'
 
 export function Header() {
   const [menuOpened, setMenuOpened] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setMenuOpened(false)
+  }, [pathname])
 
   const menu: MenuItem[] = [
     { label: 'Camisetas', href: '/categories/camisetas' },
