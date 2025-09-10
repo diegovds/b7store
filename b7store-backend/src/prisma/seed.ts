@@ -4,6 +4,8 @@ import { PrismaClient } from '../generated/prisma'
 const prisma = new PrismaClient()
 
 async function main() {
+  console.log('🌱 Starting database seeding...')
+
   const existingCategory = await prisma.category.findFirst({
     where: { slug: 'camisetas' },
   })
@@ -13,18 +15,18 @@ async function main() {
     return
   }
 
+  console.log('📝 No existing data found. Proceeding with seeding...')
+
   const category1 = await prisma.category.create({
     data: { slug: 'camisetas', name: 'Camisetas' },
   })
   const category2 = await prisma.category.create({
     data: { slug: 'bones', name: 'Bonés' },
   })
-  console.log('✅ Category created')
 
   const categoryMetadata = await prisma.categoryMetadata.create({
     data: { id: 'tech', name: 'Tecnologia', categoryId: category1.id },
   })
-  console.log('✅ Category Metadata created')
 
   await Promise.all([
     prisma.banner.create({
@@ -147,6 +149,7 @@ async function main() {
     }
   }
 
+  // Camisetas React
   await createProductWithMetadata({
     label: 'Camiseta React - Azul',
     price: 94.5,
@@ -176,6 +179,7 @@ async function main() {
   })
   console.log('✅ Camisetas React created')
 
+  // Camiseta React Native
   await createProductWithMetadata({
     label: 'Camiseta React Native - Azul Escuro',
     price: 89.9,
@@ -183,10 +187,11 @@ async function main() {
       'Camiseta com estampa React Native, azul escuro, perfeita para mobile developers',
     categoryId: category1.id,
     images: ['product_2_1.png'],
-    metadataIds: ['react-native'],
+    metadataIds: ['react', 'react-native'],
   })
   console.log('✅ Camiseta React Native created')
 
+  // Camisetas PHP
   await createProductWithMetadata({
     label: 'Camiseta PHP - Azul',
     price: 69.9,
@@ -207,6 +212,7 @@ async function main() {
   })
   console.log('✅ Camisetas PHP created')
 
+  // Camisetas Node.js
   await createProductWithMetadata({
     label: 'Camiseta Node.js - Verde',
     price: 79.9,
@@ -214,7 +220,7 @@ async function main() {
       'Camiseta com estampa Node.js, verde, perfeita para programadores back-end',
     categoryId: category1.id,
     images: ['product_4_1.png'],
-    metadataIds: ['node'],
+    metadataIds: ['node', 'javascript'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Node.js - Preta',
@@ -223,17 +229,18 @@ async function main() {
       'Camiseta com estampa Node.js, preta, perfeita para programadores back-end',
     categoryId: category1.id,
     images: ['product_4_2.png'],
-    metadataIds: ['node'],
+    metadataIds: ['node', 'javascript'],
   })
   console.log('✅ Camisetas Node.js created')
 
+  // Camisetas Laravel
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Vermelha',
     price: 59.9,
     description: 'Camiseta com estampa Laravel, vermelha, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_1.png'],
-    metadataIds: ['laravel'],
+    metadataIds: ['php', 'laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Azul',
@@ -241,7 +248,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, azul, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_2.png'],
-    metadataIds: ['laravel'],
+    metadataIds: ['php', 'laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Branca',
@@ -249,7 +256,7 @@ async function main() {
     description: 'Camiseta com estampa Laravel, branca, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_3.png'],
-    metadataIds: ['laravel'],
+    metadataIds: ['php', 'laravel'],
   })
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Preta',
@@ -257,36 +264,38 @@ async function main() {
     description: 'Camiseta com estampa Laravel, preta, ideal para devs PHP',
     categoryId: category1.id,
     images: ['product_5_4.png'],
-    metadataIds: ['laravel'],
+    metadataIds: ['php', 'laravel'],
   })
   console.log('✅ Camisetas Laravel created')
 
+  // Camisetas Web Base
   await createProductWithMetadata({
     label: 'Camiseta Web Base - CSS Azul',
     price: 49.9,
     description: 'Camiseta com design CSS, azul, base da web',
     categoryId: category1.id,
     images: ['product_8_1.png'],
-    metadataIds: ['css'],
+    metadataIds: ['css', 'react'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - JS Laranja',
+    label: 'Camiseta Web Base - HTML Laranja',
     price: 49.9,
-    description: 'Camiseta com design JavaScript, laranja, base da web',
+    description: 'Camiseta com design HTML, laranja, base da web',
     categoryId: category1.id,
     images: ['product_8_2.png'],
-    metadataIds: ['javascript'],
+    metadataIds: ['html'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - HTML Amarela',
+    label: 'Camiseta Web Base - JS Amarela',
     price: 49.9,
-    description: 'Camiseta com design HTML, amarela, base da web',
+    description: 'Camiseta com design JavaScript, amarela, base da web',
     categoryId: category1.id,
     images: ['product_8_3.png'],
-    metadataIds: ['html'],
+    metadataIds: ['javascript', 'node', 'react'],
   })
   console.log('✅ Camisetas Web Base created')
 
+  // Bonés Escuros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul',
     price: 39.9,
@@ -308,6 +317,9 @@ async function main() {
     categoryId: category2.id,
     images: ['product_6_3.png'],
   })
+  console.log('✅ Bonés Escuros created')
+
+  // Bonés Claros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul Claro',
     price: 29.9,
@@ -329,7 +341,7 @@ async function main() {
     categoryId: category2.id,
     images: ['product_7_3.png'],
   })
-  console.log('✅ Bonés created')
+  console.log('✅ Bonés Claros created')
 
   console.log('🎉 Database seeding completed successfully!')
 }
