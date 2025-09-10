@@ -27,6 +27,16 @@ export async function generateMetadata({
   return {
     title: product.label,
     description: product.description,
+    openGraph: {
+      images: [
+        {
+          url: product.images[0],
+          width: 1200,
+          height: 630,
+          alt: product.label,
+        },
+      ],
+    },
   }
 }
 
