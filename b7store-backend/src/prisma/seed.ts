@@ -277,23 +277,25 @@ async function main() {
     metadataIds: ['css'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta JS Laranja',
+    label: 'Camiseta JS Amarela',
     price: 49.9,
     description:
-      'Camiseta laranja com design JavaScript, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
+      'Camiseta amarela com design JavaScript, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
     categoryId: category1.id,
     images: ['product_8_2.png'],
     metadataIds: ['javascript', 'react'],
   })
+
   await createProductWithMetadata({
-    label: 'Camiseta HTML Amarela',
+    label: 'Camiseta HTML Laranja',
     price: 49.9,
     description:
-      'Camiseta amarela com design HTML, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
+      'Camiseta laranja com design HTML, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
     categoryId: category1.id,
     images: ['product_8_3.png'],
     metadataIds: ['html'],
   })
+
   console.log('✅ Camisetas Web Base created')
 
   await createProductWithMetadata({
