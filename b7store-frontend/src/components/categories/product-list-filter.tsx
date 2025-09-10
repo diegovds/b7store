@@ -1,14 +1,6 @@
 'use client'
 
-import { useQueryString } from '@/hooks/use-querystring'
-import { GetCategorySlugMetadata200MetadataItem } from '@/http/api'
-import { Product } from '@/types/product'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { ProductItem } from '../product-item'
-
+import { ProductFilters } from '@/app/(site)/categories/[slug]/page'
 import {
   Select,
   SelectContent,
@@ -16,6 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useQueryString } from '@/hooks/use-querystring'
+import { GetCategorySlugMetadata200MetadataItem, getProducts } from '@/http/api'
+import { Product } from '@/types/product'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { ProductItem } from '../product-item'
 import {
   Accordion,
   AccordionContent,
@@ -27,9 +28,9 @@ import { FilterItem } from './filter-item'
 type ProductListFilterProps = {
   products: Product[]
   metadata: GetCategorySlugMetadata200MetadataItem[]
+  productFilter: ProductFilters
 }
 
-// Zod schema
 const filterSchema = z.object({
   order: z.enum(['views', 'price', 'selling']),
 })
@@ -39,9 +40,11 @@ type FilterFormValues = z.infer<typeof filterSchema>
 export function ProductListFilter({
   products,
   metadata,
+  productFilter,
 }: ProductListFilterProps) {
   const queryString = useQueryString()
   const [filterOpened, setFilterOpened] = useState(false)
+  const [page, setPage] = useState('1')
 
   const defaultValues: FilterFormValues = {
     order: (queryString.get('order') as FilterFormValues['order']) || 'views',
@@ -56,12 +59,29 @@ export function ProductListFilter({
     queryString.set('order', value)
   }
 
+  function useGetProducts() {
+    return useQuery({
+      queryKey: ['get-products', productFilter, page],
+      queryFn: async () => {
+        const response = await getProducts({ page, ...productFilter })
+        return response.products ?? []
+      },
+    })
+  }
+
+  const { data: _products = products } = useGetProducts()
+
+  const handlePage = () => {
+    const current = parseInt(page)
+    setPage((current + 1).toString())
+  }
+
   return (
     <div>
       <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div className="text-3xl">
-          <strong>{products.length}</strong> Produto
-          {products.length !== 1 ? 's' : ''}
+          <strong>{_products.length}</strong> Produto
+          {_products.length !== 1 ? 's' : ''}
         </div>
 
         <div className="flex w-full flex-row gap-5 md:max-w-70">
@@ -125,10 +145,16 @@ export function ProductListFilter({
         </div>
 
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
-          {products.map((product) => (
+          {_products.map((product) => (
             <ProductItem key={product.id} {...product} />
           ))}
         </div>
+      </div>
+      <div
+        onClick={() => handlePage()}
+        className="flex cursor-pointer justify-center"
+      >
+        Página++
       </div>
     </div>
   )
