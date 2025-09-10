@@ -33,7 +33,7 @@ export default async function CategoriesPage({
   const { slug } = await params
   const filters = normalizeSearchParams(await searchParams)
   const order = filters.order
-  const page = params.page
+  const page = filters.page
 
   const orderBy =
     order === 'views'
