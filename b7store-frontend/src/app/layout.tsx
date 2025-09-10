@@ -24,6 +24,16 @@ export const metadata: Metadata = {
   },
   description:
     'B7Store - Loja virtual de roupas e acessórios com as melhores ofertas e novidades.',
+  openGraph: {
+    images: [
+      {
+        url: '/assets/ui/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'B7Store',
+      },
+    ],
+  },
 }
 
 export default async function RootLayout({
