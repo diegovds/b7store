@@ -11,10 +11,10 @@ import { getAbsoluteImageUrl } from '../utils/get-absolute-image-url'
 const productBodySchema = z.object({
   metadata: z.string().optional(),
   orderBy: z.enum(['views', 'selling', 'price']).optional(),
-  limit: z.number().int().positive().optional(),
-  categoryId: z.number().int().positive().optional(),
+  limit: z.string().regex(/^\d+$/).optional(),
+  categoryId: z.string().regex(/^\d+$/).optional(),
   q: z.string().optional(),
-  page: z.number().int().positive().optional(),
+  page: z.string().regex(/^\d+$/).optional(),
 })
 
 const productResponseSchema = z.array(
@@ -100,10 +100,10 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
     async (request, reply) => {
       const { limit, metadata, orderBy, categoryId, q, page } = request.query
 
-      const parsedLimit = limit || undefined
+      const parsedLimit = limit ? parseInt(limit) : undefined
       const parsedMetadata = metadata ? JSON.parse(metadata) : undefined
-      const parsedCategoryId = categoryId || undefined
-      const parsedPage = page || undefined
+      const parsedCategoryId = categoryId ? parseInt(categoryId) : undefined
+      const parsedPage = page ? parseInt(page) : undefined
 
       const products = await getProducts({
         limit: parsedLimit,
