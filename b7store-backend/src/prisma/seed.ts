@@ -149,12 +149,11 @@ async function main() {
     }
   }
 
-  // Camisetas React
   await createProductWithMetadata({
     label: 'Camiseta React - Azul',
     price: 94.5,
     description:
-      'Camiseta com logo do React, azul, ideal para front-end developers',
+      'Camiseta de alta qualidade com logo do React em destaque na cor azul, ideal para desenvolvedores front-end que desejam expressar sua paixão por tecnologia. Confortável, feita com algodão premium, perfeita para o dia a dia, trabalho ou eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_1_1.png'],
     metadataIds: ['react'],
@@ -163,7 +162,7 @@ async function main() {
     label: 'Camiseta React - Cinza',
     price: 94.5,
     description:
-      'Camiseta com logo do React, cinza, ideal para front-end developers',
+      'Camiseta de alta qualidade com logo do React na cor cinza, feita para desenvolvedores front-end que querem se destacar com estilo e conforto. Produzida em tecido macio, ideal para usar em hackathons, reuniões e eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_1_2.png'],
     metadataIds: ['react'],
@@ -172,31 +171,29 @@ async function main() {
     label: 'Camiseta React - Preta',
     price: 94.5,
     description:
-      'Camiseta com logo do React, preta, ideal para front-end developers',
+      'Camiseta elegante e confortável com logo do React na cor preta, perfeita para programadores front-end que desejam unir estilo e paixão por tecnologia. Tecido de alta durabilidade, ideal para o dia a dia ou encontros com a comunidade tech.',
     categoryId: category1.id,
     images: ['product_1_3.png'],
     metadataIds: ['react'],
   })
   console.log('✅ Camisetas React created')
 
-  // Camiseta React Native
   await createProductWithMetadata({
     label: 'Camiseta React Native - Azul Escuro',
     price: 89.9,
     description:
-      'Camiseta com estampa React Native, azul escuro, perfeita para mobile developers',
+      'Camiseta exclusiva com estampa React Native em azul escuro, feita para desenvolvedores mobile que valorizam conforto e estilo. Tecido premium, perfeito para usar em qualquer ocasião, mostrando sua afinidade com tecnologias mobile modernas.',
     categoryId: category1.id,
     images: ['product_2_1.png'],
     metadataIds: ['react', 'react-native'],
   })
   console.log('✅ Camiseta React Native created')
 
-  // Camisetas PHP
   await createProductWithMetadata({
     label: 'Camiseta PHP - Azul',
     price: 69.9,
     description:
-      'Camiseta com estampa PHP, azul, ideal para desenvolvedores web',
+      'Camiseta confortável com estampa PHP na cor azul, ideal para desenvolvedores web que querem demonstrar suas habilidades com estilo. Produzida em algodão de alta qualidade, perfeita para o trabalho, estudo ou eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_3_1.png'],
     metadataIds: ['php'],
@@ -205,19 +202,18 @@ async function main() {
     label: 'Camiseta PHP - Cinza',
     price: 69.9,
     description:
-      'Camiseta com estampa PHP, cinza, ideal para desenvolvedores web',
+      'Camiseta macia e resistente com estampa PHP cinza, ideal para programadores web que querem unir conforto e estilo no dia a dia. Excelente para usar em reuniões, cursos ou eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_3_2.png'],
     metadataIds: ['php'],
   })
   console.log('✅ Camisetas PHP created')
 
-  // Camisetas Node.js
   await createProductWithMetadata({
     label: 'Camiseta Node.js - Verde',
     price: 79.9,
     description:
-      'Camiseta com estampa Node.js, verde, perfeita para programadores back-end',
+      'Camiseta moderna com estampa Node.js verde, perfeita para desenvolvedores back-end que querem mostrar sua afinidade com tecnologias de servidor. Tecido de alta qualidade, ideal para uso diário e eventos tech.',
     categoryId: category1.id,
     images: ['product_4_1.png'],
     metadataIds: ['node', 'javascript'],
@@ -226,18 +222,18 @@ async function main() {
     label: 'Camiseta Node.js - Preta',
     price: 79.9,
     description:
-      'Camiseta com estampa Node.js, preta, perfeita para programadores back-end',
+      'Camiseta preta confortável com estampa Node.js, ideal para programadores back-end que valorizam estilo e tecnologia. Tecido durável e macio, perfeita para o trabalho, estudo ou encontros de tecnologia.',
     categoryId: category1.id,
     images: ['product_4_2.png'],
     metadataIds: ['node', 'javascript'],
   })
   console.log('✅ Camisetas Node.js created')
 
-  // Camisetas Laravel
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Vermelha',
     price: 59.9,
-    description: 'Camiseta com estampa Laravel, vermelha, ideal para devs PHP',
+    description:
+      'Camiseta vermelha com estampa Laravel, perfeita para desenvolvedores PHP que desejam conforto e estilo. Tecido premium, ideal para uso diário, cursos, hackathons e eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_5_1.png'],
     metadataIds: ['php', 'laravel'],
@@ -245,7 +241,8 @@ async function main() {
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Azul',
     price: 59.9,
-    description: 'Camiseta com estampa Laravel, azul, ideal para devs PHP',
+    description:
+      'Camiseta azul com estampa Laravel, confortável e resistente, perfeita para desenvolvedores PHP que desejam expressar seu conhecimento em frameworks modernos. Ideal para trabalho e eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_5_2.png'],
     metadataIds: ['php', 'laravel'],
@@ -253,7 +250,8 @@ async function main() {
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Branca',
     price: 59.9,
-    description: 'Camiseta com estampa Laravel, branca, ideal para devs PHP',
+    description:
+      'Camiseta branca com estampa Laravel, elegante e confortável, perfeita para programadores PHP que buscam unir estilo e tecnologia. Excelente para uso diário, cursos ou eventos de comunidade tech.',
     categoryId: category1.id,
     images: ['product_5_3.png'],
     metadataIds: ['php', 'laravel'],
@@ -261,83 +259,90 @@ async function main() {
   await createProductWithMetadata({
     label: 'Camiseta Laravel - Preta',
     price: 59.9,
-    description: 'Camiseta com estampa Laravel, preta, ideal para devs PHP',
+    description:
+      'Camiseta preta com estampa Laravel, ideal para desenvolvedores PHP que valorizam conforto e estilo. Tecido macio e resistente, excelente para o dia a dia ou encontros de tecnologia.',
     categoryId: category1.id,
     images: ['product_5_4.png'],
     metadataIds: ['php', 'laravel'],
   })
   console.log('✅ Camisetas Laravel created')
 
-  // Camisetas Web Base
   await createProductWithMetadata({
     label: 'Camiseta Web Base - CSS Azul',
     price: 49.9,
-    description: 'Camiseta com design CSS, azul, base da web',
+    description:
+      'Camiseta azul com design CSS, base da web, ideal para iniciantes e desenvolvedores que querem mostrar paixão pelo front-end. Confortável, leve e perfeita para estudo, trabalho ou eventos de tecnologia.',
     categoryId: category1.id,
     images: ['product_8_1.png'],
-    metadataIds: ['css', 'react'],
+    metadataIds: ['css'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - HTML Laranja',
+    label: 'Camiseta Web Base - JS Laranja',
     price: 49.9,
-    description: 'Camiseta com design HTML, laranja, base da web',
+    description:
+      'Camiseta laranja com design JavaScript, base da web, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
     categoryId: category1.id,
     images: ['product_8_2.png'],
-    metadataIds: ['html'],
+    metadataIds: ['javascript', 'react'],
   })
   await createProductWithMetadata({
-    label: 'Camiseta Web Base - JS Amarela',
+    label: 'Camiseta Web Base - HTML Amarela',
     price: 49.9,
-    description: 'Camiseta com design JavaScript, amarela, base da web',
+    description:
+      'Camiseta amarela com design HTML, base da web, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
     categoryId: category1.id,
     images: ['product_8_3.png'],
-    metadataIds: ['javascript', 'node', 'react'],
+    metadataIds: ['html'],
   })
   console.log('✅ Camisetas Web Base created')
 
-  // Bonés Escuros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul',
     price: 39.9,
-    description: 'Boné B7Web azul escuro',
+    description:
+      'Boné B7Web azul escuro, perfeito para proteção solar com estilo casual e moderno.',
     categoryId: category2.id,
     images: ['product_6_1.png'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Preto',
     price: 39.9,
-    description: 'Boné B7Web preto',
+    description:
+      'Boné B7Web preto, confortável e estiloso, ideal para uso diário.',
     categoryId: category2.id,
     images: ['product_6_2.png'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Cinza Escuro',
     price: 39.9,
-    description: 'Boné B7Web cinza escuro',
+    description:
+      'Boné B7Web cinza escuro, leve e durável, perfeito para qualquer ocasião casual.',
     categoryId: category2.id,
     images: ['product_6_3.png'],
   })
   console.log('✅ Bonés Escuros created')
 
-  // Bonés Claros
   await createProductWithMetadata({
     label: 'Boné B7Web - Azul Claro',
     price: 29.9,
-    description: 'Boné B7Web azul claro',
+    description:
+      'Boné B7Web azul claro, confortável e leve, ideal para estilo casual.',
     categoryId: category2.id,
     images: ['product_7_1.png'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Cinza Claro',
     price: 29.9,
-    description: 'Boné B7Web cinza claro',
+    description:
+      'Boné B7Web cinza claro, estiloso e confortável, perfeito para o dia a dia.',
     categoryId: category2.id,
     images: ['product_7_2.png'],
   })
   await createProductWithMetadata({
     label: 'Boné B7Web - Branco',
     price: 29.9,
-    description: 'Boné B7Web branco',
+    description:
+      'Boné B7Web branco, clássico e leve, ideal para qualquer ocasião.',
     categoryId: category2.id,
     images: ['product_7_3.png'],
   })
