@@ -6,7 +6,12 @@ import {
   GetOrdersId200Order,
   getUserAddresses,
 } from '@/http/api'
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Minha conta',
+}
 
 export default async function MyOrdersPage() {
   const { token } = await getAuthState()

@@ -2,7 +2,12 @@ import { getCartState } from '@/actions/get-cart-state'
 import { getProductsFromList } from '@/actions/get-products-from-list'
 import { CartContainer } from '@/components/cart/cart-container'
 import { CartListItem } from '@/types/cart-list-item'
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Carrinho de compras',
+}
 
 export default async function CartPage() {
   const { cart: initialCart } = await getCartState()

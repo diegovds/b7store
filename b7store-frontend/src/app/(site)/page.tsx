@@ -4,7 +4,12 @@ import { MostSoldProducts } from '@/components/home/most-sold-products'
 import { MostViewedProducts } from '@/components/home/most-viewed-products'
 import { ProductListSkeleton } from '@/components/home/product-list-skeleton'
 import { getBanners } from '@/http/api'
+import { Metadata } from 'next'
 import { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: 'Página inicial',
+}
 
 export default async function Home() {
   const data = await getBanners()
