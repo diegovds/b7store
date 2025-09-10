@@ -1,5 +1,6 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getCategorySlugMetadata, getProducts } from '@/http/api'
+import { normalizeSearchParams } from '@/utils/search-params'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -30,22 +31,25 @@ export default async function CategoriesPage({
   searchParams,
 }: CategoriesProps) {
   const { slug } = await params
-  const filters = await searchParams
-  const order =
-    filters.order === 'views'
+  const filters = normalizeSearchParams(await searchParams)
+  const order = filters.order
+  const page = params.page
+
+  const orderBy =
+    order === 'views'
       ? 'views'
-      : filters.order === 'price'
+      : order === 'price'
         ? 'price'
-        : filters.order === 'selling'
+        : order === 'selling'
           ? 'selling'
           : undefined
 
   const { category, metadata } = await getCategorySlugMetadata(slug)
 
-  const { order: _order, ..._filters } = filters
+  const { page: _page, order: _order, ..._filters } = filters
 
   const { products, error } = await getProducts({
-    orderBy: order,
+    orderBy,
     limit: '8',
     metadata: JSON.stringify(_filters),
     categoryId: category?.id.toString(),

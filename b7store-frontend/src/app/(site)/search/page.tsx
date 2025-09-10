@@ -1,5 +1,6 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
 import { getProducts } from '@/http/api'
+import { normalizeSearchParams } from '@/utils/search-params'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -11,35 +12,37 @@ type SearchPageProps = {
 export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
-  const search = await searchParams
+  const params = normalizeSearchParams(await searchParams)
+  const q = params.q
 
-  if (!search.q) {
+  if (!q) {
     redirect('/')
   }
 
   return {
-    title: `Busca por ${search.q}`,
+    title: `Busca por ${q}`,
   }
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const params = await searchParams
+  const params = normalizeSearchParams(await searchParams)
+  const order = params.order
+  const page = params.page
+  const q = params.q
 
-  const q = typeof params.q === 'string' ? params.q : undefined
-
-  const order =
-    params.order === 'views'
+  const orderBy =
+    order === 'views'
       ? 'views'
-      : params.order === 'price'
+      : order === 'price'
         ? 'price'
-        : params.order === 'selling'
+        : order === 'selling'
           ? 'selling'
           : undefined
 
-  const { q: _q, order: _order, ...filters } = params
+  const { order: _order, page: _page, q: _q, ...filters } = params
 
   const { error, products } = await getProducts({
-    orderBy: order,
+    orderBy,
     limit: '8',
     metadata: JSON.stringify(filters),
     q,

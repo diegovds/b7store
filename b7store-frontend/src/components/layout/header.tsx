@@ -3,7 +3,7 @@
 import { MenuItem } from '@/types/menu-item'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { HeaderIcon } from './header-icon'
 import { HeaderSearch } from './header-search'
@@ -11,6 +11,10 @@ import { HeaderSearch } from './header-search'
 export function Header() {
   const [menuOpened, setMenuOpened] = useState(false)
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  // Monta a query string atual (ex: ?q=nike&page=2)
+  const queryString = searchParams.toString()
 
   useEffect(() => {
     setMenuOpened(false)
@@ -64,7 +68,9 @@ export function Header() {
             <Link href="/my-orders">
               <HeaderIcon alt="Perfil" src="/assets/ui/user-line.png" />
             </Link>
-            <Link href={`/cart?from=${pathname}`}>
+            <Link
+              href={`/cart?from=${pathname}${queryString ? `?${queryString}` : ''}`}
+            >
               <HeaderIcon
                 alt="Carrinho"
                 src="/assets/ui/shopping-bag-4-line.png"
