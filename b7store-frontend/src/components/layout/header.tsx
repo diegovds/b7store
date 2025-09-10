@@ -13,8 +13,8 @@ export function Header() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Monta a query string atual (ex: ?q=nike&page=2)
-  const queryString = searchParams.toString()
+  const queryString = searchParams.toString() // mantém todos: "q=on&tech=react"
+  const from = encodeURIComponent(`${pathname}?${queryString}`)
 
   useEffect(() => {
     setMenuOpened(false)
@@ -68,9 +68,7 @@ export function Header() {
             <Link href="/my-orders">
               <HeaderIcon alt="Perfil" src="/assets/ui/user-line.png" />
             </Link>
-            <Link
-              href={`/cart?from=${pathname}${queryString ? `?${queryString}` : ''}`}
-            >
+            <Link href={`/cart?from=${from}`}>
               <HeaderIcon
                 alt="Carrinho"
                 src="/assets/ui/shopping-bag-4-line.png"

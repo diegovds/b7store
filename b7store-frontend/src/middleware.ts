@@ -8,12 +8,13 @@ export async function middleware(req: NextRequest) {
   const { cart } = await getCartState()
   const url = req.nextUrl.clone()
 
-  // Captura a URL anterior via search params
-  const from = url.searchParams.get('from') ?? '/'
-
   // Se carrinho vazio → redireciona para a URL anterior (ou home como fallback)
   if (cart.length === 0 && url.pathname.startsWith('/cart')) {
-    return NextResponse.redirect(new URL(from, req.url))
+    const from = url.searchParams.get('from')
+    const redirectTo = from
+      ? `${req.nextUrl.origin}${decodeURIComponent(from)}`
+      : req.nextUrl.origin
+    return NextResponse.redirect(redirectTo)
   }
 
   // Rotas públicas que não devem ser acessadas se o usuário estiver logado
