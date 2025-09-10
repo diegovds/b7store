@@ -351,7 +351,7 @@ async function main() {
     description:
       'Camiseta laranja com design JavaScript, associando também a tecnologia React, perfeita para desenvolvedores front-end que querem unir aprendizado e estilo no dia a dia.',
     categoryId: category1.id,
-    images: ['product_8_3.png'],
+    images: ['product_8_2.png'],
     metadataIds: ['javascript', 'react'],
   })
   await createProductWithMetadata({
@@ -360,7 +360,7 @@ async function main() {
     description:
       'Camiseta amarela com design HTML, ideal para estudantes e desenvolvedores que desejam praticidade, conforto e expressar interesse por tecnologias essenciais do front-end.',
     categoryId: category1.id,
-    images: ['product_8_2.png'],
+    images: ['product_8_3.png'],
     metadataIds: ['html'],
   })
   console.log('✅ Camisetas Web Base created')
