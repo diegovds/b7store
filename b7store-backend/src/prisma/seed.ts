@@ -255,20 +255,20 @@ async function main() {
       metadataIds: { tech: ['css'], color: ['blue'] },
     },
     {
-      label: 'Camiseta Web Base - JS Laranja',
-      price: 49.9,
-      description:
-        'Camiseta Web Base com estampa JavaScript laranja, estilosa e confortável. Algodão de qualidade, ideal para programadores e fãs de tecnologia.',
-      images: ['product_8_2.png'],
-      metadataIds: { tech: ['javascript'], color: ['orange'] },
-    },
-    {
       label: 'Camiseta Web Base - HTML Amarela',
       price: 49.9,
       description:
-        'Camiseta Web Base com estampa HTML amarela, vibrante e confortável. Algodão premium, ideal para designers e desenvolvedores.',
+        'Camiseta Web Base com estampa HTML amarela, estilosa e confortável. Algodão de qualidade, ideal para programadores e fãs de tecnologia.',
       images: ['product_8_3.png'],
       metadataIds: { tech: ['html'], color: ['yellow'] },
+    },
+    {
+      label: 'Camiseta Web Base - JavaScript Laranja',
+      price: 49.9,
+      description:
+        'Camiseta Web Base com estampa JavaScript laranja, vibrante e confortável. Algodão premium, ideal para designers e desenvolvedores.',
+      images: ['product_8_2.png'],
+      metadataIds: { tech: ['javascript'], color: ['orange'] },
     },
   ]
 
