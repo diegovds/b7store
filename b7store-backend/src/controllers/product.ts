@@ -77,20 +77,6 @@ export const getAllProducts: FastifyPluginAsyncZod = async (app) => {
                 image: z.url().nullable(),
                 liked: z.boolean(),
                 categoryId: z.number().optional(),
-                metadata: z.array(
-                  z.object({
-                    id: z.number().int(),
-                    categoryMetadataId: z.string(),
-                    metadataValue: z.object({
-                      id: z.string(),
-                      label: z.string(),
-                      categoryMetadata: z.object({
-                        id: z.string(),
-                        name: z.string(),
-                      }),
-                    }),
-                  }),
-                ),
               }),
             ),
           }),

@@ -93,24 +93,6 @@ export const getProducts = async (filters: ProductFilters) => {
         take: 1,
         orderBy: { id: 'asc' },
       },
-      metadata: {
-        select: {
-          id: true,
-          categoryMetadataId: true,
-          metadataValue: {
-            select: {
-              id: true,
-              label: true,
-              categoryMetadata: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-      },
     },
     where,
     orderBy,

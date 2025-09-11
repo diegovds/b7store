@@ -4,6 +4,7 @@ import {
   getCategoryById,
   getCategoryBySlug,
   getCategoryMetadata,
+  getCategorySearchMetadata,
 } from '../services/category'
 
 const categorySchema = z
@@ -65,6 +66,51 @@ export const getCategoryWithMetadata: FastifyPluginAsyncZod = async (app) => {
       return reply.status(200).send({
         error: null,
         category,
+        metadata,
+      })
+    },
+  )
+}
+
+export const getCategorySearchWithMetadata: FastifyPluginAsyncZod = async (
+  app,
+) => {
+  app.get(
+    '/category/search/:q/metadata',
+    {
+      schema: {
+        summary: 'Get metadata based on search.',
+        tags: ['categories'],
+        security: [],
+        params: z.object({
+          q: z.string(),
+        }),
+        response: {
+          200: z.object({
+            error: z.string().nullable(),
+            metadata: z.array(
+              z.object({
+                id: z.string(),
+                name: z.string(),
+                values: z.array(
+                  z.object({
+                    id: z.string(),
+                    label: z.string(),
+                  }),
+                ),
+              }),
+            ),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      const { q } = request.params
+
+      const metadata = await getCategorySearchMetadata(q)
+
+      return reply.status(200).send({
+        error: null,
         metadata,
       })
     },
