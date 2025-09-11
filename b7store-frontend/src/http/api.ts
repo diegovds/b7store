@@ -49,28 +49,6 @@ export type GetProducts200Error = string | null
 
 export type GetProducts200ProductsItemImage = string | null
 
-export type GetProducts200ProductsItemMetadataItemMetadataValueCategoryMetadata =
-  {
-    id: string
-    name: string
-  }
-
-export type GetProducts200ProductsItemMetadataItemMetadataValue = {
-  id: string
-  label: string
-  categoryMetadata: GetProducts200ProductsItemMetadataItemMetadataValueCategoryMetadata
-}
-
-export type GetProducts200ProductsItemMetadataItem = {
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  id: number
-  categoryMetadataId: string
-  metadataValue: GetProducts200ProductsItemMetadataItemMetadataValue
-}
-
 export type GetProducts200ProductsItem = {
   /**
    * @minimum 0
@@ -83,7 +61,6 @@ export type GetProducts200ProductsItem = {
   image: GetProducts200ProductsItemImage
   liked: boolean
   categoryId?: number
-  metadata: GetProducts200ProductsItemMetadataItem[]
 }
 
 export type GetProducts200 = {
@@ -184,6 +161,24 @@ export type GetCategorySlugMetadata200 = {
 
 export type GetCategorySlugMetadata404 = {
   error: string
+}
+
+export type GetCategorySearchQMetadata200Error = string | null
+
+export type GetCategorySearchQMetadata200MetadataItemValuesItem = {
+  id: string
+  label: string
+}
+
+export type GetCategorySearchQMetadata200MetadataItem = {
+  id: string
+  name: string
+  values: GetCategorySearchQMetadata200MetadataItemValuesItem[]
+}
+
+export type GetCategorySearchQMetadata200 = {
+  error: GetCategorySearchQMetadata200Error
+  metadata: GetCategorySearchQMetadata200MetadataItem[]
 }
 
 export type GetCategoryId200Error = string | null
@@ -691,6 +686,26 @@ export const getCategorySlugMetadata = async (
 ): Promise<GetCategorySlugMetadata200> => {
   return customFetch<GetCategorySlugMetadata200>(
     getGetCategorySlugMetadataUrl(slug),
+    {
+      ...options,
+      method: 'GET',
+    },
+  )
+}
+
+/**
+ * @summary Get metadata based on search.
+ */
+export const getGetCategorySearchQMetadataUrl = (q: string) => {
+  return `/category/search/${q}/metadata`
+}
+
+export const getCategorySearchQMetadata = async (
+  q: string,
+  options?: RequestInit,
+): Promise<GetCategorySearchQMetadata200> => {
+  return customFetch<GetCategorySearchQMetadata200>(
+    getGetCategorySearchQMetadataUrl(q),
     {
       ...options,
       method: 'GET',

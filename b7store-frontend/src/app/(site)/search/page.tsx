@@ -1,5 +1,5 @@
 import { ProductListFilter } from '@/components/categories/product-list-filter'
-import { getProducts } from '@/http/api'
+import { getCategorySearchQMetadata, getProducts } from '@/http/api'
 import { ProductFilters } from '@/types/product-filters'
 import { normalizeSearchParams } from '@/utils/search-params'
 import { Metadata } from 'next'
@@ -39,6 +39,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           ? 'selling'
           : undefined
 
+  const { metadata } = await getCategorySearchQMetadata(q || '')
+
   const { order: _order, page: _page, q: _q, ...filters } = params
 
   const productFilter: ProductFilters = {
@@ -53,44 +55,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (error) {
     redirect('/')
   }
-
-  const metadataMap = new Map<
-    string,
-    {
-      id: string
-      name: string
-      values: { id: string; label: string }[]
-    }
-  >()
-
-  for (const product of products) {
-    for (const m of product.metadata) {
-      const categoryId = m.metadataValue.categoryMetadata.id
-      const existing = metadataMap.get(categoryId)
-
-      if (existing) {
-        if (!existing.values.some((v) => v.id === m.metadataValue.id)) {
-          existing.values.push({
-            id: m.metadataValue.id,
-            label: m.metadataValue.label,
-          })
-        }
-      } else {
-        metadataMap.set(categoryId, {
-          id: categoryId,
-          name: m.metadataValue.categoryMetadata.name,
-          values: [
-            {
-              id: m.metadataValue.id,
-              label: m.metadataValue.label,
-            },
-          ],
-        })
-      }
-    }
-  }
-
-  const metadata = Array.from(metadataMap.values())
 
   return (
     <div>
