@@ -31,7 +31,7 @@ export function ProductItem({ id, image, label, liked: like, price }: Product) {
         <div className="flex aspect-square w-full items-center justify-center">
           {image && <Image src={image} alt={label} width={250} height={250} />}
         </div>
-        <div className="mt-9 text-lg font-semibold">{label}</div>
+        <div className="mt-9 line-clamp-1 text-lg font-semibold">{label}</div>
         <div className="mt-3 text-2xl font-semibold text-blue-600">
           R$ {price.toFixed(2)}
         </div>
