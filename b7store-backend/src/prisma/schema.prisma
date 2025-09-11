@@ -99,10 +99,10 @@ model Category {
 model CategoryMetadata {
   id         String          @id
   name       String
-  categoryId Int
+  categoryId Int?
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @default(now()) @updatedAt
-  category   Category        @relation(fields: [categoryId], references: [id])
+  category   Category?       @relation(fields: [categoryId], references: [id])
   values     MetadataValue[]
 }
 

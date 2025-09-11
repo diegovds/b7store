@@ -25,21 +25,46 @@ export const getCategoryById = async (id: number) => {
   return category
 }
 
-export const getCategoryMetadata = async (id: number) => {
+export const getCategoryMetadata = async (categoryId: number) => {
+  // Buscar metadatas da categoria + globais
   const metadata = await prisma.categoryMetadata.findMany({
-    where: { categoryId: id },
+    where: {
+      OR: [
+        { categoryId },
+        { categoryId: null }, // global
+      ],
+    },
     select: {
       id: true,
       name: true,
-      values: {
-        select: {
-          id: true,
-          label: true,
+    },
+  })
+
+  // Buscar todos os valores de metadata que estão ligados a produtos da categoria
+  const values = await prisma.metadataValue.findMany({
+    where: {
+      ProductMetadata: {
+        some: {
+          product: {
+            categoryId,
+          },
         },
       },
     },
+    select: {
+      id: true,
+      label: true,
+      categoryMetadataId: true,
+    },
   })
-  return metadata
+
+  // Reestruturar para agrupar os valores dentro da metadata correspondente
+  const metadataWithValues = metadata.map((meta) => ({
+    ...meta,
+    values: values.filter((v) => v.categoryMetadataId === meta.id),
+  }))
+
+  return metadataWithValues
 }
 
 export const getCategorySearchMetadata = async (q: string) => {

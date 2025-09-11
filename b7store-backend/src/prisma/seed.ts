@@ -17,24 +17,70 @@ async function main() {
 
   console.log('📝 No existing data found. Proceeding with seeding...')
 
-  // Categorias
-  const category1 = await prisma.category.create({
+  // ===================== CATEGORIAS =====================
+  const categoryCamisetas = await prisma.category.create({
     data: { slug: 'camisetas', name: 'Camisetas' },
   })
-  const category2 = await prisma.category.create({
+
+  const categoryBones = await prisma.category.create({
     data: { slug: 'bones', name: 'Bonés' },
   })
 
-  // Category Metadata
+  // ===================== METADATA =====================
+  // Tech metadata para camisetas
   const techMetadata = await prisma.categoryMetadata.create({
-    data: { id: 'tech', name: 'Tecnologia', categoryId: category1.id },
+    data: { id: 'tech', name: 'Tecnologia', categoryId: categoryCamisetas.id },
   })
 
+  // Color metadata global
   const colorMetadata = await prisma.categoryMetadata.create({
-    data: { id: 'color', name: 'Cor', categoryId: category2.id },
+    data: { id: 'color', name: 'Cor' },
   })
 
-  // Banners
+  // Valores de tech
+  const techValues = [
+    { id: 'react', label: 'React' },
+    { id: 'react-native', label: 'React Native' },
+    { id: 'php', label: 'PHP' },
+    { id: 'node', label: 'Node' },
+    { id: 'javascript', label: 'JavaScript' },
+    { id: 'laravel', label: 'Laravel' },
+    { id: 'css', label: 'CSS' },
+    { id: 'html', label: 'HTML' },
+  ]
+
+  await Promise.all(
+    techValues.map((val) =>
+      prisma.metadataValue.create({
+        data: { ...val, categoryMetadataId: techMetadata.id },
+      }),
+    ),
+  )
+
+  // Valores de cor
+  const colorValues = [
+    { id: 'blue', label: 'Azul' },
+    { id: 'black', label: 'Preto' },
+    { id: 'white', label: 'Branco' },
+    { id: 'gray', label: 'Cinza' },
+    { id: 'green', label: 'Verde' },
+    { id: 'red', label: 'Vermelho' },
+    { id: 'yellow', label: 'Amarelo' },
+    { id: 'orange', label: 'Laranja' },
+    { id: 'darkgray', label: 'Cinza Escuro' },
+    { id: 'lightgray', label: 'Cinza Claro' },
+    { id: 'lightblue', label: 'Azul Claro' },
+  ]
+
+  await Promise.all(
+    colorValues.map((val) =>
+      prisma.metadataValue.create({
+        data: { ...val, categoryMetadataId: colorMetadata.id },
+      }),
+    ),
+  )
+
+  // ===================== BANNERS =====================
   await Promise.all([
     prisma.banner.create({
       data: { img: 'banner_promo_1.jpg', link: '/categories/camisetas' },
@@ -60,95 +106,14 @@ async function main() {
   ])
   console.log('✅ Banners created')
 
-  // Metadata Values Tech
-  await Promise.all([
-    prisma.metadataValue.create({
-      data: { id: 'node', label: 'Node', categoryMetadataId: techMetadata.id },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'react',
-        label: 'React',
-        categoryMetadataId: techMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: { id: 'php', label: 'PHP', categoryMetadataId: techMetadata.id },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'react-native',
-        label: 'React Native',
-        categoryMetadataId: techMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'laravel',
-        label: 'Laravel',
-        categoryMetadataId: techMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: { id: 'css', label: 'CSS', categoryMetadataId: techMetadata.id },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'javascript',
-        label: 'JavaScript',
-        categoryMetadataId: techMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: { id: 'html', label: 'HTML', categoryMetadataId: techMetadata.id },
-    }),
-  ])
-  console.log('✅ Metadata values (tech) created')
-
-  // Metadata Values Color
-  await Promise.all([
-    prisma.metadataValue.create({
-      data: { id: 'blue', label: 'Azul', categoryMetadataId: colorMetadata.id },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'black',
-        label: 'Preto',
-        categoryMetadataId: colorMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'dark-gray',
-        label: 'Cinza Escuro',
-        categoryMetadataId: colorMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'light-gray',
-        label: 'Cinza Claro',
-        categoryMetadataId: colorMetadata.id,
-      },
-    }),
-    prisma.metadataValue.create({
-      data: {
-        id: 'white',
-        label: 'Branco',
-        categoryMetadataId: colorMetadata.id,
-      },
-    }),
-  ])
-  console.log('✅ Metadata values (color) created')
-
-  // Função de criação de produto com múltiplos metadados
+  // ===================== FUNÇÃO AUXILIAR =====================
   async function createProductWithMetadata(data: {
     label: string
     price: number
     description: string
     categoryId: number
     images: string[]
-    metadataIds?: Record<string, string[]>
+    metadataIds?: Record<string, string[]> // { tech: ['react'], color: ['blue'] }
   }) {
     const product = await prisma.product.create({
       data: {
@@ -166,14 +131,16 @@ async function main() {
     }
 
     if (data.metadataIds) {
-      for (const categoryMetadataId in data.metadataIds) {
-        const valueIds = data.metadataIds[categoryMetadataId]
-        for (const metadataValueId of valueIds) {
+      for (const metadataIdKey in data.metadataIds) {
+        const valueIds = data.metadataIds[metadataIdKey]
+        for (const valueId of valueIds) {
+          const metadata =
+            metadataIdKey === 'tech' ? techMetadata : colorMetadata
           await prisma.productMetadata.create({
             data: {
               productId: product.id,
-              categoryMetadataId,
-              metadataValueId,
+              categoryMetadataId: metadata.id,
+              metadataValueId: valueId,
             },
           })
         }
@@ -181,209 +148,192 @@ async function main() {
     }
   }
 
-  // === Camisetas ===
-  // React
-  await createProductWithMetadata({
-    label: 'Camiseta React - Azul',
-    price: 94.5,
-    description:
-      'Camiseta de alta qualidade com logo do React em destaque na cor azul. Confeccionada com tecido confortável e resistente, perfeita para uso diário ou eventos de tecnologia.',
-    categoryId: category1.id,
-    images: ['product_1_1.png'],
-    metadataIds: { tech: ['react'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta React - Cinza',
-    price: 94.5,
-    description:
-      'Camiseta de alta qualidade com logo do React na cor cinza. Estilo moderno e confortável, ideal para programadores e amantes de tecnologia.',
-    categoryId: category1.id,
-    images: ['product_1_2.png'],
-    metadataIds: { tech: ['react'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta React - Preta',
-    price: 94.5,
-    description:
-      'Camiseta elegante e confortável com logo do React na cor preta. Excelente para eventos de tecnologia ou uso diário com estilo moderno.',
-    categoryId: category1.id,
-    images: ['product_1_3.png'],
-    metadataIds: { tech: ['react'] },
-  })
+  // ===================== PRODUTOS CAMISETAS =====================
+  const camisetas = [
+    {
+      label: 'Camiseta React - Azul',
+      price: 94.5,
+      description:
+        'Camiseta de alta qualidade com estampa do logo React em azul vibrante. Confeccionada com algodão premium, garante conforto e durabilidade. Ideal para desenvolvedores e fãs de tecnologia que querem exibir seu estilo de maneira elegante e casual. Costura reforçada, toque macio e design moderno, perfeito para o dia a dia ou eventos de tecnologia.',
+      images: ['product_1_1.png'],
+      metadataIds: { tech: ['react'], color: ['blue'] },
+    },
+    {
+      label: 'Camiseta React - Cinza',
+      price: 94.5,
+      description:
+        'Camiseta cinza com estampa do React, confortável e resistente. Ideal para programadores que buscam uma peça casual, elegante e que combina com diferentes estilos. Algodão respirável e costura de qualidade para uso prolongado.',
+      images: ['product_1_2.png'],
+      metadataIds: { tech: ['react'], color: ['gray'] },
+    },
+    {
+      label: 'Camiseta React - Preta',
+      price: 94.5,
+      description:
+        'Camiseta preta com estampa React, minimalista e sofisticada. Produzida em algodão de alta qualidade, oferece durabilidade, conforto e estilo, ideal para uso diário ou eventos de tecnologia.',
+      images: ['product_1_3.png'],
+      metadataIds: { tech: ['react'], color: ['black'] },
+    },
+    {
+      label: 'Camiseta React Native - Azul Escuro',
+      price: 89.9,
+      description:
+        'Camiseta exclusiva com estampa React Native em azul escuro, ideal para desenvolvedores que trabalham com mobile. Algodão premium, confortável, respirável e resistente, perfeita para o dia a dia.',
+      images: ['product_2_1.png'],
+      metadataIds: { tech: ['react-native'], color: ['blue'] },
+    },
+    {
+      label: 'Camiseta PHP - Azul',
+      price: 60.0,
+      description:
+        'Camiseta confortável com estampa PHP azul, perfeita para quem quer exibir sua paixão por programação. Algodão macio, toque agradável, resistente e ideal para uso diário ou eventos de tecnologia.',
+      images: ['product_3_1.png'],
+      metadataIds: { tech: ['php'], color: ['blue'] },
+    },
+    {
+      label: 'Camiseta PHP - Cinza',
+      price: 69.9,
+      description:
+        'Camiseta PHP em cinza, de alta qualidade, confortável e resistente. Design moderno e versátil, ideal para programadores e eventos tecnológicos.',
+      images: ['product_3_2.png'],
+      metadataIds: { tech: ['php'], color: ['gray'] },
+    },
+    {
+      label: 'Camiseta Node.js - Verde',
+      price: 60.0,
+      description:
+        'Camiseta Node.js verde, moderna e confortável. Estampa destacada para desenvolvedores que desejam mostrar seu amor por tecnologia. Algodão premium, costura reforçada e design atraente.',
+      images: ['product_4_1.png'],
+      metadataIds: { tech: ['node', 'javascript'], color: ['green'] },
+    },
+    {
+      label: 'Camiseta Node.js - Preta',
+      price: 79.9,
+      description:
+        'Camiseta preta Node.js, resistente e elegante, com estampa destacada. Ideal para programadores que buscam conforto e estilo para o dia a dia.',
+      images: ['product_4_2.png'],
+      metadataIds: { tech: ['node', 'javascript'], color: ['black'] },
+    },
+    {
+      label: 'Camiseta Laravel - Vermelha',
+      price: 60.0,
+      description:
+        'Camiseta Laravel vermelha, com estampa sofisticada. Algodão de alta qualidade, confortável e durável. Ideal para eventos de tecnologia e uso casual.',
+      images: ['product_5_1.png'],
+      metadataIds: { tech: ['php', 'laravel'], color: ['red'] },
+    },
+    {
+      label: 'Camiseta Laravel - Azul',
+      price: 59.9,
+      description:
+        'Camiseta Laravel azul, confortável, moderna e durável. Estampa de alta qualidade, perfeita para desenvolvedores e eventos tecnológicos.',
+      images: ['product_5_2.png'],
+      metadataIds: { tech: ['php', 'laravel'], color: ['blue'] },
+    },
+    {
+      label: 'Camiseta Laravel - Branca',
+      price: 60.0,
+      description:
+        'Camiseta Laravel branca, minimalista e elegante. Produzida em algodão premium, confortável e resistente. Ideal para uso diário ou eventos de tecnologia.',
+      images: ['product_5_3.png'],
+      metadataIds: { tech: ['php', 'laravel'], color: ['white'] },
+    },
+    {
+      label: 'Camiseta Laravel - Preta',
+      price: 59.9,
+      description:
+        'Camiseta preta Laravel, elegante e confortável. Estampa de alta qualidade, resistente e perfeita para desenvolvedores.',
+      images: ['product_5_4.png'],
+      metadataIds: { tech: ['php', 'laravel'], color: ['black'] },
+    },
+    {
+      label: 'Camiseta Web Base - CSS Azul',
+      price: 49.9,
+      description:
+        'Camiseta Web Base com estampa CSS azul, confortável e moderna. Algodão premium, perfeita para designers e desenvolvedores que querem mostrar seu estilo.',
+      images: ['product_8_1.png'],
+      metadataIds: { tech: ['css'], color: ['blue'] },
+    },
+    {
+      label: 'Camiseta Web Base - JS Laranja',
+      price: 49.9,
+      description:
+        'Camiseta Web Base com estampa JavaScript laranja, estilosa e confortável. Algodão de qualidade, ideal para programadores e fãs de tecnologia.',
+      images: ['product_8_2.png'],
+      metadataIds: { tech: ['javascript'], color: ['orange'] },
+    },
+    {
+      label: 'Camiseta Web Base - HTML Amarela',
+      price: 49.9,
+      description:
+        'Camiseta Web Base com estampa HTML amarela, vibrante e confortável. Algodão premium, ideal para designers e desenvolvedores.',
+      images: ['product_8_3.png'],
+      metadataIds: { tech: ['html'], color: ['yellow'] },
+    },
+  ]
 
-  // React Native
-  await createProductWithMetadata({
-    label: 'Camiseta React Native - Azul Escuro',
-    price: 89.9,
-    description:
-      'Camiseta exclusiva com estampa React Native em azul escuro, tecido de alta qualidade, ideal para desenvolvedores mobile que buscam conforto e estilo.',
-    categoryId: category1.id,
-    images: ['product_2_1.png'],
-    metadataIds: { tech: ['react', 'react-native'] },
-  })
+  for (const prod of camisetas) {
+    await createProductWithMetadata({
+      ...prod,
+      categoryId: categoryCamisetas.id,
+    })
+  }
 
-  // PHP
-  await createProductWithMetadata({
-    label: 'Camiseta PHP - Azul',
-    price: 60.0,
-    description:
-      'Camiseta confortável com estampa PHP na cor azul. Tecido macio e durável, perfeita para programadores PHP ou eventos de tecnologia.',
-    categoryId: category1.id,
-    images: ['product_3_1.png'],
-    metadataIds: { tech: ['php'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta PHP - Cinza',
-    price: 69.9,
-    description:
-      'Camiseta macia e resistente com estampa PHP cinza. Ideal para uso diário e eventos de tecnologia.',
-    categoryId: category1.id,
-    images: ['product_3_2.png'],
-    metadataIds: { tech: ['php'] },
-  })
+  // ===================== PRODUTOS BONÉS =====================
+  const bones = [
+    {
+      label: 'Boné B7Web - Azul Escuro',
+      price: 39.9,
+      description:
+        'Boné B7Web azul escuro, feito com material leve e resistente, perfeito para proteção solar e estilo casual. Ajuste confortável que se adapta a diferentes tamanhos de cabeça.',
+      images: ['product_6_1.png'],
+      metadataIds: { color: ['blue'] },
+    },
+    {
+      label: 'Boné B7Web - Preto',
+      price: 39.9,
+      description:
+        'Boné B7Web preto clássico, leve e confortável, ideal para uso diário e atividades ao ar livre. Tecido respirável e durável.',
+      images: ['product_6_2.png'],
+      metadataIds: { color: ['black'] },
+    },
+    {
+      label: 'Boné B7Web - Cinza Escuro',
+      price: 39.9,
+      description:
+        'Boné B7Web cinza escuro, resistente e estiloso. Ideal para uso diário ou atividades ao ar livre.',
+      images: ['product_6_3.png'],
+      metadataIds: { color: ['darkgray'] },
+    },
+    {
+      label: 'Boné B7Web - Azul Claro',
+      price: 39.9,
+      description:
+        'Boné B7Web azul claro, leve e confortável, ideal para uso casual e proteção solar.',
+      images: ['product_7_1.png'],
+      metadataIds: { color: ['lightblue'] },
+    },
+    {
+      label: 'Boné B7Web - Cinza Claro',
+      price: 39.9,
+      description:
+        'Boné B7Web cinza claro, elegante e confortável, ideal para atividades diárias e lazer.',
+      images: ['product_7_2.png'],
+      metadataIds: { color: ['lightgray'] },
+    },
+    {
+      label: 'Boné B7Web - Branco',
+      price: 39.9,
+      description:
+        'Boné B7Web branco clássico, resistente e estiloso, perfeito para qualquer ocasião.',
+      images: ['product_7_3.png'],
+      metadataIds: { color: ['white'] },
+    },
+  ]
 
-  // Node.js
-  await createProductWithMetadata({
-    label: 'Camiseta Node.js - Verde',
-    price: 60.0,
-    description:
-      'Camiseta moderna com estampa Node.js verde, perfeita para desenvolvedores backend. Confortável e durável, ideal para uso diário.',
-    categoryId: category1.id,
-    images: ['product_4_1.png'],
-    metadataIds: { tech: ['node', 'javascript'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta Node.js - Preta',
-    price: 79.9,
-    description:
-      'Camiseta preta confortável com estampa Node.js. Material de qualidade, ideal para desenvolvedores e eventos tecnológicos.',
-    categoryId: category1.id,
-    images: ['product_4_2.png'],
-    metadataIds: { tech: ['node', 'javascript'] },
-  })
-
-  // Laravel
-  await createProductWithMetadata({
-    label: 'Camiseta Laravel - Vermelha',
-    price: 60.0,
-    description:
-      'Camiseta vermelha com estampa Laravel. Tecido confortável e resistente, ideal para desenvolvedores backend e eventos de tecnologia.',
-    categoryId: category1.id,
-    images: ['product_5_1.png'],
-    metadataIds: { tech: ['php', 'laravel'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta Laravel - Azul',
-    price: 59.9,
-    description:
-      'Camiseta azul com estampa Laravel. Estilo moderno e confortável, perfeita para programadores Laravel.',
-    categoryId: category1.id,
-    images: ['product_5_2.png'],
-    metadataIds: { tech: ['php', 'laravel'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta Laravel - Branca',
-    price: 60.0,
-    description:
-      'Camiseta branca com estampa Laravel. Tecido de qualidade e ajuste perfeito, ideal para uso diário.',
-    categoryId: category1.id,
-    images: ['product_5_3.png'],
-    metadataIds: { tech: ['php', 'laravel'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta Laravel - Preta',
-    price: 59.9,
-    description:
-      'Camiseta preta com estampa Laravel. Material resistente, confortável e ideal para desenvolvedores.',
-    categoryId: category1.id,
-    images: ['product_5_4.png'],
-    metadataIds: { tech: ['php', 'laravel'] },
-  })
-
-  // Web Base (CSS, JS, HTML)
-  await createProductWithMetadata({
-    label: 'Camiseta CSS Azul',
-    price: 60.0,
-    description:
-      'Camiseta azul com design CSS. Confortável e estilosa, perfeita para desenvolvedores frontend.',
-    categoryId: category1.id,
-    images: ['product_8_1.png'],
-    metadataIds: { tech: ['css'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta JS Amarela',
-    price: 49.9,
-    description:
-      'Camiseta amarela com design JavaScript. Material confortável e resistente, ideal para programadores frontend.',
-    categoryId: category1.id,
-    images: ['product_8_3.png'],
-    metadataIds: { tech: ['javascript', 'react'] },
-  })
-  await createProductWithMetadata({
-    label: 'Camiseta HTML Laranja',
-    price: 49.9,
-    description:
-      'Camiseta laranja com design HTML. Confortável, resistente e perfeita para desenvolvedores frontend.',
-    categoryId: category1.id,
-    images: ['product_8_2.png'],
-    metadataIds: { tech: ['html'] },
-  })
-
-  // === Bonés ===
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Azul',
-    price: 39.9,
-    description:
-      'Boné B7Web azul escuro, perfeito para proteção solar com estilo casual. Material leve e confortável, ideal para passeios, esportes e uso diário. Design moderno e resistente, garantindo durabilidade e conforto.',
-    categoryId: category2.id,
-    images: ['product_6_1.png'],
-    metadataIds: { color: ['blue'] },
-  })
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Preto',
-    price: 39.9,
-    description:
-      'Boné B7Web preto, confortável e estiloso. Produzido com materiais de qualidade, proporciona ajuste seguro e toque suave. Perfeito para looks urbanos e atividades ao ar livre, unindo praticidade e estilo.',
-    categoryId: category2.id,
-    images: ['product_6_2.png'],
-    metadataIds: { color: ['black'] },
-  })
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Cinza Escuro',
-    price: 39.9,
-    description:
-      'Boné B7Web cinza escuro, leve e durável. Design moderno, perfeito para quem busca conforto e estilo em atividades externas ou no dia a dia. Ajuste confortável e material resistente garantem longa durabilidade.',
-    categoryId: category2.id,
-    images: ['product_6_3.png'],
-    metadataIds: { color: ['dark-gray'] },
-  })
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Azul Claro',
-    price: 29.9,
-    description:
-      'Boné B7Web azul claro, confortável e leve. Ideal para proteção solar com estilo casual. Material resistente, design moderno e ajuste confortável para uso diário.',
-    categoryId: category2.id,
-    images: ['product_7_1.png'],
-    metadataIds: { color: ['blue'] },
-  })
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Cinza Claro',
-    price: 29.9,
-    description:
-      'Boné B7Web cinza claro, estiloso e confortável. Produzido com materiais de qualidade, garantindo ajuste perfeito e durabilidade. Perfeito para atividades ao ar livre ou uso diário.',
-    categoryId: category2.id,
-    images: ['product_7_2.png'],
-    metadataIds: { color: ['light-gray'] },
-  })
-  await createProductWithMetadata({
-    label: 'Boné B7Web - Branco',
-    price: 29.9,
-    description:
-      'Boné B7Web branco, clássico e leve. Confortável para uso diário, perfeito para complementar looks casuais ou esportivos. Material resistente e design moderno, garantindo durabilidade e estilo.',
-    categoryId: category2.id,
-    images: ['product_7_3.png'],
-    metadataIds: { color: ['white'] },
-  })
+  for (const bone of bones) {
+    await createProductWithMetadata({ ...bone, categoryId: categoryBones.id })
+  }
 
   console.log('🎉 Database seeding completed successfully!')
 }
