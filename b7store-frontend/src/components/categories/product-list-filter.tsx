@@ -13,7 +13,7 @@ import { Product } from '@/types/product'
 import { ProductFilters } from '@/types/product-filters'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { ProductItem } from '../product-item'
@@ -44,6 +44,24 @@ export function ProductListFilter({
 }: ProductListFilterProps) {
   const queryString = useQueryString()
   const [filterOpened, setFilterOpened] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detecta se é mobile
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Atualiza a altura dinâmica do Accordion no mobile
+  useEffect(() => {
+    if (wrapperRef.current && isMobile) {
+      setHeight(filterOpened ? wrapperRef.current.scrollHeight : 0)
+    }
+  }, [filterOpened, metadata, isMobile])
 
   const defaultValues: FilterFormValues = {
     order: (queryString.get('order') as FilterFormValues['order']) || 'views',
@@ -78,6 +96,7 @@ export function ProductListFilter({
 
   return (
     <div>
+      {/* Cabeçalho e filtros */}
       <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div className="text-3xl">
           <strong>{allProducts.length}</strong> Produto
@@ -108,6 +127,7 @@ export function ProductListFilter({
             )}
           />
 
+          {/* Botão mobile */}
           <div
             onClick={() => setFilterOpened(!filterOpened)}
             className="flex flex-1 cursor-pointer items-center rounded-sm border border-gray-200 bg-white px-6 text-sm text-gray-500 md:hidden"
@@ -118,32 +138,46 @@ export function ProductListFilter({
       </div>
 
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
+        {/* Filtros */}
         <div className="flex-1 md:max-w-70">
-          <Accordion
-            type="multiple"
-            defaultValue={metadata.map((data) => data.id)}
-            className={`w-full ${filterOpened ? 'block' : 'hidden'} md:block`}
+          <div
+            ref={wrapperRef}
+            style={{
+              height: isMobile
+                ? filterOpened
+                  ? `${height}px`
+                  : '0px'
+                : 'auto',
+            }}
+            className="overflow-hidden duration-300"
           >
-            {metadata.map((data) => (
-              <AccordionItem key={data.id} value={data.id}>
-                <AccordionTrigger className="flex flex-1 items-center text-lg font-medium hover:no-underline md:text-xl">
-                  {data.name}
-                </AccordionTrigger>
-                <AccordionContent>
-                  {data.values.map((value) => (
-                    <FilterItem
-                      key={value.id}
-                      item={{ id: value.id, label: value.label }}
-                      groupId={data.id}
-                      selected={() => setFilterOpened(!filterOpened)}
-                    />
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            <Accordion
+              type="multiple"
+              defaultValue={metadata.map((data) => data.id)}
+              className="w-full"
+            >
+              {metadata.map((data) => (
+                <AccordionItem key={data.id} value={data.id}>
+                  <AccordionTrigger className="flex flex-1 items-center text-lg font-medium hover:no-underline md:text-xl">
+                    {data.name}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {data.values.map((value) => (
+                      <FilterItem
+                        key={value.id}
+                        item={{ id: value.id, label: value.label }}
+                        groupId={data.id}
+                        selected={() => setFilterOpened(!filterOpened)}
+                      />
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
 
+        {/* Produtos */}
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
           {allProducts.map((product) => (
             <ProductItem key={product.id} {...product} />
@@ -151,6 +185,7 @@ export function ProductListFilter({
         </div>
       </div>
 
+      {/* Botão carregar mais */}
       {hasNextPage && (
         <div className="flex justify-center">
           <button
