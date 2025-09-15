@@ -44,24 +44,26 @@ export function ProductListFilter({
 }: ProductListFilterProps) {
   const queryString = useQueryString()
   const [filterOpened, setFilterOpened] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const [height, setHeight] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
+  const mobileRef = useRef<HTMLDivElement>(null)
 
-  // Detecta se é mobile
+  // animação suave da altura no mobile
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    const el = mobileRef.current
+    if (!el) return
 
-  // Atualiza a altura dinâmica do Accordion no mobile
-  useEffect(() => {
-    if (wrapperRef.current && isMobile) {
-      setHeight(filterOpened ? wrapperRef.current.scrollHeight : 0)
+    if (filterOpened) {
+      el.style.height = el.scrollHeight + 'px'
+      const timer = setTimeout(() => {
+        el.style.height = 'auto'
+      }, 300) // igual ao duration-300
+      return () => clearTimeout(timer)
+    } else {
+      el.style.height = el.scrollHeight + 'px'
+      requestAnimationFrame(() => {
+        el.style.height = '0px'
+      })
     }
-  }, [filterOpened, metadata, isMobile])
+  }, [filterOpened])
 
   const defaultValues: FilterFormValues = {
     order: (queryString.get('order') as FilterFormValues['order']) || 'views',
@@ -96,7 +98,7 @@ export function ProductListFilter({
 
   return (
     <div>
-      {/* Cabeçalho e filtros */}
+      {/* header com quantidade + selects */}
       <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
         <div className="text-3xl">
           <strong>{allProducts.length}</strong> Produto
@@ -127,7 +129,7 @@ export function ProductListFilter({
             )}
           />
 
-          {/* Botão mobile */}
+          {/* botão mobile */}
           <div
             onClick={() => setFilterOpened(!filterOpened)}
             className="flex flex-1 cursor-pointer items-center rounded-sm border border-gray-200 bg-white px-6 text-sm text-gray-500 md:hidden"
@@ -137,47 +139,58 @@ export function ProductListFilter({
         </div>
       </div>
 
+      {/* conteúdo: filtros + lista */}
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
-        {/* Filtros */}
-        <div className="flex-1 md:max-w-70">
-          <div
-            ref={wrapperRef}
-            style={{
-              height: isMobile
-                ? filterOpened
-                  ? `${height}px`
-                  : '0px'
-                : 'auto',
-            }}
-            className="overflow-hidden duration-300"
-          >
-            <Accordion
-              type="multiple"
-              defaultValue={metadata.map((data) => data.id)}
-              className="w-full"
-            >
-              {metadata.map((data) => (
-                <AccordionItem key={data.id} value={data.id}>
-                  <AccordionTrigger className="flex flex-1 items-center text-lg font-medium hover:no-underline md:text-xl">
-                    {data.name}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {data.values.map((value) => (
-                      <FilterItem
-                        key={value.id}
-                        item={{ id: value.id, label: value.label }}
-                        groupId={data.id}
-                        selected={() => setFilterOpened(!filterOpened)}
-                      />
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+        {/* Mobile */}
+        <div
+          ref={mobileRef}
+          className="h-0 overflow-hidden transition-all duration-300 ease-in-out md:hidden"
+        >
+          <Accordion type="multiple" defaultValue={metadata.map((d) => d.id)}>
+            {metadata.map((data) => (
+              <AccordionItem key={data.id} value={data.id}>
+                <AccordionTrigger className="flex flex-1 items-center text-lg font-medium hover:no-underline">
+                  {data.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {data.values.map((value) => (
+                    <FilterItem
+                      key={value.id}
+                      item={{ id: value.id, label: value.label }}
+                      groupId={data.id}
+                      selected={() => setFilterOpened(!filterOpened)}
+                    />
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
 
-        {/* Produtos */}
+        {/* Desktop */}
+        <div className="hidden flex-1 md:block md:max-w-70">
+          <Accordion type="multiple" defaultValue={metadata.map((d) => d.id)}>
+            {metadata.map((data) => (
+              <AccordionItem key={data.id} value={data.id}>
+                <AccordionTrigger className="flex flex-1 items-center text-xl font-medium hover:no-underline">
+                  {data.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {data.values.map((value) => (
+                    <FilterItem
+                      key={value.id}
+                      item={{ id: value.id, label: value.label }}
+                      groupId={data.id}
+                      selected={() => setFilterOpened(!filterOpened)}
+                    />
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
+        {/* Lista de produtos */}
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
           {allProducts.map((product) => (
             <ProductItem key={product.id} {...product} />
@@ -185,7 +198,7 @@ export function ProductListFilter({
         </div>
       </div>
 
-      {/* Botão carregar mais */}
+      {/* Paginação infinita */}
       {hasNextPage && (
         <div className="flex justify-center">
           <button
