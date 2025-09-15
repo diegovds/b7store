@@ -41,7 +41,7 @@ export function FilterItem({ groupId, item, selected }: FilterItemProps) {
         onCheckedChange={() => toggleFilter(groupId, item.id)}
         checked={hasFilter(groupId, item.id)}
       />
-      <label htmlFor={`ck-${item.id}`} className="text-lg text-gray-500">
+      <label htmlFor={`ck-${item.id}`} className="text-gray-500 md:text-lg">
         {item.label}
       </label>
     </div>

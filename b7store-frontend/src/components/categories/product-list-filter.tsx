@@ -120,13 +120,13 @@ export function ProductListFilter({
       <div className="mt-8 flex flex-col gap-8 md:flex-row">
         <div className="flex-1 md:max-w-70">
           <Accordion
-            type="single"
-            collapsible
+            type="multiple"
+            defaultValue={metadata.map((data) => data.id)}
             className={`w-full ${filterOpened ? 'block' : 'hidden'} md:block`}
           >
             {metadata.map((data) => (
               <AccordionItem key={data.id} value={data.id}>
-                <AccordionTrigger className="flex flex-1 items-center text-xl font-medium hover:no-underline">
+                <AccordionTrigger className="flex flex-1 items-center text-lg font-medium hover:no-underline md:text-xl">
                   {data.name}
                 </AccordionTrigger>
                 <AccordionContent>
