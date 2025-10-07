@@ -27,6 +27,7 @@ export const MyOrdersContainer = ({
         <div className="mb-4 flex items-center justify-between gap-2">
           <h2 className="text-2xl font-bold">Minha conta</h2>
           <button
+            data-testid="signout-button"
             className="cursor-pointer"
             onClick={async () => {
               await clearAuthCookie()
